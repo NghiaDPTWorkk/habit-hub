@@ -7,7 +7,6 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import prettierConfig from 'eslint-config-prettier'
 import reactPlugin from 'eslint-plugin-react'
 
-
 export default defineConfig([
   globalIgnores(['dist']),
   {

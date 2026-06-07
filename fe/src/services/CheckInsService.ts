@@ -5,6 +5,7 @@ import { useBoundStore } from '@/store/useBoundStore'
 import { today, subDaysFromDate, isFutureDate } from '@/utils/dateUtils'
 import { isScheduledOn } from './ScheduleService'
 import { getHabit } from './HabitsService'
+import { evaluateThresholds } from './GoalsService'
 
 function computeCompletionStatus(count: number, target: number): CheckIn['completionStatus'] {
   if (count <= 0) return 'NOT_STARTED'
@@ -46,11 +47,7 @@ export function upsertCheckIn(input: CheckInInput): CheckIn {
 
   useBoundStore.getState().upsertCheckIn(checkIn)
 
-  // Evaluate goal thresholds after check-in
-  // Import inline to avoid circular dependency
-  import('@/services/GoalsService').then(({ evaluateThresholds }) => {
-    evaluateThresholds(habitId)
-  })
+  evaluateThresholds(habitId)
 
   return checkIn
 }

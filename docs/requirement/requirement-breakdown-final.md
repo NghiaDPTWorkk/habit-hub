@@ -807,44 +807,64 @@ A sprint is "Done" when:
 
 ---
 
-## 13. 1.5-week roadmap
+## 13. Task Assignment & Schedule (June 8 - June 17, 2026)
 
-### 13.1 Single-swimlane Gantt (with no BE the whole team is on the same lane)
+**Project Timeline:** June 8, 2026 (Monday) – June 17, 2026 (Wednesday)  
+**Goal:** Complete all development 3 days before the June 20 deadline for integration, testing, and buffer.  
+**Tech Stack:** React, TypeScript, Material UI (MUI), Zustand, LocalStorage, React Router  
+**Current Status:** Base Structure, Routing, Theme MUI, and Zustand configuration have been successfully set up by Nghĩa.
 
-```mermaid
-gantt
- title Habit Tracker Pro — 1.5-week (FE-only) plan
- dateFormat YYYY-MM-DD
- axisFormat %d %b
- section Sprint 1 (Foundations + EPIC-1 + EPIC-2)
- Foundations (FE-US-01..05, 15) :a1, 2026-06-08, 1d
- Domain & Data layer (17,18,19,20,21) :a2, after a1, 1d
- EPIC-1 Habit Mgmt UI (06,07,08) :a3, after a2, 2d
- EPIC-2 Check-in UI (09,10,11) :a4, after a3, 1d
- Sprint 1 demo + slack :a5, after a4, 1d
- section Sprint 2 (EPIC-3 + EPIC-4 + Reset + Polish)
- Goals service+UI (22,12,13) :b1, 2026-06-13, 1d
- Stats + Dashboard (23,14) :b2, after b1, 1d
- Reset (16) + UX polish + demo prep :b3, after b2, 1d
-```
+### 13.1 Team Roles & Responsibilities
 
-### 13.2 Same plan, as a table
+* **Dương Phạm Trọng Nghĩa (Lead BA & Project Manager):** Acted as Base Architect (completed base setup). Now serves as Product Owner / Lead BA to ensure business rules are met. Responsible for PR reviews, code quality, and workflow coordination.
+* **Lê Ngọc Minh Phương (QA & Deployment):** Responsible for setting up automated pipelines (Vercel/Netlify/GH Pages), writing test cases, continuous manual testing on Staging, and managing final releases.
+* **Team Dev (Alrz, Ny, Hạnh, Quỳnh, Như):** Focused on writing UI components with MUI and managing state/logic with Zustand custom hooks.
 
-| Day           | M1 (Shell)                        | M2 (Data)                        | M3 (Habits)                                         | M4 (Check-ins)                                     | M5 (Goals & Stats)          |
-| ------------- | --------------------------------- | -------------------------------- | --------------------------------------------------- | -------------------------------------------------- | --------------------------- |
-| **Day 1** Mon | 🟢 **FE-US-01** → **02** → **03** | 🟢 **FE-US-04**                  | ⏳ wait for 17, 18                                  | 🟢 **FE-US-20**                                    | 🟢 start **FE-US-15**       |
-| **Day 2** Tue | review PRs / pair-review          | 🟢 **FE-US-17**, **18**, **05**  | 🟢 **FE-US-19** habits svc                          | ⏳ wait for 19                                     | 🟢 finish **FE-US-15**      |
-| **Day 3** Wed | 🟢 **FE-US-16** reset UI          | 🎯 free-rover (bonus / reviewer) | 🟢 **FE-US-06** habit list (degraded mode until 23) | 🟢 **FE-US-21** check-ins svc                      | 🟢 **FE-US-22** goals svc   |
-| **Day 4** Thu | review / wait for 23              | 🎯 free-rover                    | 🟢 **FE-US-07** habit form                          | 🟢 **FE-US-09** quick check-in                     | 🟢 **FE-US-23** stats svc   |
-| **Day 5** Fri | 🟢 start **FE-US-14** dashboard   | 🎯 free-rover                    | 🟢 **FE-US-08** overflow menu                       | 🟢 **FE-US-10** multi-count + **FE-US-11** by-date | 🟢 **FE-US-12** goal panel  |
-| **Day 6** Mon | 🟢 finish **FE-US-14**            | help on demo / bonuses           | help reviewers                                      | wrap remaining                                     | 🟢 **FE-US-13** goal toasts |
-| **Day 7** Tue | 🎬 demo dry-run + polish          | 🎬                               | 🎬                                                  | 🎬                                                 | 🎬                          |
+### 13.2 Detailed Task Breakdown (UI vs. Hooks)
 
-> Day 1 is intense for M1 — three 1-pt stories (`01`, `02`, `03`) merge in sequence over the same working day. Each one is genuinely small (Vite scaffold, Tailwind config, router shell). If `01` slips past mid-day, escalate immediately: every other lane is blocked behind it.
+#### Feature 1: Habit Management (Core)
+* **Members:** Alrz Phuong & Xuân Ny
+* **Alrz (Logic Lead):** Write custom hook `useHabitStore` (Zustand) for Habit CRUD and LocalStorage sync. Write scheduling logic (`ScheduleService`) and Zod form validation.
+* **Xuân Ny (UI Dev):** Write MUI UI components for `<HabitCard>`, `<HabitFormModal>`, `/habits` page (`<HabitList>` & `<FilterSidebar>`), and `<HabitOverflowMenu>`.
 
-Legend: 🟢 active build ⏳ blocked 🎯 free capacity (bonuses / reviewer) 🎬 demo prep
+#### Feature 2: Check-ins
+* **Member:** Hạnh Trần
+* **Logic & Store:** Write custom hook `useCheckInStore` (Zustand) for upserting check-ins, future-date guards, and target constraints.
+* **UI Components:**
+  * Write UI for `<QuickToggle>` inside the Habit Card.
+  * Write UI for `<MultiCountModal>` using MUI Sliders.
+  * Write UI for `/check-ins` page with MUI DatePicker and `<CheckInRow>`.
+  * Support building `<ConfirmDialog>`.
 
-> Pairing on FE-US-23 (StatsService) is **non-negotiable** — it's the single highest-risk story (Advanced #6 derived state).
+#### Feature 3: Goals & Progress
+* **Member:** Trúc Quỳnh
+* **Logic & Store:** Write custom hook `useGoalStore` (Zustand) for goal management and 80%/100% threshold detection.
+* **UI Components:**
+  * Write UI for `<GoalPanel>` and `<GoalForm>` in Habit Details.
+  * Write UI for `<ProgressBar>` using MUI LinearProgress.
+  * Write custom hook/logic for triggering MUI Snackbar notification toasts.
+
+#### Feature 4: Dashboard & Analytics
+* **Member:** Bảo Như
+* **Logic & Utilities:** Write pure utility functions to derive dashboard metrics on the fly (streaks, rates, totals) from Zustand stores.
+* **UI Components:**
+  * Write UI for `/dashboard` page and top `<KpiCard>` components.
+  * Write UI for `<AtRiskBanner>` (MUI Alert), `<CategorySection>` (MUI Accordion), and `<HabitStatsRow>`.
+  * Write UI for `<StatusPill>`.
+
+### 13.3 Detailed Schedule (June 8 - June 17)
+
+| Date | Nghĩa (Leader) | Phương (QA & Deploy) | Alrz & Ny (Habits) | Hạnh (Check-ins) | Quỳnh (Goals) | Như (Dashboard) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Mon 8/6** | Brief BA logic & review workflow. | Setup Staging environment & Test Plan. | **Alrz:** hook `useHabitStore`. <br>**Ny:** UI layout for `/habits`. | Hook `useCheckInStore`. | Hook `useGoalStore`. | Write analytics functions. |
+| **Tue 9/6** | Review PRs for layout & stores. | Verify staging deployment & test cases. | **Alrz:** Form Validation logic. <br>**Ny:** UI `<HabitCard>` & Form Modal. | UI `<QuickToggle>` & state mapping. | UI `<GoalForm>` & `<ProgressBar>`. | UI `<KpiCard>` & metric wiring. |
+| **Wed 10/6** | Cross-review store state updates. | Test Habit creation/edit on staging. | **Alrz:** Bind store data to Form. <br>**Ny:** UI `<FilterSidebar>`. | UI `<MultiCountModal>`. | UI `<GoalPanel>` & progress bar. | UI `<CategorySection>`. |
+| **Thu 11/6** | Review validation & check-in business rules. | Test check-in boundary conditions. | **Alrz:** Cross-store validation logic. <br>**Ny:** Finalize `/habits` page. | UI `/check-ins` page + DatePicker. | Hook for threshold snackbar alerts. | UI `<HabitStatsRow>`. |
+| **Fri 12/6** | Sync Check-in with Dashboard metrics. | Push initial seed data to staging for E2E test. | MUI Overflow Menu, empty/error UI states. | Configure date-filtering on `/check-ins`. | Fix toast re-triggering bugs. | UI `<AtRiskBanner>` & Dashboard layout. |
+| **Sat 13/6 - Sun 14/6** | **Buffer Days** | **Catch-up** | **Independent Refinement** | | | |
+| **Mon 15/6** | Conduct BA Acceptance Testing. | Execute E2E Test Phase 1 & log issues. | Fix bugs in Habit Store & logic. | Fix bugs in Check-in workflows. | Fix bugs in Goal Progress display. | Fix dashboard calculation bugs. |
+| **Tue 16/6** | Review and approve final bugfix PRs. | Retest resolved bugs & prep Prod build. | Refine MUI component responsiveness. | Refine MUI component responsiveness. | Refine MUI component responsiveness. | Refine MUI component responsiveness. |
+| **Wed 17/6** | **FEATURE FREEZE** | Deploy to Production & sign off. | **FEATURE FREEZE** | **FEATURE FREEZE** | **FEATURE FREEZE** | **FEATURE FREEZE** |
 
 ---
 

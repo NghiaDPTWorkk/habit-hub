@@ -1,4 +1,5 @@
 export const SHARED_MESSAGES = {
+  // Nhớ ghi tiếng anh
   SUCCESS: {
     CREATE: 'Tạo mới dữ liệu thành công!',
     UPDATE: 'Cập nhật dữ liệu thành công!',

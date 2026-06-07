@@ -30,6 +30,19 @@ export default defineConfig([
       'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
       'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
       'prefer-const': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "JSXAttribute[name.name='sx'] Literal[value=/^#|rgb|rgba/]",
+          message:
+            "Không được hardcode mã màu (Hex/RGB) trong prop 'sx'. Hãy sử dụng các biến màu từ Theme (ví dụ: 'primary.main', 'background.paper', 'text.primary').",
+        },
+        {
+          selector: "JSXAttribute[name.name='sx'] Literal[value=/px$/]",
+          message:
+            "Không được hardcode đơn vị pixel ('px') trong prop 'sx'. Hãy sử dụng giá trị số (number) để MUI tự động nhân với spacing của Theme (ví dụ: mt: 2 thay vì mt: '16px').",
+        },
+      ],
     },
   },
   {

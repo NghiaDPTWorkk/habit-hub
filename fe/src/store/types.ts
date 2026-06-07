@@ -1,5 +1,6 @@
 import type { HabitSlice } from './habitSlice'
-import type { CheckinSlice } from './checkinSlice'
+import type { CheckInSlice } from './checkinSlice'
 import type { GoalSlice } from './goalSlice'
+import type { MetaSlice } from './metaSlice'
 
-export type BoundStore = HabitSlice & CheckinSlice & GoalSlice
+export type BoundStore = HabitSlice & CheckInSlice & GoalSlice & MetaSlice

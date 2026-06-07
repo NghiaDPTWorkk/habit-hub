@@ -1,17 +1,21 @@
 export const SHARED_MESSAGES = {
   // Nhớ ghi tiếng anh
   SUCCESS: {
-    CREATE: 'Tạo mới dữ liệu thành công!',
-    UPDATE: 'Cập nhật dữ liệu thành công!',
-    DELETE: 'Xóa dữ liệu thành công!',
-    RESET: 'Khôi phục toàn bộ dữ liệu ban đầu thành công!',
-    STATUS_CHANGE: 'Thay đổi trạng thái thành công!',
+    CREATE: 'Habit created',
+    UPDATE: 'Habit updated',
+    DELETE: 'Habit deleted',
+    RESET: 'Data reset to seed state',
+    STATUS_CHANGE: 'Status updated',
+    CHECKIN: 'Progress saved',
+    GOAL_CREATED: 'Goal created',
   },
   ERROR: {
-    UNKNOWN: 'Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!',
-    NOT_FOUND: 'Không tìm thấy dữ liệu yêu cầu!',
-    INVALID_INPUT: 'Dữ liệu đầu vào không hợp lệ!',
-    FUTURE_DATE: 'Không thể check-in cho ngày trong tương lai!',
-    TARGET_EXCEEDED: 'Số lần hoàn thành không thể vượt quá mục tiêu ngày!',
+    UNKNOWN: 'Something went wrong. Please try again.',
+    NOT_FOUND: 'The requested item could not be found.',
+    INVALID_INPUT: 'Invalid input — please check your values.',
+    FUTURE_DATE: "Future dates can't be checked in",
+    TARGET_EXCEEDED: 'Completed count cannot exceed daily target',
+    GOAL_EXISTS: 'An active goal already exists for this habit.',
+    NOT_SCHEDULED: 'This habit is not scheduled on this day.',
   },
 }

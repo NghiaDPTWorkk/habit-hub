@@ -4,32 +4,27 @@ import type { BoundStore } from './types'
 
 export interface HabitSlice {
   habits: Habit[]
-  addHabit: (habit: Omit<Habit, 'id' | 'createdAt'>) => void
-  updateHabit: (id: number, updates: Partial<Habit>) => void
-  deleteHabit: (id: number) => void
+  setHabits: (habits: Habit[]) => void
+  upsertHabit: (habit: Habit) => void
+  removeHabit: (id: string) => void
 }
 
 export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (set) => ({
   habits: [],
 
-  addHabit: (habit) =>
-    set((state) => ({
-      habits: [
-        ...state.habits,
-        {
-          ...habit,
-          id: Date.now(),
-          createdAt: new Date().toISOString().split('T')[0],
-        },
-      ],
-    })),
+  setHabits: (habits) => set({ habits }),
 
-  updateHabit: (id, updates) =>
-    set((state) => ({
-      habits: state.habits.map((h) => (h.id === id ? { ...h, ...updates } : h)),
-    })),
+  upsertHabit: (habit) =>
+    set((state) => {
+      const exists = state.habits.some((h) => h.id === habit.id)
+      return {
+        habits: exists
+          ? state.habits.map((h) => (h.id === habit.id ? habit : h))
+          : [...state.habits, habit],
+      }
+    }),
 
-  deleteHabit: (id) =>
+  removeHabit: (id) =>
     set((state) => ({
       habits: state.habits.filter((h) => h.id !== id),
     })),

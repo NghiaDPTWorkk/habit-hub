@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import prettierConfig from 'eslint-config-prettier'
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -18,6 +19,41 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.browser,
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: ['**/src/components/ui/icons.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@mui/icons-material',
+              message: "Please import icons from '@/components/ui/icons' instead of importing directly from '@mui/icons-material'.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: ['**/src/components/ui/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@mui/material',
+              importNames: ['Button', 'TextField', 'Input', 'Badge', 'Dialog', 'Select'],
+              message: "Please use custom components from '@/components/ui' instead of importing directly from '@mui/material'.",
+            },
+          ],
+        },
+      ],
     },
   },
 ])

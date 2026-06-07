@@ -1,64 +1,64 @@
-# Habit Tracker: Task Assignment & Schedule
+# Habit Tracker: Phân Công Công Việc & Lịch Trình Phát Triển
 
-**Project Timeline:** June 8, 2026 (Monday) – June 17, 2026 (Wednesday)  
-**Goal:** Complete all development 3 days before the June 20 deadline for integration, testing, and buffer.  
-**Tech Stack:** React, TypeScript, Material UI (MUI), Zustand, LocalStorage, React Router  
-**Current Status:** Base Structure, Routing, Theme MUI, and Zustand configuration have been successfully set up by Nghĩa.
-
----
-
-## 1. Team Roles & Responsibilities
-
-* **Dương Phạm Trọng Nghĩa (Lead BA & Project Manager):** Acted as Base Architect (completed base setup). Now serves as Product Owner / Lead BA to ensure business rules are met. Responsible for PR reviews, code quality, and workflow coordination.
-* **Lê Ngọc Minh Phương (QA & Deployment):** Responsible for setting up automated pipelines (Vercel/Netlify/GH Pages), writing test cases, continuous manual testing on Staging, and managing final releases.
-* **Team Dev (Alrz, Ny, Hạnh, Quỳnh, Như):** Focused on writing UI components with MUI and managing state/logic with Zustand custom hooks.
+**Thời gian dự án:** 8/6/2026 (Thứ Hai) – 17/6/2026 (Thứ Tư)  
+**Mục tiêu:** Hoàn thành toàn bộ quá trình phát triển trước hạn chót 20/6 khoảng 3 ngày để phục vụ tích hợp, kiểm thử và dự phòng.  
+**Tech Stack (Công nghệ):** React, TypeScript, Material UI (MUI), Zustand, LocalStorage, React Router  
+**Trạng thái hiện tại:** Cấu trúc dự án cơ bản (Base), Định tuyến (Routing), Theme MUI, và cấu hình Zustand đã được thiết lập thành công bởi Nghĩa.
 
 ---
 
-## 2. Detailed Task Breakdown (UI vs. Hooks)
+## 1. Vai Trò & Trách Nhiệm Các Thành Viên
 
-### Feature 1: Habit Management (Core)
-* **Members:** Alrz Phuong & Xuân Ny
-* **Alrz (Logic Lead):** Write custom hook `useHabitStore` (Zustand) for Habit CRUD and LocalStorage sync. Write scheduling logic (`ScheduleService`) and Zod form validation.
-* **Xuân Ny (UI Dev):** Write MUI UI components for `<HabitCard>`, `<HabitFormModal>`, `/habits` page (`<HabitList>` & `<FilterSidebar>`), and `<HabitOverflowMenu>`.
-
-### Feature 2: Check-ins
-* **Member:** Hạnh Trần
-* **Logic & Store:** Write custom hook `useCheckInStore` (Zustand) for upserting check-ins, future-date guards, and target constraints.
-* **UI Components:**
-  * Write UI for `<QuickToggle>` inside the Habit Card.
-  * Write UI for `<MultiCountModal>` using MUI Sliders.
-  * Write UI for `/check-ins` page with MUI DatePicker and `<CheckInRow>`.
-  * Support building `<ConfirmDialog>`.
-
-### Feature 3: Goals & Progress
-* **Member:** Trúc Quỳnh
-* **Logic & Store:** Write custom hook `useGoalStore` (Zustand) for goal management and 80%/100% threshold detection.
-* **UI Components:**
-  * Write UI for `<GoalPanel>` and `<GoalForm>` in Habit Details.
-  * Write UI for `<ProgressBar>` using MUI LinearProgress.
-  * Write custom hook/logic for triggering MUI Snackbar notification toasts.
-
-### Feature 4: Dashboard & Analytics
-* **Member:** Bảo Như
-* **Logic & Utilities:** Write pure utility functions to derive dashboard metrics on the fly (streaks, rates, totals) from Zustand stores.
-* **UI Components:**
-  * Write UI for `/dashboard` page and top `<KpiCard>` components.
-  * Write UI for `<AtRiskBanner>` (MUI Alert), `<CategorySection>` (MUI Accordion), and `<HabitStatsRow>`.
-  * Write UI for `<StatusPill>`.
+* **Dương Phạm Trọng Nghĩa (Lead BA & Quản lý dự án):** Đóng vai trò là Kiến trúc sư hệ thống (đã hoàn thành thiết lập base). Hiện tại làm Product Owner / Lead BA để đảm bảo tuân thủ các quy tắc nghiệp vụ. Chịu trách nhiệm review Pull Request (PR), kiểm soát chất lượng mã nguồn và điều phối quy trình làm việc.
+* **Lê Ngọc Minh Phương (QA & Triển khai):** Chịu trách nhiệm thiết lập các pipeline tự động (Vercel/Netlify/GH Pages), viết các kịch bản kiểm thử (test cases), thực hiện kiểm thử thủ công liên tục trên môi trường Staging và quản lý các bản phát hành chính thức (release).
+* **Đội ngũ Dev (Alrz, Ny, Hạnh, Quỳnh, Như):** Tập trung vào việc xây dựng các component giao diện (UI) bằng MUI và quản lý trạng thái/logic bằng các custom hook của Zustand.
 
 ---
 
-## 3. Detailed Schedule (June 8 - June 17)
+## 2. Chi Tiết Phân Chia Công Việc (UI vs. Hooks)
 
-| Date | Nghĩa (Leader) | Phương (QA & Deploy) | Alrz & Ny (Habits) | Hạnh (Check-ins) | Quỳnh (Goals) | Như (Dashboard) |
+### Tính năng 1: Quản lý Thói quen (Habit Management - Cốt lõi)
+* **Thành viên:** Alrz Phuong & Xuân Ny
+* **Alrz (Logic Lead):** Viết custom hook `useHabitStore` (Zustand) để xử lý CRUD Thói quen và đồng bộ dữ liệu vào LocalStorage. Viết logic lập lịch thói quen (`ScheduleService`) và xác thực dữ liệu form bằng thư viện Zod.
+* **Xuân Ny (UI Dev):** Xây dựng các component giao diện bằng MUI bao gồm `<HabitCard>`, `<HabitFormModal>`, trang `/habits` (bao gồm `<HabitList>` & `<FilterSidebar>`), và `<HabitOverflowMenu>`.
+
+### Tính năng 2: Điểm danh / Check-ins
+* **Thành viên:** Hạnh Trần
+* **Logic & Store:** Viết custom hook `useCheckInStore` (Zustand) để cập nhật check-in (upsert), kiểm tra ngăn chặn ngày trong tương lai (future-date guards) và các ràng buộc mục tiêu hàng ngày.
+* **Component UI:**
+  * Xây dựng giao diện nút check-in nhanh `<QuickToggle>` bên trong thẻ Habit Card.
+  * Xây dựng giao diện nhập số lần check-in `<MultiCountModal>` sử dụng MUI Slider.
+  * Xây dựng giao diện cho trang `/check-ins` với MUI DatePicker and `<CheckInRow>`.
+  * Hỗ trợ xây dựng hộp thoại xác nhận `<ConfirmDialog>`.
+
+### Tính năng 3: Mục tiêu & Tiến độ (Goals & Progress)
+* **Thành viên:** Trúc Quỳnh
+* **Logic & Store:** Viết custom hook `useGoalStore` (Zustand) để quản lý mục tiêu và phát hiện ngưỡng hoàn thành (đạt 80% / 100%).
+* **Component UI:**
+  * Xây dựng giao diện `<GoalPanel>` và `<GoalForm>` trong trang Chi tiết Thói quen (Habit Details).
+  * Xây dựng giao diện thanh tiến trình `<ProgressBar>` sử dụng MUI LinearProgress.
+  * Viết custom hook/logic để hiển thị thông báo nổi (toasts) bằng MUI Snackbar.
+
+### Tính năng 4: Bảng điều khiển & Phân tích (Dashboard & Analytics)
+* **Thành viên:** Bảo Như
+* **Logic & Tiện ích:** Viết các hàm tiện ích thuần túy (pure utility functions) để tính toán các chỉ số dashboard ngay lập tức (chuỗi ngày liên tục - streaks, tỷ lệ hoàn thành, tổng số) từ dữ liệu Zustand stores.
+* **Component UI:**
+  * Xây dựng giao diện cho trang `/dashboard` và các thẻ thống kê `<KpiCard>` phía trên.
+  * Xây dựng giao diện cho banner cảnh báo đứt chuỗi `<AtRiskBanner>` (sử dụng MUI Alert), phần danh mục thói quen `<CategorySection>` (MUI Accordion), và hàng số liệu thống kê thói quen `<HabitStatsRow>`.
+  * Xây dựng giao diện cho các tag trạng thái `<StatusPill>`.
+
+---
+
+## 3. Lịch Trình Chi Tiết (8/6 - 17/6)
+
+| Ngày | Nghĩa (Leader) | Phương (QA & Deploy) | Alrz & Ny (Habits) | Hạnh (Check-ins) | Quỳnh (Goals) | Như (Dashboard) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Mon 8/6** | Brief BA logic & review workflow. | Setup Staging environment & Test Plan. | **Alrz:** hook `useHabitStore`. <br>**Ny:** UI layout for `/habits`. | Hook `useCheckInStore`. | Hook `useGoalStore`. | Write analytics functions. |
-| **Tue 9/6** | Review PRs for layout & stores. | Verify staging deployment & test cases. | **Alrz:** Form Validation logic. <br>**Ny:** UI `<HabitCard>` & Form Modal. | UI `<QuickToggle>` & state mapping. | UI `<GoalForm>` & `<ProgressBar>`. | UI `<KpiCard>` & metric wiring. |
-| **Wed 10/6** | Cross-review store state updates. | Test Habit creation/edit on staging. | **Alrz:** Bind store data to Form. <br>**Ny:** UI `<FilterSidebar>`. | UI `<MultiCountModal>`. | UI `<GoalPanel>` & progress bar. | UI `<CategorySection>`. |
-| **Thu 11/6** | Review validation & check-in business rules. | Test check-in boundary conditions. | **Alrz:** Cross-store validation logic. <br>**Ny:** Finalize `/habits` page. | UI `/check-ins` page + DatePicker. | Hook for threshold snackbar alerts. | UI `<HabitStatsRow>`. |
-| **Fri 12/6** | Sync Check-in with Dashboard metrics. | Push initial seed data to staging for E2E test. | MUI Overflow Menu, empty/error UI states. | Configure date-filtering on `/check-ins`. | Fix toast re-triggering bugs. | UI `<AtRiskBanner>` & Dashboard layout. |
-| **Sat 13/6 - Sun 14/6** | **Buffer Days** | **Catch-up** | **Independent Refinement** | | | |
-| **Mon 15/6** | Conduct BA Acceptance Testing. | Execute E2E Test Phase 1 & log issues. | Fix bugs in Habit Store & logic. | Fix bugs in Check-in workflows. | Fix bugs in Goal Progress display. | Fix dashboard calculation bugs. |
-| **Tue 16/6** | Review and approve final bugfix PRs. | Retest resolved bugs & prep Prod build. | Refine MUI component responsiveness. | Refine MUI component responsiveness. | Refine MUI component responsiveness. | Refine MUI component responsiveness. |
-| **Wed 17/6** | **FEATURE FREEZE** | Deploy to Production & sign off. | **FEATURE FREEZE** | **FEATURE FREEZE** | **FEATURE FREEZE** | **FEATURE FREEZE** |
+| **Thứ Hai 8/6** | Phổ biến logic BA & quy trình làm việc. | Thiết lập môi trường Staging & Kế hoạch test. | **Alrz:** hook `useHabitStore`. <br>**Ny:** Bố cục UI cho `/habits`. | Hook `useCheckInStore`. | Hook `useGoalStore`. | Viết các hàm phân tích số liệu. |
+| **Thứ Ba 9/6** | Review các PR về layout & stores. | Xác thực triển khai staging & các test cases. | **Alrz:** Logic xác thực dữ liệu Form. <br>**Ny:** UI `<HabitCard>` & Modal tạo mới. | UI `<QuickToggle>` & ánh xạ trạng thái. | UI `<GoalForm>` & `<ProgressBar>`. | UI `<KpiCard>` & kết nối số liệu. |
+| **Thứ Tư 10/6** | Đồng bộ cập nhật store state giữa các dev. | Kiểm thử tạo/sửa Thói quen trên staging. | **Alrz:** Đổ dữ liệu store vào Form. <br>**Ny:** UI `<FilterSidebar>`. | UI `<MultiCountModal>`. | UI `<GoalPanel>` & thanh tiến độ. | UI `<CategorySection>`. |
+| **Thứ Năm 11/6** | Review logic xác thực & quy tắc check-in. | Kiểm thử các trường hợp biên của check-in. | **Alrz:** Logic xác thực chéo các store. <br>**Ny:** Hoàn thiện trang `/habits`. | UI trang `/check-ins` + DatePicker. | Hook hiển thị snackbar cảnh báo đạt ngưỡng. | UI `<HabitStatsRow>`. |
+| **Thứ Sáu 12/6** | Đồng bộ Check-in với các chỉ số Dashboard. | Đẩy dữ liệu mẫu lên staging để test E2E. | MUI Overflow Menu, UI trống/lỗi. | Cấu hình bộ lọc ngày trên trang `/check-ins`. | Sửa lỗi lặp thông báo toast. | UI `<AtRiskBanner>` & Layout Dashboard. |
+| **13/6 - 14/6** | **Ngày dự phòng** | **Hỗ trợ thêm** | **Tự tối ưu hóa code** | | | |
+| **Thứ Hai 15/6** | Kiểm thử nghiệm thu BA (Acceptance). | Chạy Test E2E Giai đoạn 1 & log lỗi. | Sửa lỗi Habit Store & logic. | Sửa lỗi luồng Check-in. | Sửa lỗi hiển thị tiến độ Mục tiêu. | Sửa lỗi tính toán dashboard. |
+| **Thứ Ba 16/6** | Review và duyệt các PR sửa lỗi cuối. | Test lại các lỗi đã sửa & chuẩn bị bản Prod. | Tối ưu hiển thị responsive (MUI). | Tối ưu hiển thị responsive (MUI). | Tối ưu hiển thị responsive (MUI). | Tối ưu hiển thị responsive (MUI). |
+| **Thứ Tư 17/6** | **ĐÓNG BĂNG TÍNH NĂNG** | Triển khai Production & ký nghiệm thu. | **ĐÓNG BĂNG TÍNH NĂNG** | **ĐÓNG BĂNG TÍNH NĂNG** | **ĐÓNG BĂNG TÍNH NĂNG** | **ĐÓNG BĂNG TÍNH NĂNG** |

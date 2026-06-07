@@ -2,7 +2,6 @@ import type { StateCreator } from 'zustand'
 import type { Goal } from '@/types'
 import type { BoundStore } from './types'
 
-
 export interface GoalSlice {
   goals: Goal[]
   addGoal: (goal: Omit<Goal, 'id'>) => void

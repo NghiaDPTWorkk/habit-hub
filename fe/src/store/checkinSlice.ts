@@ -2,7 +2,6 @@ import type { StateCreator } from 'zustand'
 import type { Checkin } from '@/types'
 import type { BoundStore } from './types'
 
-
 export interface CheckinSlice {
   checkins: Checkin[]
   addCheckin: (checkin: Omit<Checkin, 'id'>) => void

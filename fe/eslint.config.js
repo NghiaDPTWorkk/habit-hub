@@ -20,6 +20,15 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      'keyword-spacing': ['error', { before: true, after: true }],
+      'object-curly-spacing': ['error', 'always'],
+      'space-before-blocks': ['error', 'always'],
+      'arrow-spacing': ['error', { before: true, after: true }],
+      'no-trailing-spaces': 'error',
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
+      'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
+    },
   },
   {
     files: ['**/*.{ts,tsx}'],
@@ -31,7 +40,8 @@ export default defineConfig([
           paths: [
             {
               name: '@mui/icons-material',
-              message: "Please import icons from '@/components/ui/icons' instead of importing directly from '@mui/icons-material'.",
+              message:
+                "Please import icons from '@/components/ui/icons' instead of importing directly from '@mui/icons-material'.",
             },
           ],
         },
@@ -49,7 +59,8 @@ export default defineConfig([
             {
               name: '@mui/material',
               importNames: ['Button', 'TextField', 'Input', 'Badge', 'Dialog', 'Select'],
-              message: "Please use custom components from '@/components/ui' instead of importing directly from '@mui/material'.",
+              message:
+                "Please use custom components from '@/components/ui' instead of importing directly from '@mui/material'.",
             },
           ],
         },

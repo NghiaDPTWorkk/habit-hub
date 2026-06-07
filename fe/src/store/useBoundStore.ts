@@ -17,4 +17,3 @@ export const useBoundStore = create<BoundStore>()(
     }
   )
 )
-

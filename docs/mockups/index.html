@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Tracker Pro — UI Mockups</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['system-ui','-apple-system','Segoe UI','Roboto','sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+    .browser-chrome { background: linear-gradient(180deg,#f8fafc,#e2e8f0); }
+    .annotation { background: linear-gradient(135deg,#0f172a,#1e293b); }
+    [data-screen] { scroll-margin-top: 5rem; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 font-sans">
+
+<!-- ============================================================
+     STICKY MOCKUP NAVIGATION
+============================================================ -->
+<nav class="sticky top-0 z-50 bg-slate-900 text-white shadow-lg">
+  <div class="max-w-6xl mx-auto px-4 py-2 flex items-center gap-1 overflow-x-auto text-xs">
+    <span class="font-semibold mr-3 shrink-0">📱 Habit Tracker Pro · UI Mockups v1.0</span>
+    <a href="#index" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">Index</a>
+    <span class="text-slate-500">|</span>
+    <a href="#screen-dashboard" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">1·Dashboard</a>
+    <a href="#screen-habits-list" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">2·Habits</a>
+    <a href="#screen-habit-form" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">3·New/Edit</a>
+    <a href="#screen-overflow" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">4·Overflow</a>
+    <a href="#screen-quick-checkin" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">5·Quick check-in</a>
+    <a href="#screen-multicount" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">6·Multi-count</a>
+    <a href="#screen-checkins" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">7·Check-ins</a>
+    <a href="#screen-goal" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">8·Goal</a>
+    <a href="#screen-reset" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">9·Reset</a>
+    <a href="#screen-toasts" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">10·Toasts</a>
+    <a href="#screen-empty" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">11·Empty</a>
+    <a href="#screen-errors" class="px-2 py-1 rounded hover:bg-slate-700 shrink-0">12·Errors</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     INDEX / COVER
+============================================================ -->
+<section id="index" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <header class="mb-8">
+    <p class="text-sm uppercase tracking-widest text-slate-500">Capstone · Wecamp Batch 11</p>
+    <h1 class="text-4xl font-bold mt-1">Habit Tracker Pro — UI Mockups</h1>
+    <p class="text-slate-600 mt-2 max-w-3xl">Single-file clickable prototype rendered with Tailwind 3 (CDN). Doubles as the design source of truth for the 4-student team — every class used here is the same one to copy into <code>frontend/src/</code>.</p>
+  </header>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="bg-white rounded-lg shadow p-5">
+      <h3 class="font-semibold mb-2">📐 Design tokens</h3>
+      <ul class="text-sm space-y-1 text-slate-700">
+        <li><span class="inline-block size-3 rounded-full bg-emerald-500 mr-2"></span> Emerald — success, completed, ACTIVE</li>
+        <li><span class="inline-block size-3 rounded-full bg-amber-500 mr-2"></span> Amber — warning, at-risk, PAUSED, MEDIUM priority</li>
+        <li><span class="inline-block size-3 rounded-full bg-rose-500 mr-2"></span> Rose — destructive, error, HIGH priority</li>
+        <li><span class="inline-block size-3 rounded-full bg-slate-400 mr-2"></span> Slate — neutrals, ARCHIVED, LOW priority</li>
+        <li><span class="inline-block size-3 rounded-full bg-violet-500 mr-2"></span> Violet — accent (Mindfulness category)</li>
+        <li><span class="inline-block size-3 rounded-full bg-indigo-500 mr-2"></span> Indigo — accent (Study category)</li>
+      </ul>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+      <h3 class="font-semibold mb-2">🗂 Screen inventory</h3>
+      <ol class="text-sm space-y-1 text-slate-700 list-decimal pl-4">
+        <li><a href="#screen-dashboard" class="text-emerald-700 hover:underline">Dashboard</a> — FE-US-14, 23 · Core 4.1–4.8, Adv 6</li>
+        <li><a href="#screen-habits-list" class="text-emerald-700 hover:underline">Habits list + filter sidebar</a> — FE-US-06 · Core 1.6, 1.7, Adv 8.6</li>
+        <li><a href="#screen-habit-form" class="text-emerald-700 hover:underline">New / Edit habit modal</a> — FE-US-07 · Core 1.1–1.4, Adv 8.1, 8.2, 8.5</li>
+        <li><a href="#screen-overflow" class="text-emerald-700 hover:underline">Habit overflow menu</a> — FE-US-08 · Core 1.5</li>
+        <li><a href="#screen-quick-checkin" class="text-emerald-700 hover:underline">Quick check-in toggle</a> — FE-US-09 · Core 2.2, 2.4</li>
+        <li><a href="#screen-multicount" class="text-emerald-700 hover:underline">Multi-count modal</a> — FE-US-10 · Core 2.2, Adv 8.3</li>
+        <li><a href="#screen-checkins" class="text-emerald-700 hover:underline">Check-ins grouped-by-date</a> — FE-US-11 · Core 2.3, Adv 8.7</li>
+        <li><a href="#screen-goal" class="text-emerald-700 hover:underline">Goal panel</a> — FE-US-12, 13 · Core 3.1–3.4, Adv 8.8</li>
+        <li><a href="#screen-reset" class="text-emerald-700 hover:underline">Reset all data</a> — FE-US-16 · Adv 7</li>
+        <li><a href="#screen-toasts" class="text-emerald-700 hover:underline">Toast catalogue</a> — FE-US-15 · Adv 8.5</li>
+        <li><a href="#screen-empty" class="text-emerald-700 hover:underline">Empty states</a> — Adv 8.6, 8.7, 8.8</li>
+        <li><a href="#screen-errors" class="text-emerald-700 hover:underline">Validation / error states</a> — Adv 8.1–8.5</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="mt-6 bg-amber-50 border border-amber-200 rounded p-4 text-sm text-amber-900">
+    <strong>How to view:</strong> Just double-click <code>index.html</code> from Finder/Explorer — opens in any modern browser. Use the sticky nav bar at the top to jump between screens. Tailwind is pulled from a CDN; a working internet connection is required on first load.
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 1 — DASHBOARD  (FE-US-14, FE-US-23)
+============================================================ -->
+<section id="screen-dashboard" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">1 · Dashboard <span class="text-slate-400 text-base font-normal">(<code>/dashboard</code>)</span></h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-14</code>, <code>FE-US-23</code> · Brief: Core 4.1–4.8, Advanced 6 · Demo: §14 step 1–3</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">4 KPI cards · dismissible at-risk banner · habits-by-category sections · per-habit current streak / longest / total / 7-day rate. <strong>Every number on this page comes from <code>StatsService.getDashboard()</code> — never a stored aggregate.</strong></p>
+  </div>
+
+  <!-- Browser frame -->
+  <div class="bg-white rounded-b-lg shadow-xl overflow-hidden">
+    <div class="browser-chrome border-b border-slate-200 px-4 py-2 flex items-center gap-2">
+      <div class="flex gap-1.5"><span class="size-3 rounded-full bg-rose-400"></span><span class="size-3 rounded-full bg-amber-400"></span><span class="size-3 rounded-full bg-emerald-400"></span></div>
+      <div class="ml-3 bg-white border border-slate-200 rounded px-3 py-1 text-xs text-slate-600 flex-1 max-w-md">localhost:5173/dashboard</div>
+    </div>
+
+    <!-- App: top nav (matches MainLayout / FE-US-02) -->
+    <header class="bg-white border-b border-slate-200">
+      <div class="max-w-5xl mx-auto p-4 flex items-center gap-6">
+        <h1 class="text-xl font-semibold">Habit Tracker Pro</h1>
+        <nav class="flex gap-2 ml-auto">
+          <a class="px-3 py-1.5 rounded hover:bg-slate-50">Habits</a>
+          <a class="px-3 py-1.5 rounded hover:bg-slate-50">Check-ins</a>
+          <a class="px-3 py-1.5 rounded bg-slate-100 font-medium" aria-current="page">Dashboard</a>
+        </nav>
+        <button class="px-3 py-1.5 rounded hover:bg-slate-50">⚙️ Settings</button>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6 space-y-6 bg-slate-50">
+      <!-- Page heading -->
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">Dashboard</h2>
+        <p class="text-sm text-slate-500">Tuesday, 9 June 2026</p>
+      </div>
+
+      <!-- KPI cards -->
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-lg shadow-sm p-4">
+          <p class="text-xs uppercase tracking-wide text-slate-500">Done today</p>
+          <p class="text-3xl font-bold mt-1 text-emerald-600">20%</p>
+          <p class="text-xs text-slate-500 mt-1">1 of 5 scheduled</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm p-4">
+          <p class="text-xs uppercase tracking-wide text-slate-500">Active habits</p>
+          <p class="text-3xl font-bold mt-1">5</p>
+          <p class="text-xs text-slate-500 mt-1">across 4 categories</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm p-4 ring-2 ring-amber-300">
+          <p class="text-xs uppercase tracking-wide text-amber-700">⚠ At risk</p>
+          <p class="text-3xl font-bold mt-1 text-amber-600">1</p>
+          <p class="text-xs text-amber-700 mt-1">streak in danger</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm p-4">
+          <p class="text-xs uppercase tracking-wide text-slate-500">Goals achieved</p>
+          <p class="text-3xl font-bold mt-1">0</p>
+          <p class="text-xs text-slate-500 mt-1">1 in progress · 81%</p>
+        </div>
+      </section>
+
+      <!-- At-risk banner -->
+      <div class="bg-amber-50 border-l-4 border-amber-400 rounded p-4 flex items-start gap-3">
+        <div class="text-amber-500 text-xl">⚠️</div>
+        <div class="flex-1">
+          <p class="font-medium text-amber-900">1 habit is at risk of breaking a streak</p>
+          <p class="text-sm text-amber-800 mt-0.5"><strong>Read 20 pages</strong> — 14-day streak, not yet checked in today.</p>
+        </div>
+        <a href="#screen-habits-list" class="text-amber-700 hover:text-amber-900 text-sm font-medium underline">View habits →</a>
+        <button class="text-amber-700 hover:text-amber-900 text-xl leading-none" aria-label="Dismiss">×</button>
+      </div>
+
+      <!-- Habits by category -->
+      <section class="space-y-4">
+        <!-- Mindfulness -->
+        <div class="bg-white rounded-lg shadow-sm">
+          <button class="w-full flex items-center justify-between p-4 text-left">
+            <div class="flex items-center gap-3">
+              <span class="size-2 rounded-full bg-violet-500"></span>
+              <h3 class="font-semibold">Mindfulness</h3>
+              <span class="text-xs text-slate-500">1 habit</span>
+            </div>
+            <span class="text-slate-400">▾</span>
+          </button>
+          <div class="border-t border-slate-100 divide-y divide-slate-100">
+            <div class="p-4 grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-4">
+              <div class="flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-rose-500" title="HIGH priority"></span>
+                <div>
+                  <p class="font-medium">Morning meditation</p>
+                  <p class="text-xs text-slate-500">Daily · 1×</p>
+                </div>
+              </div>
+              <div class="text-center"><p class="text-lg font-semibold">🔥 17</p><p class="text-xs text-slate-500">current</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">21</p><p class="text-xs text-slate-500">longest</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">42</p><p class="text-xs text-slate-500">total</p></div>
+              <div class="text-center w-16"><p class="text-lg font-semibold text-emerald-600">100%</p><p class="text-xs text-slate-500">7-day</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health -->
+        <div class="bg-white rounded-lg shadow-sm">
+          <button class="w-full flex items-center justify-between p-4 text-left">
+            <div class="flex items-center gap-3">
+              <span class="size-2 rounded-full bg-rose-400"></span>
+              <h3 class="font-semibold">Health</h3>
+              <span class="text-xs text-slate-500">2 habits</span>
+            </div>
+            <span class="text-slate-400">▾</span>
+          </button>
+          <div class="border-t border-slate-100 divide-y divide-slate-100">
+            <div class="p-4 grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-4">
+              <div class="flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-amber-400" title="MEDIUM priority"></span>
+                <div>
+                  <p class="font-medium">Drink 8 glasses of water</p>
+                  <p class="text-xs text-slate-500">Daily · 8× · 5/8 today</p>
+                </div>
+              </div>
+              <div class="text-center"><p class="text-lg font-semibold">🔥 3</p><p class="text-xs text-slate-500">current</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">9</p><p class="text-xs text-slate-500">longest</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">87</p><p class="text-xs text-slate-500">total</p></div>
+              <div class="text-center w-16"><p class="text-lg font-semibold text-amber-600">71%</p><p class="text-xs text-slate-500">7-day</p></div>
+            </div>
+            <div class="p-4 grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-4">
+              <div class="flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-rose-500" title="HIGH priority"></span>
+                <div>
+                  <p class="font-medium">Workout</p>
+                  <p class="text-xs text-slate-500">Mon / Wed / Fri · 1× · not scheduled today</p>
+                </div>
+              </div>
+              <div class="text-center"><p class="text-lg font-semibold">🔥 5</p><p class="text-xs text-slate-500">current</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">8</p><p class="text-xs text-slate-500">longest</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">22</p><p class="text-xs text-slate-500">total</p></div>
+              <div class="text-center w-16"><p class="text-lg font-semibold text-emerald-600">100%</p><p class="text-xs text-slate-500">7-day</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Study -->
+        <div class="bg-white rounded-lg shadow-sm ring-2 ring-amber-300">
+          <button class="w-full flex items-center justify-between p-4 text-left">
+            <div class="flex items-center gap-3">
+              <span class="size-2 rounded-full bg-indigo-500"></span>
+              <h3 class="font-semibold">Study</h3>
+              <span class="text-xs text-slate-500">1 habit</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">⚠ At risk</span>
+            </div>
+            <span class="text-slate-400">▾</span>
+          </button>
+          <div class="border-t border-slate-100 divide-y divide-slate-100">
+            <div class="p-4 grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-4">
+              <div class="flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-amber-400"></span>
+                <div>
+                  <p class="font-medium">Read 20 pages <span class="text-amber-700 text-xs ml-1">⚠ Not done today</span></p>
+                  <p class="text-xs text-slate-500">Daily · 1× · 0/1 today</p>
+                </div>
+              </div>
+              <div class="text-center"><p class="text-lg font-semibold">🔥 14</p><p class="text-xs text-slate-500">current</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">14</p><p class="text-xs text-slate-500">longest</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">14</p><p class="text-xs text-slate-500">total</p></div>
+              <div class="text-center w-16"><p class="text-lg font-semibold text-emerald-600">86%</p><p class="text-xs text-slate-500">7-day</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Work -->
+        <div class="bg-white rounded-lg shadow-sm">
+          <button class="w-full flex items-center justify-between p-4 text-left">
+            <div class="flex items-center gap-3">
+              <span class="size-2 rounded-full bg-amber-500"></span>
+              <h3 class="font-semibold">Work</h3>
+              <span class="text-xs text-slate-500">1 habit</span>
+            </div>
+            <span class="text-slate-400">▾</span>
+          </button>
+          <div class="border-t border-slate-100 divide-y divide-slate-100">
+            <div class="p-4 grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-4">
+              <div class="flex items-center gap-3">
+                <span class="size-2.5 rounded-full bg-slate-400"></span>
+                <div>
+                  <p class="font-medium">Code review practice</p>
+                  <p class="text-xs text-slate-500">Tue / Thu · 2× · 1/2 today</p>
+                </div>
+              </div>
+              <div class="text-center"><p class="text-lg font-semibold">🔥 2</p><p class="text-xs text-slate-500">current</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">4</p><p class="text-xs text-slate-500">longest</p></div>
+              <div class="text-center"><p class="text-lg font-semibold">11</p><p class="text-xs text-slate-500">total</p></div>
+              <div class="text-center w-16"><p class="text-lg font-semibold text-amber-600">50%</p><p class="text-xs text-slate-500">7-day</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 2 — HABITS LIST  (FE-US-06, FE-US-08, FE-US-09)
+============================================================ -->
+<section id="screen-habits-list" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">2 · Habits list <span class="text-slate-400 text-base font-normal">(<code>/habits</code>)</span></h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-06</code>, <code>FE-US-08</code>, <code>FE-US-09</code> · Brief: Core 1.6, 1.7 · Demo: §14 step 3, 4, 11</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Filter sidebar (multi-dim) · habit cards with status pill, priority dot, today's progress, overflow menu, quick check-in toggle. <strong>At-risk cards get a 2-px amber ring + an "At risk" pill</strong> from <code>dashboard.atRiskHabitIds</code>.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl overflow-hidden">
+    <div class="browser-chrome border-b border-slate-200 px-4 py-2 flex items-center gap-2">
+      <div class="flex gap-1.5"><span class="size-3 rounded-full bg-rose-400"></span><span class="size-3 rounded-full bg-amber-400"></span><span class="size-3 rounded-full bg-emerald-400"></span></div>
+      <div class="ml-3 bg-white border border-slate-200 rounded px-3 py-1 text-xs text-slate-600 flex-1 max-w-md">localhost:5173/habits?status=ACTIVE</div>
+    </div>
+
+    <header class="bg-white border-b border-slate-200">
+      <div class="max-w-5xl mx-auto p-4 flex items-center gap-6">
+        <h1 class="text-xl font-semibold">Habit Tracker Pro</h1>
+        <nav class="flex gap-2 ml-auto">
+          <a class="px-3 py-1.5 rounded bg-slate-100 font-medium" aria-current="page">Habits</a>
+          <a class="px-3 py-1.5 rounded hover:bg-slate-50">Check-ins</a>
+          <a class="px-3 py-1.5 rounded hover:bg-slate-50">Dashboard</a>
+        </nav>
+        <button class="px-3 py-1.5 rounded hover:bg-slate-50">⚙️ Settings</button>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6 bg-slate-50 grid grid-cols-[16rem_1fr] gap-6">
+      <!-- Filter sidebar -->
+      <aside class="bg-white rounded-lg shadow-sm p-4 space-y-5 h-fit">
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Category</h3>
+          <ul class="space-y-1.5 text-sm">
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Health</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Study</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Work</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded" checked> <span class="font-medium">Mindfulness</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Other</span></label></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Frequency</h3>
+          <ul class="space-y-1.5 text-sm">
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Daily</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Specific days</span></label></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Priority</h3>
+          <ul class="space-y-1.5 text-sm">
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>High</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Medium</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="checkbox" class="rounded"> <span>Low</span></label></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Status</h3>
+          <ul class="space-y-1.5 text-sm">
+            <li><label class="flex items-center gap-2"><input type="radio" name="st" checked class="rounded"> <span class="font-medium">Active</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="radio" name="st" class="rounded"> <span>Paused</span></label></li>
+            <li><label class="flex items-center gap-2"><input type="radio" name="st" class="rounded"> <span>Archived</span></label></li>
+          </ul>
+        </div>
+        <button class="text-xs text-slate-500 hover:text-slate-700 underline">Clear all filters</button>
+      </aside>
+
+      <!-- List column -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-2xl font-bold">Habits</h2>
+            <p class="text-sm text-slate-500">5 active · 1 filter applied</p>
+          </div>
+          <a href="#screen-habit-form" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow-sm font-medium">+ New habit</a>
+        </div>
+
+        <ul class="space-y-3">
+          <!-- Habit card 1: at-risk -->
+          <li class="bg-white rounded-lg shadow-sm border-2 border-amber-400 p-4">
+            <div class="flex items-start gap-3">
+              <span class="size-2.5 rounded-full bg-amber-400 mt-2" title="MEDIUM priority"></span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-semibold">Read 20 pages</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs">Study</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">ACTIVE</span>
+                  <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">⚠ At risk</span>
+                </div>
+                <p class="text-sm text-slate-500 mt-0.5">Daily · target 1 · 🔥 14-day streak · 0/1 today</p>
+              </div>
+              <button aria-label="Mark done today" class="size-9 rounded-full border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 transition" aria-pressed="false"></button>
+              <button class="size-9 rounded hover:bg-slate-100 text-slate-500 text-xl leading-none" aria-label="Habit options">⋮</button>
+            </div>
+          </li>
+
+          <!-- Habit card 2: completed today -->
+          <li class="bg-white rounded-lg shadow-sm p-4">
+            <div class="flex items-start gap-3">
+              <span class="size-2.5 rounded-full bg-rose-500 mt-2" title="HIGH priority"></span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-semibold">Morning meditation</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-violet-100 text-violet-800 text-xs">Mindfulness</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">ACTIVE</span>
+                </div>
+                <p class="text-sm text-slate-500 mt-0.5">Daily · target 1 · 🔥 17-day streak · ✓ done today</p>
+              </div>
+              <button aria-label="Undo today's check-in" aria-pressed="true" class="size-9 rounded-full bg-emerald-500 border-2 border-emerald-600 text-white text-lg flex items-center justify-center">✓</button>
+              <button class="size-9 rounded hover:bg-slate-100 text-slate-500 text-xl leading-none" aria-label="Habit options">⋮</button>
+            </div>
+          </li>
+
+          <!-- Habit card 3: in progress (multi-count target) -->
+          <li class="bg-white rounded-lg shadow-sm p-4">
+            <div class="flex items-start gap-3">
+              <span class="size-2.5 rounded-full bg-amber-400 mt-2"></span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-semibold">Drink 8 glasses of water</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs">Health</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">ACTIVE</span>
+                </div>
+                <p class="text-sm text-slate-500 mt-0.5 mb-2">Daily · target 8 · 🔥 3-day streak</p>
+                <div class="flex items-center gap-3">
+                  <div class="flex-1 max-w-xs h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div class="h-full bg-amber-400" style="width: 62.5%"></div>
+                  </div>
+                  <span class="text-sm font-medium text-slate-700">5/8</span>
+                </div>
+              </div>
+              <a href="#screen-multicount" class="size-9 rounded border border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-emerald-600 text-lg flex items-center justify-center" aria-label="Update count">+</a>
+              <button class="size-9 rounded hover:bg-slate-100 text-slate-500 text-xl leading-none" aria-label="Habit options">⋮</button>
+            </div>
+          </li>
+
+          <!-- Habit card 4: not scheduled today (workout — Mon/Wed/Fri but it's Tuesday) -->
+          <li class="bg-white rounded-lg shadow-sm p-4 opacity-75">
+            <div class="flex items-start gap-3">
+              <span class="size-2.5 rounded-full bg-rose-500 mt-2"></span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-semibold">Workout</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs">Health</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">ACTIVE</span>
+                  <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs">Not scheduled today</span>
+                </div>
+                <p class="text-sm text-slate-500 mt-0.5">Mon / Wed / Fri · target 1 · 🔥 5-day streak · next: Wed</p>
+              </div>
+              <span class="size-9"></span>
+              <button class="size-9 rounded hover:bg-slate-100 text-slate-500 text-xl leading-none" aria-label="Habit options">⋮</button>
+            </div>
+          </li>
+
+          <!-- Habit card 5: in progress code review -->
+          <li class="bg-white rounded-lg shadow-sm p-4">
+            <div class="flex items-start gap-3">
+              <span class="size-2.5 rounded-full bg-slate-400 mt-2"></span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-semibold">Code review practice</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">Work</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">ACTIVE</span>
+                </div>
+                <p class="text-sm text-slate-500 mt-0.5 mb-2">Tue / Thu · target 2 · 🔥 2-day streak</p>
+                <div class="flex items-center gap-3">
+                  <div class="flex-1 max-w-xs h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div class="h-full bg-amber-400" style="width: 50%"></div>
+                  </div>
+                  <span class="text-sm font-medium text-slate-700">1/2</span>
+                </div>
+              </div>
+              <a href="#screen-multicount" class="size-9 rounded border border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-emerald-600 text-lg flex items-center justify-center">+</a>
+              <button class="size-9 rounded hover:bg-slate-100 text-slate-500 text-xl leading-none" aria-label="Habit options">⋮</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 3 — NEW / EDIT HABIT MODAL  (FE-US-07)
+============================================================ -->
+<section id="screen-habit-form" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">3 · New / Edit habit modal</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-07</code> · Brief: Core 1.1–1.4, Advanced 8.1, 8.2, 8.5 · Demo: §14 step 4, 5</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Form: name · category · frequency picker (Daily / Specific days with day chips) · target stepper · priority radio. <strong>Inline validation</strong> using Zod schema from FE-US-18; submit closes modal on success.</p>
+  </div>
+
+  <!-- Two side-by-side states: empty form (creating) and filled form with errors -->
+  <div class="grid lg:grid-cols-2 gap-6">
+    <!-- State A: filling out a new habit -->
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+      <div class="browser-chrome border-b border-slate-200 px-4 py-2 flex items-center justify-between">
+        <span class="text-xs text-slate-600 font-medium">State A — Filling in</span>
+        <span class="text-xs text-slate-400">/habits?new=1</span>
+      </div>
+      <!-- Faux backdrop -->
+      <div class="bg-slate-900/60 p-6 flex items-center justify-center min-h-[34rem]">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md">
+          <header class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="font-semibold text-lg">New habit</h3>
+            <button class="size-7 rounded hover:bg-slate-100 text-slate-500" aria-label="Close">×</button>
+          </header>
+          <form class="p-5 space-y-4">
+            <label class="block">
+              <span class="text-sm font-medium">Name</span>
+              <input type="text" value="Read 20 pages" class="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" />
+            </label>
+
+            <label class="block">
+              <span class="text-sm font-medium">Category</span>
+              <select class="mt-1 w-full border border-slate-300 rounded px-3 py-2 bg-white">
+                <option>Health</option><option selected>Study</option><option>Work</option><option>Mindfulness</option><option>Other</option>
+              </select>
+            </label>
+
+            <div>
+              <span class="text-sm font-medium">Frequency</span>
+              <div class="mt-1 inline-flex rounded-lg border border-slate-300 overflow-hidden">
+                <button type="button" class="px-4 py-2 bg-emerald-600 text-white text-sm">Daily</button>
+                <button type="button" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 text-sm">Specific days</button>
+              </div>
+            </div>
+
+            <label class="block">
+              <span class="text-sm font-medium">Target per day</span>
+              <div class="mt-1 inline-flex items-center border border-slate-300 rounded">
+                <button type="button" class="size-9 hover:bg-slate-100">−</button>
+                <input type="number" value="1" min="1" class="w-12 text-center border-x border-slate-300 py-1.5" />
+                <button type="button" class="size-9 hover:bg-slate-100">+</button>
+              </div>
+            </label>
+
+            <fieldset>
+              <legend class="text-sm font-medium">Priority</legend>
+              <div class="mt-2 flex gap-2">
+                <label class="flex-1"><input type="radio" name="prio-a" class="peer sr-only"><span class="block text-center px-3 py-2 border border-slate-300 rounded peer-checked:bg-rose-50 peer-checked:border-rose-500 peer-checked:text-rose-700 cursor-pointer text-sm">High</span></label>
+                <label class="flex-1"><input type="radio" name="prio-a" checked class="peer sr-only"><span class="block text-center px-3 py-2 border border-slate-300 rounded peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 cursor-pointer text-sm font-medium">Medium</span></label>
+                <label class="flex-1"><input type="radio" name="prio-a" class="peer sr-only"><span class="block text-center px-3 py-2 border border-slate-300 rounded peer-checked:bg-slate-100 peer-checked:border-slate-500 peer-checked:text-slate-700 cursor-pointer text-sm">Low</span></label>
+              </div>
+            </fieldset>
+
+            <footer class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" class="px-4 py-2 rounded text-slate-600 hover:bg-slate-100">Cancel</button>
+              <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium">Create</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- State B: validation errors AND specific-days selected -->
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+      <div class="browser-chrome border-b border-slate-200 px-4 py-2 flex items-center justify-between">
+        <span class="text-xs text-slate-600 font-medium">State B — Submitted with validation errors (Specific days selected)</span>
+        <span class="text-xs text-slate-400">Brief: A8.1, A8.2</span>
+      </div>
+      <div class="bg-slate-900/60 p-6 flex items-center justify-center min-h-[34rem]">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md">
+          <header class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="font-semibold text-lg">New habit</h3>
+            <button class="size-7 rounded hover:bg-slate-100 text-slate-500" aria-label="Close">×</button>
+          </header>
+          <form class="p-5 space-y-4">
+            <label class="block">
+              <span class="text-sm font-medium">Name <span class="text-rose-600">*</span></span>
+              <input type="text" value="" placeholder="e.g. Read 20 pages" aria-invalid="true" aria-describedby="err-name" class="mt-1 w-full border border-rose-400 rounded px-3 py-2 ring-2 ring-rose-100 outline-none" />
+              <p id="err-name" class="mt-1 text-sm text-rose-700">Name is required</p>
+            </label>
+
+            <label class="block">
+              <span class="text-sm font-medium">Category</span>
+              <select class="mt-1 w-full border border-slate-300 rounded px-3 py-2 bg-white">
+                <option>Health</option><option>Study</option><option selected>Work</option><option>Mindfulness</option><option>Other</option>
+              </select>
+            </label>
+
+            <div>
+              <span class="text-sm font-medium">Frequency</span>
+              <div class="mt-1 inline-flex rounded-lg border border-slate-300 overflow-hidden">
+                <button type="button" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 text-sm">Daily</button>
+                <button type="button" class="px-4 py-2 bg-emerald-600 text-white text-sm">Specific days</button>
+              </div>
+              <div class="mt-3" aria-describedby="err-days">
+                <p class="text-xs text-slate-500 mb-1.5">Choose at least one day</p>
+                <div class="flex gap-1.5 flex-wrap">
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Mon</button>
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Tue</button>
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Wed</button>
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Thu</button>
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Fri</button>
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Sat</button>
+                  <button type="button" class="px-3 py-1.5 rounded-full text-sm border border-rose-300 text-rose-600 bg-rose-50">Sun</button>
+                </div>
+                <p id="err-days" class="mt-1 text-sm text-rose-700">Choose at least one day</p>
+              </div>
+            </div>
+
+            <label class="block">
+              <span class="text-sm font-medium">Target per day</span>
+              <div class="mt-1 inline-flex items-center border border-rose-400 rounded ring-2 ring-rose-100">
+                <button type="button" class="size-9 hover:bg-slate-100">−</button>
+                <input type="number" value="0" class="w-12 text-center border-x border-rose-300 py-1.5" />
+                <button type="button" class="size-9 hover:bg-slate-100">+</button>
+              </div>
+              <p class="mt-1 text-sm text-rose-700">Target must be at least 1</p>
+            </label>
+
+            <fieldset>
+              <legend class="text-sm font-medium">Priority</legend>
+              <div class="mt-2 flex gap-2">
+                <label class="flex-1"><input type="radio" name="prio-b" class="peer sr-only"><span class="block text-center px-3 py-2 border border-slate-300 rounded peer-checked:bg-rose-50 peer-checked:border-rose-500 peer-checked:text-rose-700 cursor-pointer text-sm">High</span></label>
+                <label class="flex-1"><input type="radio" name="prio-b" class="peer sr-only"><span class="block text-center px-3 py-2 border border-slate-300 rounded peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 cursor-pointer text-sm">Medium</span></label>
+                <label class="flex-1"><input type="radio" name="prio-b" checked class="peer sr-only"><span class="block text-center px-3 py-2 border border-slate-300 rounded peer-checked:bg-slate-100 peer-checked:border-slate-500 peer-checked:text-slate-700 cursor-pointer text-sm font-medium">Low</span></label>
+              </div>
+            </fieldset>
+
+            <footer class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" class="px-4 py-2 rounded text-slate-600 hover:bg-slate-100">Cancel</button>
+              <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium">Create</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 4 — OVERFLOW MENU  (FE-US-08)
+============================================================ -->
+<section id="screen-overflow" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">4 · Habit overflow menu</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-08</code> · Brief: Core 1.5 · Demo: §14 step 11</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Three states (ACTIVE / PAUSED / ARCHIVED) → menu items differ per state, enforcing the status state-machine from <code>HabitsService.changeStatus</code>. Plus a destructive Delete confirm with cascade warning.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-6">
+    <div class="grid md:grid-cols-3 gap-4">
+      <!-- ACTIVE state -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">When ACTIVE</p>
+        <div class="relative bg-slate-50 rounded p-3 min-h-[14rem]">
+          <div class="bg-white rounded shadow-sm p-3 flex items-center gap-2">
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Drink 8 glasses of water</p>
+              <p class="text-xs text-slate-500">Daily · 5/8 today</p>
+            </div>
+            <button class="size-7 rounded bg-slate-100 text-slate-700 text-lg leading-none">⋮</button>
+          </div>
+          <div class="absolute right-6 top-16 bg-white rounded-lg shadow-2xl border border-slate-200 w-48 py-1.5 z-10">
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">⏸ Pause</button>
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">📦 Archive</button>
+            <hr class="my-1 border-slate-100">
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">✏️ Edit</button>
+            <button class="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50">🗑 Delete…</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAUSED state -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">When PAUSED</p>
+        <div class="relative bg-slate-50 rounded p-3 min-h-[14rem]">
+          <div class="bg-white rounded shadow-sm p-3 flex items-center gap-2">
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Read 20 pages</p>
+              <span class="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px]">PAUSED</span>
+            </div>
+            <button class="size-7 rounded bg-slate-100 text-slate-700 text-lg leading-none">⋮</button>
+          </div>
+          <div class="absolute right-6 top-16 bg-white rounded-lg shadow-2xl border border-slate-200 w-48 py-1.5 z-10">
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">▶️ Resume</button>
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">📦 Archive</button>
+            <hr class="my-1 border-slate-100">
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">✏️ Edit</button>
+            <button class="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50">🗑 Delete…</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCHIVED state -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">When ARCHIVED</p>
+        <div class="relative bg-slate-50 rounded p-3 min-h-[14rem]">
+          <div class="bg-white rounded shadow-sm p-3 flex items-center gap-2 opacity-60">
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Old experiment</p>
+              <span class="px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-600 text-[11px]">ARCHIVED</span>
+            </div>
+            <button class="size-7 rounded bg-slate-100 text-slate-700 text-lg leading-none">⋮</button>
+          </div>
+          <div class="absolute right-6 top-16 bg-white rounded-lg shadow-2xl border border-slate-200 w-48 py-1.5 z-10">
+            <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">↺ Restore (Active)</button>
+            <hr class="my-1 border-slate-100">
+            <button class="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50">🗑 Delete…</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete confirm dialog -->
+    <div class="mt-8">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Delete confirm dialog</p>
+      <div class="bg-slate-900/60 rounded-lg p-8 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md p-5">
+          <div class="flex items-start gap-3">
+            <div class="size-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0">🗑</div>
+            <div class="flex-1">
+              <h3 class="font-semibold">Delete "Drink 8 glasses of water"?</h3>
+              <p class="text-sm text-slate-600 mt-1">This will also delete <strong>87 check-ins</strong> and any goal you've set on this habit. This cannot be undone.</p>
+            </div>
+          </div>
+          <footer class="flex items-center justify-end gap-2 mt-5 pt-4 border-t border-slate-100">
+            <button class="px-4 py-2 rounded text-slate-600 hover:bg-slate-100">Cancel</button>
+            <button class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded font-medium">Delete habit</button>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 5 — QUICK CHECK-IN TOGGLE  (FE-US-09)
+============================================================ -->
+<section id="screen-quick-checkin" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">5 · Quick check-in toggle</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-09</code> · Brief: Core 2.2, 2.4 · Demo: §14 step 6</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Single-tap toggle on cards where <code>habit.targetPerDay === 1</code>. <strong>Optimistic UI</strong>: the card flips green immediately, then settles after the service write succeeds. <code>aria-pressed</code> reflects state for screen readers.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-6 grid md:grid-cols-3 gap-4">
+    <!-- State: not done -->
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Not done today</p>
+      <div class="bg-slate-50 rounded-lg p-4 min-h-[10rem]">
+        <div class="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3">
+          <span class="size-2.5 rounded-full bg-rose-500"></span>
+          <div class="flex-1 text-sm">
+            <p class="font-medium">Read 20 pages</p>
+            <p class="text-xs text-slate-500">Daily · 0/1 today</p>
+          </div>
+          <button aria-pressed="false" aria-label="Mark done today" class="size-9 rounded-full border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 transition"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- State: optimistic -->
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Mid-tap (optimistic)</p>
+      <div class="bg-slate-50 rounded-lg p-4 min-h-[10rem]">
+        <div class="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3 ring-2 ring-emerald-200">
+          <span class="size-2.5 rounded-full bg-rose-500"></span>
+          <div class="flex-1 text-sm">
+            <p class="font-medium">Read 20 pages</p>
+            <p class="text-xs text-emerald-600">Saving… optimistic 1/1</p>
+          </div>
+          <button aria-pressed="true" class="size-9 rounded-full bg-emerald-500 border-2 border-emerald-600 text-white text-lg flex items-center justify-center animate-pulse">✓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- State: done -->
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Done today</p>
+      <div class="bg-slate-50 rounded-lg p-4 min-h-[10rem]">
+        <div class="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3">
+          <span class="size-2.5 rounded-full bg-rose-500"></span>
+          <div class="flex-1 text-sm">
+            <p class="font-medium">Read 20 pages</p>
+            <p class="text-xs text-emerald-600">✓ done · 🔥 15-day streak</p>
+          </div>
+          <button aria-pressed="true" aria-label="Undo today's check-in" class="size-9 rounded-full bg-emerald-500 border-2 border-emerald-600 text-white text-lg flex items-center justify-center">✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 6 — MULTI-COUNT MODAL  (FE-US-10)
+============================================================ -->
+<section id="screen-multicount" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">6 · Multi-count check-in modal</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-10</code> · Brief: Core 2.2, Advanced 8.3 · Demo: §14 step 7, 9</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Slider snapping 0..target · running "X / Y" indicator · optional note (≤ 200 chars). Service-side guards (count ≤ target, not future, scheduled today) surface as toasts on submit.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl overflow-hidden">
+    <div class="bg-slate-900/60 p-8 flex items-center justify-center min-h-[28rem]">
+      <div class="bg-white rounded-lg shadow-2xl w-full max-w-md">
+        <header class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div>
+            <h3 class="font-semibold text-lg">Progress · Drink 8 glasses of water</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Tuesday, 9 June 2026 · target 8/day</p>
+          </div>
+          <button class="size-7 rounded hover:bg-slate-100 text-slate-500" aria-label="Close">×</button>
+        </header>
+
+        <div class="p-5 space-y-5">
+          <div>
+            <div class="flex items-baseline justify-between mb-2">
+              <span class="text-sm font-medium">Glasses today</span>
+              <span class="text-2xl font-bold tabular-nums">5 <span class="text-base text-slate-400 font-normal">/ 8</span></span>
+            </div>
+            <input type="range" min="0" max="8" step="1" value="5" class="w-full accent-emerald-600" aria-label="Glasses today" />
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span>
+            </div>
+            <div class="mt-3 h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-amber-400" style="width: 62.5%"></div>
+            </div>
+            <p class="text-xs text-amber-600 mt-1">In progress — 3 to go</p>
+          </div>
+
+          <label class="block">
+            <span class="text-sm font-medium">Note <span class="text-slate-400 font-normal">(optional)</span></span>
+            <textarea rows="3" maxlength="200" class="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none">Drank 5 by lunch — push for 8 before bed.</textarea>
+            <div class="text-right text-xs text-slate-400 mt-1">42 / 200</div>
+          </label>
+        </div>
+
+        <footer class="flex items-center justify-end gap-2 p-5 border-t border-slate-100">
+          <button class="px-4 py-2 rounded text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium">Save</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 7 — CHECK-INS BY DATE  (FE-US-11)
+============================================================ -->
+<section id="screen-checkins" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">7 · Check-ins grouped by date <span class="text-slate-400 text-base font-normal">(<code>/check-ins</code>)</span></h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-11</code> · Brief: Core 2.3, Advanced 8.7 · Demo: §14 step 8</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Native <code>&lt;input type="date" max=today&gt;</code> · per-habit row with status pill, count/target, completion bar. Habits not scheduled on the chosen date are excluded. Future dates blocked at the input level (Brief A8.4).</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl overflow-hidden">
+    <div class="browser-chrome border-b border-slate-200 px-4 py-2 flex items-center gap-2">
+      <div class="flex gap-1.5"><span class="size-3 rounded-full bg-rose-400"></span><span class="size-3 rounded-full bg-amber-400"></span><span class="size-3 rounded-full bg-emerald-400"></span></div>
+      <div class="ml-3 bg-white border border-slate-200 rounded px-3 py-1 text-xs text-slate-600 flex-1 max-w-md">localhost:5173/check-ins</div>
+    </div>
+
+    <header class="bg-white border-b border-slate-200">
+      <div class="max-w-5xl mx-auto p-4 flex items-center gap-6">
+        <h1 class="text-xl font-semibold">Habit Tracker Pro</h1>
+        <nav class="flex gap-2 ml-auto">
+          <a class="px-3 py-1.5 rounded hover:bg-slate-50">Habits</a>
+          <a class="px-3 py-1.5 rounded bg-slate-100 font-medium" aria-current="page">Check-ins</a>
+          <a class="px-3 py-1.5 rounded hover:bg-slate-50">Dashboard</a>
+        </nav>
+        <button class="px-3 py-1.5 rounded hover:bg-slate-50">⚙️ Settings</button>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6 bg-slate-50">
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="text-2xl font-bold">Check-ins</h2>
+        <div class="flex items-center gap-2 ml-auto">
+          <label class="text-sm text-slate-600">Date</label>
+          <input type="date" value="2026-06-09" max="2026-06-09" class="border border-slate-300 rounded px-2 py-1.5 text-sm" />
+        </div>
+      </div>
+
+      <ul class="bg-white rounded-lg shadow-sm divide-y divide-slate-100">
+        <li class="p-4 flex items-center gap-4">
+          <span class="size-2.5 rounded-full bg-rose-500"></span>
+          <div class="flex-1">
+            <p class="font-medium">Morning meditation</p>
+            <p class="text-xs text-slate-500">Mindfulness · Daily · target 1</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">COMPLETED</span>
+          <div class="w-32 flex items-center gap-2">
+            <div class="flex-1 h-1.5 rounded-full bg-slate-200 overflow-hidden"><div class="h-full bg-emerald-500" style="width:100%"></div></div>
+            <span class="text-sm font-medium tabular-nums">1/1</span>
+          </div>
+        </li>
+        <li class="p-4 flex items-center gap-4">
+          <span class="size-2.5 rounded-full bg-amber-400"></span>
+          <div class="flex-1">
+            <p class="font-medium">Drink 8 glasses of water</p>
+            <p class="text-xs text-slate-500">Health · Daily · target 8</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">IN PROGRESS</span>
+          <div class="w-32 flex items-center gap-2">
+            <div class="flex-1 h-1.5 rounded-full bg-slate-200 overflow-hidden"><div class="h-full bg-amber-400" style="width:62.5%"></div></div>
+            <span class="text-sm font-medium tabular-nums">5/8</span>
+          </div>
+        </li>
+        <li class="p-4 flex items-center gap-4">
+          <span class="size-2.5 rounded-full bg-amber-400"></span>
+          <div class="flex-1">
+            <p class="font-medium">Read 20 pages</p>
+            <p class="text-xs text-slate-500">Study · Daily · target 1</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 text-xs">NOT STARTED</span>
+          <div class="w-32 flex items-center gap-2">
+            <div class="flex-1 h-1.5 rounded-full bg-slate-200 overflow-hidden"></div>
+            <span class="text-sm font-medium tabular-nums">0/1</span>
+          </div>
+        </li>
+        <li class="p-4 flex items-center gap-4">
+          <span class="size-2.5 rounded-full bg-slate-400"></span>
+          <div class="flex-1">
+            <p class="font-medium">Code review practice</p>
+            <p class="text-xs text-slate-500">Work · Tue / Thu · target 2</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">IN PROGRESS</span>
+          <div class="w-32 flex items-center gap-2">
+            <div class="flex-1 h-1.5 rounded-full bg-slate-200 overflow-hidden"><div class="h-full bg-amber-400" style="width:50%"></div></div>
+            <span class="text-sm font-medium tabular-nums">1/2</span>
+          </div>
+        </li>
+      </ul>
+      <p class="text-xs text-slate-500 mt-2">"Workout" is hidden — not scheduled on Tuesdays.</p>
+    </main>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 8 — GOAL PANEL  (FE-US-12, FE-US-13)
+============================================================ -->
+<section id="screen-goal" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">8 · Goal panel</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-12</code>, <code>FE-US-13</code> · Brief: Core 3.1–3.4, Advanced 8.8 · Demo: §14 step 10</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Three states side-by-side: <strong>(A)</strong> no goal yet → "Set a goal" form, <strong>(B)</strong> active goal at 81 % (encouragement zone) with 80 %/100 % checkpoints visible, <strong>(C)</strong> achieved goal celebration.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-6 grid lg:grid-cols-3 gap-4">
+    <!-- A: empty -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">A — No goal set</p>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="size-10 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xl">🎯</div>
+          <div class="flex-1">
+            <h3 class="font-semibold">No goal set</h3>
+            <p class="text-sm text-slate-500">Set a stretch target to track your progress.</p>
+          </div>
+        </div>
+        <form class="space-y-3 border-t border-slate-100 pt-4">
+          <div>
+            <span class="text-sm font-medium">Target type</span>
+            <div class="mt-1 inline-flex rounded-lg border border-slate-300 overflow-hidden">
+              <button type="button" class="px-3 py-1.5 bg-emerald-600 text-white text-sm">Streak target</button>
+              <button type="button" class="px-3 py-1.5 bg-white text-slate-700 text-sm">Total completions</button>
+            </div>
+          </div>
+          <label class="block">
+            <span class="text-sm font-medium">Target value</span>
+            <div class="mt-1 inline-flex items-center border border-slate-300 rounded">
+              <button type="button" class="size-8 hover:bg-slate-100">−</button>
+              <input type="number" value="21" class="w-16 text-center border-x border-slate-300 py-1" />
+              <button type="button" class="size-8 hover:bg-slate-100">+</button>
+              <span class="px-2 text-sm text-slate-500">days</span>
+            </div>
+          </label>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium text-sm w-full">Set goal</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- B: active at 81% (encouragement zone) -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-3">B — Active · 81 % (encouragement)</p>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <div class="flex items-baseline justify-between mb-1">
+          <h3 class="font-semibold">Streak goal · Morning meditation</h3>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">ACTIVE</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-5">21-day streak · 4 days to go</p>
+
+        <!-- Progress bar with 80% and 100% ticks -->
+        <div class="relative h-3 rounded-full bg-slate-100 mb-2">
+          <div class="absolute inset-y-0 left-0 rounded-full bg-amber-400" style="width: 81%"></div>
+          <div class="absolute top-0 bottom-0 w-px bg-amber-700/40" style="left: 80%" title="80%"></div>
+          <div class="absolute top-0 bottom-0 w-px bg-emerald-700/40" style="left: 100%" title="100%"></div>
+        </div>
+        <div class="relative text-[11px] text-slate-500 h-4">
+          <span class="absolute left-[80%] -translate-x-1/2 top-0 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">80%</span>
+          <span class="absolute right-0 top-0 px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-medium">100%</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mt-6 text-center">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Current</p>
+            <p class="text-2xl font-bold">17</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Target</p>
+            <p class="text-2xl font-bold">21</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-slate-500">% Done</p>
+            <p class="text-2xl font-bold text-amber-600">81%</p>
+          </div>
+        </div>
+        <p class="text-sm text-amber-700 mt-3 italic">💪 Almost there — keep it up!</p>
+      </div>
+    </div>
+
+    <!-- C: achieved -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600 mb-3">C — 100 % achieved</p>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <div class="flex items-baseline justify-between mb-1">
+          <h3 class="font-semibold">Streak goal · Morning meditation</h3>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs">ACHIEVED</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-5">Achieved 13 June 2026</p>
+
+        <div class="relative h-3 rounded-full bg-slate-100 mb-2">
+          <div class="absolute inset-y-0 left-0 rounded-full bg-emerald-500" style="width: 100%"></div>
+        </div>
+        <div class="relative text-[11px] text-slate-500 h-4">
+          <span class="absolute left-[80%] -translate-x-1/2 top-0 px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-medium">80%</span>
+          <span class="absolute right-0 top-0 px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900 font-medium">100%</span>
+        </div>
+
+        <div class="mt-6 text-center">
+          <div class="text-5xl">🎯</div>
+          <p class="text-lg font-bold text-emerald-700 mt-1">Goal achieved!</p>
+          <p class="text-sm text-slate-600">21-day meditation streak completed.</p>
+          <button class="mt-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-medium">Set a new goal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 9 — SETTINGS DROPDOWN + RESET CONFIRM  (FE-US-16)
+============================================================ -->
+<section id="screen-reset" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">9 · Reset all data</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-16</code>, <code>FE-US-17</code> · Brief: Advanced 7 · Demo: §14 step 12</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Two states: <strong>(A)</strong> Settings dropdown surfaced from the top nav, <strong>(B)</strong> "type RESET to confirm" friction guard so demo-day muscle memory doesn't wipe data accidentally.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-6 grid lg:grid-cols-2 gap-4">
+    <!-- A: settings dropdown open -->
+    <div class="bg-slate-50 rounded-lg p-5 min-h-[24rem]">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">A — Settings dropdown</p>
+      <div class="bg-white border-b border-slate-200 rounded-t">
+        <div class="p-3 flex items-center gap-4">
+          <h1 class="text-base font-semibold">Habit Tracker Pro</h1>
+          <nav class="flex gap-1.5 ml-auto text-sm">
+            <a class="px-2.5 py-1 rounded hover:bg-slate-50">Habits</a>
+            <a class="px-2.5 py-1 rounded hover:bg-slate-50">Check-ins</a>
+            <a class="px-2.5 py-1 rounded hover:bg-slate-50">Dashboard</a>
+          </nav>
+          <button class="px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-sm">⚙️ Settings ▾</button>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="absolute right-3 top-1 bg-white rounded-lg shadow-2xl border border-slate-200 w-56 py-1.5 z-10">
+          <div class="px-4 py-1 text-xs uppercase tracking-wide text-slate-500">Data</div>
+          <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">📥 Export JSON</button>
+          <button class="w-full px-4 py-2 text-left text-sm hover:bg-slate-50">📤 Import JSON</button>
+          <hr class="my-1 border-slate-100">
+          <button class="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50">🗑 Reset all data…</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: confirm dialog -->
+    <div class="bg-slate-900/60 rounded-lg p-6 flex items-center justify-center min-h-[24rem]">
+      <div class="bg-white rounded-lg shadow-2xl w-full max-w-md p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="size-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl">⚠</div>
+          <div class="flex-1">
+            <h3 class="font-semibold">Reset all data?</h3>
+            <p class="text-sm text-slate-600 mt-1">This will permanently delete <strong>all habits, check-ins and goals</strong> and replace them with seed data. The app will reload on the dashboard.</p>
+          </div>
+        </div>
+
+        <label class="block">
+          <span class="text-sm font-medium">Type <code class="bg-slate-100 px-1 py-0.5 rounded text-rose-600">RESET</code> to confirm</span>
+          <input type="text" placeholder="RESET" class="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none" />
+        </label>
+
+        <footer class="flex items-center justify-end gap-2 mt-5 pt-4 border-t border-slate-100">
+          <button class="px-4 py-2 rounded text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button disabled class="px-4 py-2 bg-rose-300 text-white rounded font-medium cursor-not-allowed">Reset everything</button>
+        </footer>
+        <p class="text-[11px] text-slate-400 mt-2 text-right">Button enables when "RESET" is typed exactly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 10 — TOAST CATALOGUE  (FE-US-15, FE-US-13, validation)
+============================================================ -->
+<section id="screen-toasts" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">10 · Toast catalogue</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-15</code>, <code>FE-US-13</code> · Brief: Core 3.3, 3.4, Advanced 8.5</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Bottom-right portal. <code>role="status"</code> + <code>aria-live="polite"</code>. Auto-dismiss after 4 s · max 3 visible · newest pushes oldest. Six common variants — encouragement / achievement / error / success / info / system.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-8">
+    <p class="text-xs text-slate-500 mb-4">Each variant rendered in isolation for the design system.</p>
+    <div class="grid md:grid-cols-2 gap-4">
+
+      <!-- Encouragement (FE-US-13 — 80%) -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Encouragement (goal 80 %)</p>
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white bg-emerald-600 max-w-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">💪</span>
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Almost there — keep it up!</p>
+              <p class="text-emerald-100 text-xs mt-0.5">Morning meditation · 4 days to go</p>
+            </div>
+            <button class="text-emerald-100 hover:text-white text-lg leading-none">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Achievement (FE-US-13 — 100%) -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Achievement (goal 100 %)</p>
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white bg-emerald-700 max-w-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">🎯</span>
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Goal achieved!</p>
+              <p class="text-emerald-100 text-xs mt-0.5">21-day meditation streak · target reached</p>
+            </div>
+            <button class="text-emerald-100 hover:text-white text-lg leading-none">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error: future date -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Error · future date (Brief A8.4)</p>
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white bg-rose-600 max-w-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">⚠️</span>
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Future dates can't be checked in</p>
+              <p class="text-rose-100 text-xs mt-0.5"><code>ERR.CHECKIN.FUTURE_DATE</code></p>
+            </div>
+            <button class="text-rose-100 hover:text-white text-lg leading-none">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error: count exceeds target -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Error · count exceeds target (Brief A8.3)</p>
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white bg-rose-600 max-w-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">⚠️</span>
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Completed count cannot exceed daily target (8)</p>
+              <p class="text-rose-100 text-xs mt-0.5"><code>ERR.CHECKIN.COUNT_EXCEEDS_TARGET</code></p>
+            </div>
+            <button class="text-rose-100 hover:text-white text-lg leading-none">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success: habit created -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Success · habit created</p>
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white bg-emerald-600 max-w-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">✓</span>
+            <div class="flex-1 text-sm">
+              <p class="font-medium">Habit created</p>
+            </div>
+            <button class="text-emerald-100 hover:text-white text-lg leading-none">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info: data reset -->
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Info · data reset</p>
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white bg-slate-700 max-w-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">↺</span>
+            <div class="flex-1 text-sm">
+              <p class="font-medium">All data reset to seed</p>
+              <p class="text-slate-300 text-xs mt-0.5">5 habits · 14 days of check-ins · 1 active goal</p>
+            </div>
+            <button class="text-slate-300 hover:text-white text-lg leading-none">×</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stacked example -->
+    <div class="mt-8">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Stacked (max 3 visible — newest on bottom)</p>
+      <div class="bg-slate-50 rounded-lg p-6 relative min-h-[14rem]">
+        <span class="text-xs text-slate-400">Toasts portal · bottom-right of viewport</span>
+        <div class="absolute bottom-4 right-4 flex flex-col gap-2 w-72" role="status" aria-live="polite">
+          <div class="px-4 py-2 rounded shadow text-white bg-slate-700 text-sm">↺ All data reset to seed</div>
+          <div class="px-4 py-2 rounded shadow text-white bg-emerald-600 text-sm">✓ Habit created</div>
+          <div class="px-4 py-2 rounded shadow text-white bg-emerald-700 text-sm">🎯 Goal achieved!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 11 — EMPTY STATES  (FE-US-06, FE-US-11, FE-US-12, FE-US-15)
+============================================================ -->
+<section id="screen-empty" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">11 · Empty states</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-15</code> · Brief: Advanced 8.6, 8.7, 8.8</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">Every "nothing to show" path uses <code>&lt;EmptyState title icon? cta?&gt;</code>. Each variant has a unique icon, headline, helper copy, and a clear single CTA — never a dead-end screen.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-6 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+    <!-- Empty habits list -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Habits list — no habits yet</p>
+      <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+        <div class="text-5xl mb-3">🌱</div>
+        <h3 class="font-semibold">No habits yet</h3>
+        <p class="text-sm text-slate-500 mt-1">Build a routine — add your first habit to start tracking your progress.</p>
+        <button class="mt-5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium">+ Create your first habit</button>
+      </div>
+    </div>
+
+    <!-- Filtered to zero results -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Habits list — filters return zero</p>
+      <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+        <div class="text-5xl mb-3">🔍</div>
+        <h3 class="font-semibold">No habits match these filters</h3>
+        <p class="text-sm text-slate-500 mt-1">Try removing the Mindfulness + High priority combo.</p>
+        <button class="mt-5 px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded font-medium">Clear all filters</button>
+      </div>
+    </div>
+
+    <!-- Check-ins: nothing scheduled -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Check-ins — nothing scheduled this day</p>
+      <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+        <div class="text-5xl mb-3">🛌</div>
+        <h3 class="font-semibold">Nothing scheduled on Sunday</h3>
+        <p class="text-sm text-slate-500 mt-1">No habits run on this day. Pick another date or add a Daily habit.</p>
+        <a href="#screen-habits-list" class="mt-5 inline-block px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded font-medium">Go to habits</a>
+      </div>
+    </div>
+
+    <!-- Goal panel: no goal -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Goal panel — no goal set</p>
+      <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+        <div class="text-5xl mb-3">🎯</div>
+        <h3 class="font-semibold">No goal set</h3>
+        <p class="text-sm text-slate-500 mt-1">Set a streak or total-completions target to track stretch progress.</p>
+        <a href="#screen-goal" class="mt-5 inline-block px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium">Set a goal</a>
+      </div>
+    </div>
+
+    <!-- Dashboard: no habits -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Dashboard — zero active habits</p>
+      <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+        <div class="text-5xl mb-3">📊</div>
+        <h3 class="font-semibold">No habits yet — create one to see stats</h3>
+        <p class="text-sm text-slate-500 mt-1">Streaks, totals and your weekly rate will appear here once you start tracking.</p>
+        <a href="#screen-habit-form" class="mt-5 inline-block px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium">+ Create a habit</a>
+      </div>
+    </div>
+
+    <!-- 404 -->
+    <div class="bg-slate-50 rounded-lg p-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">404 — unknown route</p>
+      <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+        <div class="text-5xl mb-3">🛣</div>
+        <h3 class="font-semibold">Page not found</h3>
+        <p class="text-sm text-slate-500 mt-1">Looks like that path doesn't exist. Take me back to the dashboard.</p>
+        <a href="#screen-dashboard" class="mt-5 inline-block px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded font-medium">Back to dashboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 12 — VALIDATION / ERROR STATES  (FE-US-15, FE-US-18)
+============================================================ -->
+<section id="screen-errors" data-screen class="max-w-6xl mx-auto px-6 py-12">
+  <div class="annotation text-white p-5 rounded-t-lg">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl font-bold">12 · Validation &amp; error states</h2>
+      <div class="text-xs text-slate-300">PRPs: <code>FE-US-15</code>, <code>FE-US-18</code> · Brief: Advanced 8.1–8.5</div>
+    </div>
+    <p class="text-slate-300 text-sm mt-1">A8.1–A8.5 lifted into a single design surface. Inline form errors render <em>directly under</em> the offending field; service-level errors render as a toast (see Screen 10). The <code>&lt;ErrorState&gt;</code> shell is for catastrophic failures that abort the whole screen.</p>
+  </div>
+
+  <div class="bg-white rounded-b-lg shadow-xl p-6 space-y-6">
+    <!-- Inline form error patterns -->
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Inline field errors</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-lg p-5">
+          <label class="block">
+            <span class="text-sm font-medium">Habit name <span class="text-rose-600">*</span></span>
+            <input type="text" value="" aria-invalid="true" aria-describedby="e1" class="mt-1 w-full border border-rose-400 rounded px-3 py-2 ring-2 ring-rose-100 outline-none" />
+            <p id="e1" class="mt-1 text-sm text-rose-700">Name is required</p>
+          </label>
+          <p class="text-[11px] text-slate-500 mt-2">Brief A8.1 · ZodError → AppError("ERR.HABIT.NAME_REQUIRED")</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-5">
+          <label class="block">
+            <span class="text-sm font-medium">Target per day</span>
+            <input type="number" value="-3" aria-invalid="true" aria-describedby="e2" class="mt-1 w-full border border-rose-400 rounded px-3 py-2 ring-2 ring-rose-100 outline-none" />
+            <p id="e2" class="mt-1 text-sm text-rose-700">Target must be at least 1</p>
+          </label>
+          <p class="text-[11px] text-slate-500 mt-2">Brief A8.2 · ZodError → AppError("ERR.HABIT.TARGET_INVALID")</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-5">
+          <label class="block">
+            <span class="text-sm font-medium">Glasses today (target 8)</span>
+            <input type="number" value="9" aria-invalid="true" aria-describedby="e3" class="mt-1 w-full border border-rose-400 rounded px-3 py-2 ring-2 ring-rose-100 outline-none" />
+            <p id="e3" class="mt-1 text-sm text-rose-700">Completed count cannot exceed daily target</p>
+          </label>
+          <p class="text-[11px] text-slate-500 mt-2">Brief A8.3 · service guard → AppError("ERR.CHECKIN.COUNT_EXCEEDS_TARGET")</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-5">
+          <label class="block">
+            <span class="text-sm font-medium">Date</span>
+            <input type="date" value="2030-01-01" aria-invalid="true" aria-describedby="e4" class="mt-1 w-full border border-rose-400 rounded px-3 py-2 ring-2 ring-rose-100 outline-none" />
+            <p id="e4" class="mt-1 text-sm text-rose-700">Future dates can't be checked in</p>
+          </label>
+          <p class="text-[11px] text-slate-500 mt-2">Brief A8.4 · Zod refine → AppError("ERR.CHECKIN.FUTURE_DATE")</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Whole-screen <ErrorState> -->
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">&lt;ErrorState&gt; shell — catastrophic failure</p>
+      <div class="bg-slate-50 rounded-lg p-6">
+        <div class="bg-white rounded-lg shadow-sm py-12 px-6 text-center">
+          <div class="text-5xl mb-3">⚠️</div>
+          <h3 class="font-semibold text-rose-700">Couldn't load habits</h3>
+          <p class="text-sm text-slate-500 mt-1 max-w-md mx-auto">Browser storage is full. Free space and try again, or reset all data from Settings.</p>
+          <p class="text-[11px] text-slate-400 mt-2"><code>ERR.STORAGE.FULL</code></p>
+          <div class="mt-5 flex items-center justify-center gap-2">
+            <button class="px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded font-medium">Retry</button>
+            <a href="#screen-reset" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded font-medium">Open Reset…</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="max-w-6xl mx-auto px-6 py-12 text-center">
+  <p class="text-sm text-slate-500">Habit Tracker Pro — UI Mockups · v1.0 · 6 Jun 2026</p>
+  <p class="text-xs text-slate-400 mt-1">Source spec: <code>docs/BA-Requirements-Breakdown-Lean.md</code> · PRPs: <code>docs/prps/fe/FE-US-*.md</code></p>
+</footer>
+
+</body>
+</html>

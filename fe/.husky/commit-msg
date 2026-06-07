@@ -1,0 +1,2 @@
+cd fe
+node scripts/check-commit-msg.cjs "$1"

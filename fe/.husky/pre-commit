@@ -1,0 +1,4 @@
+cd fe
+npx lint-staged
+npm run lint
+npm run build

@@ -35,6 +35,13 @@ const NAV_LINKS = [
   { label: 'Dashboard', to: '/dashboard' },
 ]
 
+const COLOR_WHITE = 'common.white'
+const COLOR_TRANSPARENT_WHITE_80 = 'rgba(255, 255, 255, 0.8)'
+const COLOR_TRANSPARENT_WHITE_10 = 'rgba(255, 255, 255, 0.1)'
+
+const FOOTER_COPY_SYMBOL = '© '
+const FOOTER_COPY_TEXT = ' Habit Hub. All rights reserved.'
+
 export function MainLayout() {
   const navigate = useNavigate()
   const toast = useToast()
@@ -53,7 +60,14 @@ export function MainLayout() {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+      }}
+    >
       <AppBar
         position="sticky"
         elevation={0}
@@ -61,13 +75,13 @@ export function MainLayout() {
           bgcolor: 'primary.main',
           borderBottom: '1px solid',
           borderColor: 'primary.dark',
-          color: '#ffffff',
+          color: COLOR_WHITE,
         }}
       >
         <Toolbar sx={{ gap: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 3 }}>
-            <DashboardIcon sx={{ color: '#ffffff' }} />
-            <Typography sx={{ color: '#ffffff', fontWeight: 700, fontSize: 18 }}>
+            <DashboardIcon sx={{ color: COLOR_WHITE }} />
+            <Typography sx={{ color: COLOR_WHITE, fontWeight: 700, fontSize: 18 }}>
               {BRAND}
             </Typography>
           </Box>
@@ -79,11 +93,11 @@ export function MainLayout() {
                 component={NavLink}
                 to={to}
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.8)',
+                  color: COLOR_TRANSPARENT_WHITE_80,
                   textTransform: 'none',
                   '&.active': {
-                    color: '#ffffff',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    color: COLOR_WHITE,
+                    bgcolor: COLOR_TRANSPARENT_WHITE_10,
                     fontWeight: 700,
                   },
                 }}
@@ -93,7 +107,11 @@ export function MainLayout() {
             ))}
           </Box>
 
-          <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} size="small" sx={{ color: '#ffffff' }}>
+          <IconButton
+            onClick={(e) => setMenuAnchor(e.currentTarget)}
+            size="small"
+            sx={{ color: COLOR_WHITE }}
+          >
             <SettingsIcon fontSize="small" />
           </IconButton>
           <Menu
@@ -128,8 +146,10 @@ export function MainLayout() {
         }}
       >
         <Container maxWidth="sm">
-          <Typography variant="body2" align="center" sx={{ color: '#ffffff' }}>
-            © {currentYear} Habit Hub. All rights reserved.
+          <Typography variant="body2" align="center" sx={{ color: COLOR_WHITE }}>
+            {FOOTER_COPY_SYMBOL}
+            {currentYear}
+            {FOOTER_COPY_TEXT}
           </Typography>
         </Container>
       </Box>

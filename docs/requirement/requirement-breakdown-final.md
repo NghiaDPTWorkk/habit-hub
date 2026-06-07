@@ -828,21 +828,21 @@ gantt
  Reset (16) + UX polish + demo prep :b3, after b2, 1d
 ```
 
-### 13.2 Sprint table
+### 13.2 Same plan, as a table
 
-| Sprint | Days             | Stories shipped                                                     | Goal                                                                                     |
-| ------ | ---------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| 1      | Mon–Thu (4 days) | FE-US-01–05, FE-US-15, FE-US-17–21, FE-US-06–11                     | Habits CRUD + filter + check-in flow + grouped check-ins all working from a clean reset. |
-| 2      | Fri–Tue (4 days) | FE-US-22, FE-US-12, FE-US-13, FE-US-23, FE-US-14, FE-US-16 + polish | Goals + dashboard + reset + demo dry-run.                                                |
+| Day           | M1 (Shell)                        | M2 (Data)                        | M3 (Habits)                                         | M4 (Check-ins)                                     | M5 (Goals & Stats)          |
+| ------------- | --------------------------------- | -------------------------------- | --------------------------------------------------- | -------------------------------------------------- | --------------------------- |
+| **Day 1** Mon | 🟢 **FE-US-01** → **02** → **03** | 🟢 **FE-US-04**                  | ⏳ wait for 17, 18                                  | 🟢 **FE-US-20**                                    | 🟢 start **FE-US-15**       |
+| **Day 2** Tue | review PRs / pair-review          | 🟢 **FE-US-17**, **18**, **05**  | 🟢 **FE-US-19** habits svc                          | ⏳ wait for 19                                     | 🟢 finish **FE-US-15**      |
+| **Day 3** Wed | 🟢 **FE-US-16** reset UI          | 🎯 free-rover (bonus / reviewer) | 🟢 **FE-US-06** habit list (degraded mode until 23) | 🟢 **FE-US-21** check-ins svc                      | 🟢 **FE-US-22** goals svc   |
+| **Day 4** Thu | review / wait for 23              | 🎯 free-rover                    | 🟢 **FE-US-07** habit form                          | 🟢 **FE-US-09** quick check-in                     | 🟢 **FE-US-23** stats svc   |
+| **Day 5** Fri | 🟢 start **FE-US-14** dashboard   | 🎯 free-rover                    | 🟢 **FE-US-08** overflow menu                       | 🟢 **FE-US-10** multi-count + **FE-US-11** by-date | 🟢 **FE-US-12** goal panel  |
+| **Day 6** Mon | 🟢 finish **FE-US-14**            | help on demo / bonuses           | help reviewers                                      | wrap remaining                                     | 🟢 **FE-US-13** goal toasts |
+| **Day 7** Tue | 🎬 demo dry-run + polish          | 🎬                               | 🎬                                                  | 🎬                                                 | 🎬                          |
 
-### 13.3 Suggested 4-person split (single React codebase)
+> Day 1 is intense for M1 — three 1-pt stories (`01`, `02`, `03`) merge in sequence over the same working day. Each one is genuinely small (Vite scaffold, Tailwind config, router shell). If `01` slips past mid-day, escalate immediately: every other lane is blocked behind it.
 
-| Engineer          | Sprint 1 focus           | Sprint 2 focus                                       |
-| ----------------- | ------------------------ | ---------------------------------------------------- |
-| Eng-A (Tech lead) | FE-US-01, 04, 05, 17, 18 | FE-US-23 (StatsService), pair with Eng-D on FE-US-14 |
-| Eng-B             | FE-US-02, 03, 15, 19     | FE-US-22, FE-US-13                                   |
-| Eng-C             | FE-US-06, 07, 08, 20     | FE-US-12, FE-US-16                                   |
-| Eng-D             | FE-US-09, 10, 11, 21     | FE-US-14 (Dashboard), polish & demo prep             |
+Legend: 🟢 active build ⏳ blocked 🎯 free capacity (bonuses / reviewer) 🎬 demo prep
 
 > Pairing on FE-US-23 (StatsService) is **non-negotiable** — it's the single highest-risk story (Advanced #6 derived state).
 

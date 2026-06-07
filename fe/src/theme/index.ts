@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles'
+import type { Category, Priority } from '@/types'
 
 declare module '@mui/material/styles' {
   interface TypeBackground {
@@ -82,8 +83,11 @@ export const theme = createTheme({
   },
   components: {
     MuiButton: {
+      defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
+          textTransform: 'none',
+          fontWeight: 600,
           boxShadow: 'none',
           '&:hover': {
             boxShadow: 'none',
@@ -91,7 +95,60 @@ export const theme = createTheme({
         },
       },
     },
+    MuiCard: {
+      defaultProps: { elevation: 0, variant: 'outlined' },
+    },
+    MuiTextField: {
+      defaultProps: { size: 'small' },
+    },
+    MuiChip: {
+      styleOverrides: { root: { fontWeight: 600 } },
+    },
+    MuiAppBar: {
+      defaultProps: { elevation: 0 },
+      styleOverrides: {
+        root: {
+          backgroundColor: '#8c7ae6',
+          borderBottom: '1px solid #e2e8f0',
+          color: '#ffffff',
+        },
+      },
+    },
   },
 })
+
+export const CATEGORY_COLORS: Record<Category, string> = {
+  HEALTH: '#f43f5e',
+  STUDY: '#6366f1',
+  WORK: '#f59e0b',
+  MINDFULNESS: '#a78bfa',
+  OTHER: '#64748b',
+}
+
+export const CATEGORY_BG: Record<Category, string> = {
+  HEALTH: '#fff1f2',
+  STUDY: '#eef2ff',
+  WORK: '#fffbeb',
+  MINDFULNESS: '#f5f3ff',
+  OTHER: '#f8fafc',
+}
+
+export const PRIORITY_COLORS: Record<Priority, string> = {
+  HIGH: '#f43f5e',
+  MEDIUM: '#f59e0b',
+  LOW: '#64748b',
+}
+
+export const STATUS_COLORS = {
+  ACTIVE: '#10b981',
+  PAUSED: '#f59e0b',
+  ARCHIVED: '#94a3b8',
+}
+
+export const COMPLETION_COLORS = {
+  NOT_STARTED: '#94a3b8',
+  IN_PROGRESS: '#f59e0b',
+  COMPLETED: '#10b981',
+}
 
 export default theme

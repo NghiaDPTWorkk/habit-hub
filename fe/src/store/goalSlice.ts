@@ -4,32 +4,34 @@ import type { BoundStore } from './types'
 
 export interface GoalSlice {
   goals: Goal[]
-  addGoal: (goal: Omit<Goal, 'id'>) => void
-  updateGoal: (id: number, updates: Partial<Omit<Goal, 'id'>>) => void
-  deleteGoal: (id: number) => void
+  setGoals: (goals: Goal[]) => void
+  upsertGoal: (goal: Goal) => void
+  removeGoal: (id: string) => void
+  removeGoalForHabit: (habitId: string) => void
 }
 
 export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set) => ({
   goals: [],
 
-  addGoal: (goal) =>
-    set((state) => ({
-      goals: [
-        ...state.goals,
-        {
-          ...goal,
-          id: Date.now(),
-        },
-      ],
-    })),
+  setGoals: (goals) => set({ goals }),
 
-  updateGoal: (id, updates) =>
-    set((state) => ({
-      goals: state.goals.map((g) => (g.id === id ? { ...g, ...updates } : g)),
-    })),
+  upsertGoal: (goal) =>
+    set((state) => {
+      const exists = state.goals.some((g) => g.id === goal.id)
+      return {
+        goals: exists
+          ? state.goals.map((g) => (g.id === goal.id ? goal : g))
+          : [...state.goals, goal],
+      }
+    }),
 
-  deleteGoal: (id) =>
+  removeGoal: (id) =>
     set((state) => ({
       goals: state.goals.filter((g) => g.id !== id),
+    })),
+
+  removeGoalForHabit: (habitId) =>
+    set((state) => ({
+      goals: state.goals.filter((g) => g.habitId !== habitId),
     })),
 })

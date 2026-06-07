@@ -25,11 +25,13 @@ const theme = createTheme({
   },
 })
 
+const APP_NAME = 'Habit Hub'
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div>Habit Hub</div>
+      <div>{APP_NAME}</div>
     </ThemeProvider>
   </StrictMode>,
 )

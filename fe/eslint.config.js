@@ -5,6 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import prettierConfig from 'eslint-config-prettier'
+import reactPlugin from 'eslint-plugin-react'
+
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -63,6 +65,21 @@ export default defineConfig([
                 "Please use custom components from '@/components/ui' instead of importing directly from '@mui/material'.",
             },
           ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: {
+      react: reactPlugin,
+    },
+    rules: {
+      'react/jsx-no-literals': [
+        'error',
+        {
+          noStrings: true,
+          ignoreProps: true,
         },
       ],
     },

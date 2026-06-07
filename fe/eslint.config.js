@@ -30,6 +30,7 @@ export default defineConfig([
       'no-trailing-spaces': 'error',
       'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
       'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
+      'prefer-const': 'error',
     },
   },
   {

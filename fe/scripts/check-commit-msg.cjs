@@ -1,11 +1,17 @@
 const fs = require('fs')
 const path = require('path')
 
-const commitMsgFile = process.argv[2]
+let commitMsgFile = process.argv[2]
 if (!commitMsgFile) {
   console.error('Không tìm thấy file tin nhắn commit.')
   process.exit(1)
 }
+
+// Nếu đường dẫn là tương đối, chuyển đổi nó thành tương đối với thư mục gốc của repo (cha của fe/)
+if (!path.isAbsolute(commitMsgFile)) {
+  commitMsgFile = path.resolve(__dirname, '../../', commitMsgFile)
+}
+
 
 const commitMsg = fs.readFileSync(commitMsgFile, 'utf8').trim()
 

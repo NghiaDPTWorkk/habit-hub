@@ -6,6 +6,7 @@ import { createGoalSlice } from '@/store/goalSlice'
 import type { BoundStore } from './types'
 
 export const useBoundStore = create<BoundStore>()(
+  // selector pattern zustands
   persist(
     (...a) => ({
       ...createHabitSlice(...a),
@@ -17,4 +18,3 @@ export const useBoundStore = create<BoundStore>()(
     }
   )
 )
-

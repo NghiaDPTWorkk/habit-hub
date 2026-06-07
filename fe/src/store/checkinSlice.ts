@@ -2,7 +2,6 @@ import type { StateCreator } from 'zustand'
 import type { Checkin } from '@/types'
 import type { BoundStore } from './types'
 
-
 export interface CheckinSlice {
   checkins: Checkin[]
   addCheckin: (checkin: Omit<Checkin, 'id'>) => void
@@ -26,9 +25,7 @@ export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> 
 
   updateCheckin: (id, updates) =>
     set((state) => ({
-      checkins: state.checkins.map((c) =>
-        c.id === id ? { ...c, ...updates } : c
-      ),
+      checkins: state.checkins.map((c) => (c.id === id ? { ...c, ...updates } : c)),
     })),
 
   deleteCheckin: (id) =>

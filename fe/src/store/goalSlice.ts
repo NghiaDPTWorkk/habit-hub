@@ -2,7 +2,6 @@ import type { StateCreator } from 'zustand'
 import type { Goal } from '@/types'
 import type { BoundStore } from './types'
 
-
 export interface GoalSlice {
   goals: Goal[]
   addGoal: (goal: Omit<Goal, 'id'>) => void
@@ -26,9 +25,7 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
 
   updateGoal: (id, updates) =>
     set((state) => ({
-      goals: state.goals.map((g) =>
-        g.id === id ? { ...g, ...updates } : g
-      ),
+      goals: state.goals.map((g) => (g.id === id ? { ...g, ...updates } : g)),
     })),
 
   deleteGoal: (id) =>

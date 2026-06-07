@@ -52,7 +52,7 @@ export default defineConfig([
   },
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['**/src/components/ui/**'],
+    ignores: ['**/src/components/ui/**', '**/src/main.tsx'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -60,7 +60,6 @@ export default defineConfig([
           paths: [
             {
               name: '@mui/material',
-              importNames: ['Button', 'TextField', 'Input', 'Badge', 'Dialog', 'Select'],
               message:
                 "Please use custom components from '@/components/ui' instead of importing directly from '@mui/material'.",
             },

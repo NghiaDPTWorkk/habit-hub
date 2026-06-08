@@ -12,16 +12,19 @@ if (!path.isAbsolute(commitMsgFile)) {
   commitMsgFile = path.resolve(__dirname, '../../', commitMsgFile)
 }
 
-
 const commitMsg = fs.readFileSync(commitMsgFile, 'utf8').trim()
 
 // Bỏ qua kiểm tra đối với các commit tự động (Merge, Revert)
-if (commitMsg.startsWith('Merge ') || commitMsg.startsWith('Revert ') || commitMsg.startsWith('merge ')) {
+if (
+  commitMsg.startsWith('Merge ') ||
+  commitMsg.startsWith('Revert ') ||
+  commitMsg.startsWith('merge ')
+) {
   process.exit(0)
 }
 
-// Kiểm tra độ dài tối đa (tối đa 100 ký tự)
-const MAX_LENGTH = 100
+// Kiểm tra độ dài tối đa (tối đa 75 ký tự)
+const MAX_LENGTH = 75
 if (commitMsg.length > MAX_LENGTH) {
   console.error(`\n[LỖI ĐỘ DÀI COMMIT] Tin nhắn commit quá dài (${commitMsg.length} ký tự)!`)
   console.error(`Độ dài tối đa cho phép là ${MAX_LENGTH} ký tự.`)
@@ -33,7 +36,8 @@ if (commitMsg.length > MAX_LENGTH) {
 const featFixRegex = /^(feat|fix)(\([a-z0-9\-]+\))?: HH-\d+ - [a-z0-9\s\-\.\,\'\(\)\[\]\/_#]+$/
 
 // 2. Đối với docs, chore, style, refactor, test, ci: ID Task là tùy chọn (optional) nhưng vẫn bắt buộc viết thường
-const otherRegex = /^(docs|chore|style|refactor|perf|test|ci)(\([a-z0-9\-]+\))?: (HH-\d+ - )?[a-z0-9\s\-\.\,\'\(\)\[\]\/_#]+$/
+const otherRegex =
+  /^(docs|chore|style|refactor|perf|test|ci)(\([a-z0-9\-]+\))?: (HH-\d+ - )?[a-z0-9\s\-\.\,\'\(\)\[\]\/_#]+$/
 
 const isValid = featFixRegex.test(commitMsg) || otherRegex.test(commitMsg)
 
@@ -41,13 +45,19 @@ if (!isValid) {
   console.error('\n[LỖI ĐỊNH DẠNG COMMIT] Tin nhắn commit không hợp lệ!')
   console.error('Nội dung bạn đã gõ: "' + commitMsg + '"')
   console.error('\nYêu cầu tuân thủ đúng quy tắc:')
-  console.error('1. Với feat/fix: <type>(scope): HH-[Id_Task] - <nội dung bằng tiếng Anh, viết thường>')
+  console.error(
+    '1. Với feat/fix: <type>(scope): HH-[Id_Task] - <nội dung bằng tiếng Anh, viết thường>'
+  )
   console.error('   Ví dụ: feat(auth): HH-12 - add google login api.')
   console.error('   Ví dụ: fix(ui): HH-45 - resolve overflow button on mobile\n')
-  console.error('2. Với docs/chore/other: <type>: <nội dung viết thường> hoặc có thêm scope & Task ID')
+  console.error(
+    '2. Với docs/chore/other: <type>: <nội dung viết thường> hoặc có thêm scope & Task ID'
+  )
   console.error('   Ví dụ: docs: update setup instruction in readme')
   console.error('   Ví dụ: chore(deps): HH-1 - install material ui\n')
-  console.error('Lưu ý: Nội dung mô tả commit phải viết THƯỜNG hoàn toàn (không viết hoa chữ cái đầu).\n')
+  console.error(
+    'Lưu ý: Nội dung mô tả commit phải viết THƯỜNG hoàn toàn (không viết hoa chữ cái đầu).\n'
+  )
   process.exit(1)
 }
 

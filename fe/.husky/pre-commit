@@ -1,4 +1,5 @@
 cd fe
+node scripts/check-branch-name.cjs
 npx lint-staged
 npm run lint
 npm run build

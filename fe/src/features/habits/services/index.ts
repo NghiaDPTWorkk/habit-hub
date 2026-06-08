@@ -1,1 +1,1 @@
-export {}
+export * as ScheduleService from './ScheduleService'

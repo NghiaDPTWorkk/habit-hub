@@ -1,8 +1,19 @@
-export type TargetType = 'Streak' | 'Total'
+export type GoalTargetType = 'streak' | 'total_completions'
+export type GoalStatus = 'active' | 'completed' | 'paused'
 
 export interface Goal {
-  id: number
-  habitId: number
-  targetType: TargetType
+  id: string
+  habitId: string
+  targetType: GoalTargetType
   targetValue: number
+  status: GoalStatus
+  createdAt: string
+}
+
+export interface GoalProgress {
+  goalId: string
+  currentValue: number
+  percentage: number
+  isAt80Percent: boolean
+  isCompleted: boolean
 }

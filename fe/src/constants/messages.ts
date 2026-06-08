@@ -13,4 +13,10 @@ export const SHARED_MESSAGES = {
     FUTURE_DATE: 'Cannot check-in for a future date!',
     TARGET_EXCEEDED: 'Completed count cannot exceed the daily target!',
   },
+  GOALS: {
+    AT_80_PERCENT: 'Great progress! You are 80% toward your goal!',
+    COMPLETED: 'Congratulations! You have completed your goal!',
+    VALIDATION_ALL_REQUIRED: 'All fields are required',
+    VALIDATION_TARGET_POSITIVE: 'Target value must be greater than 0',
+  },
 }

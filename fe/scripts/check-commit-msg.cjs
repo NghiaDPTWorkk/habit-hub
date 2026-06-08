@@ -20,6 +20,14 @@ if (commitMsg.startsWith('Merge ') || commitMsg.startsWith('Revert ') || commitM
   process.exit(0)
 }
 
+// Kiểm tra độ dài tối đa (tối đa 100 ký tự)
+const MAX_LENGTH = 100
+if (commitMsg.length > MAX_LENGTH) {
+  console.error(`\n[LỖI ĐỘ DÀI COMMIT] Tin nhắn commit quá dài (${commitMsg.length} ký tự)!`)
+  console.error(`Độ dài tối đa cho phép là ${MAX_LENGTH} ký tự.`)
+  process.exit(1)
+}
+
 // Regex kiểm tra định dạng
 // 1. Đối với feat và fix: BẮT BUỘC phải có ID Task dạng HH-[số] và viết thường
 const featFixRegex = /^(feat|fix)(\([a-z0-9\-]+\))?: HH-\d+ - [a-z0-9\s\-\.\,\'\(\)\[\]\/_#]+$/

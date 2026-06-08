@@ -22,10 +22,10 @@ if (commitMsg.startsWith('Merge ') || commitMsg.startsWith('Revert ') || commitM
 
 // Regex kiểm tra định dạng
 // 1. Đối với feat và fix: BẮT BUỘC phải có ID Task dạng HH-[số] và viết thường
-const featFixRegex = /^(feat|fix)(\([a-z0-9\-]+\))?: HH-\d+ - [a-z0-9\s\-\.\,\'\(\)\[\]\/_]+$/
+const featFixRegex = /^(feat|fix)(\([a-z0-9\-]+\))?: HH-\d+ - [a-z0-9\s\-\.\,\'\(\)\[\]\/_#]+$/
 
 // 2. Đối với docs, chore, style, refactor, test, ci: ID Task là tùy chọn (optional) nhưng vẫn bắt buộc viết thường
-const otherRegex = /^(docs|chore|style|refactor|perf|test|ci)(\([a-z0-9\-]+\))?: (HH-\d+ - )?[a-z0-9\s\-\.\,\'\(\)\[\]\/_]+$/
+const otherRegex = /^(docs|chore|style|refactor|perf|test|ci)(\([a-z0-9\-]+\))?: (HH-\d+ - )?[a-z0-9\s\-\.\,\'\(\)\[\]\/_#]+$/
 
 const isValid = featFixRegex.test(commitMsg) || otherRegex.test(commitMsg)
 

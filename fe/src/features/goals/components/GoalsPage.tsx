@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Stack, Typography, Box } from '@/components/ui'
 import { GoalForm } from './GoalForm'
 import { GoalPanel } from './GoalPanel'
 import { GOALS_CONTENT } from '../constants/content'
+import { MOCK_HABITS, MOCK_GOALS, MOCK_CHECKINS } from '../constants/mockData'
+import { useBoundStore } from '@/store/useBoundStore'
 import type { Goal } from '@/types'
 
 const PAGE_TITLE = GOALS_CONTENT.PAGE_TITLE
@@ -11,6 +13,16 @@ const FORM_SECTION_TITLE = GOALS_CONTENT.FORM_TITLE_ADD
 
 export const GoalsPage: React.FC = () => {
   const [editingGoal, setEditingGoal] = useState<Goal | undefined>()
+  const { addHabit, addGoal, addCheckin, habits } = useBoundStore()
+
+  useEffect(() => {
+    // Initialize with mock data if no habits exist
+    if (habits.length === 0) {
+      MOCK_HABITS.forEach((habit) => addHabit(habit))
+      MOCK_GOALS.forEach((goal) => addGoal(goal))
+      MOCK_CHECKINS.forEach((checkin) => addCheckin(checkin))
+    }
+  }, [habits.length, addHabit, addGoal, addCheckin])
 
   const handleEditGoal = (goal: Goal): void => {
     setEditingGoal(goal)

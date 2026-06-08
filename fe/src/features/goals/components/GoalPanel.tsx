@@ -67,7 +67,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   }
 
   const getHabitName = (habitId: string): string => {
-    return habits.find((h) => String(h.id) === String(habitId))?.name || 'Unknown Habit'
+    return habits.find((h) => String(h.id) === habitId)?.name || 'Unknown Habit'
   }
 
   const getTargetLabel = (goal: Goal): string => {
@@ -99,12 +99,12 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
           const targetLabel = getTargetLabel(goal)
 
           return (
-            <Card key={goal.id} sx={{ p: 2 }}>
-              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'flex-start' }}>
-                <Box sx={{ flex: { xs: 1, sm: '0 0 66.666667%' } }}>
-                  <Stack spacing={1.5}>
+            <Card key={goal.id} sx={{ p: 3, borderRadius: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Stack spacing={2}>
                     <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
                         {habitName}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -113,15 +113,17 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                         {goal.targetValue}
                       </Typography>
                     </Box>
-                    <ProgressBar value={progress.percentage} status={progressStatus} />
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                      {progress.currentValue}
-                      {DATE_SEPARATOR}
-                      {goal.targetValue}
-                    </Typography>
+                    <Box>
+                      <ProgressBar value={progress.percentage} status={progressStatus} />
+                      <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
+                        {progress.currentValue}
+                        {DATE_SEPARATOR}
+                        {goal.targetValue}
+                      </Typography>
+                    </Box>
                   </Stack>
                 </Box>
-                <Box sx={{ flex: { xs: 1, sm: '0 0 33.333333%' }, display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' }, gap: 1 }}>
+                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
                   <IconButton
                     size="small"
                     onClick={() => onEditGoal?.(goal)}

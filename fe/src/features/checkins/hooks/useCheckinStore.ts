@@ -52,14 +52,29 @@ export function useCheckinStore() {
 
   const upsertCheckin = useCallback(
     (habitId: number, date: string, updates: Partial<Omit<Checkin, 'id' | 'habitId' | 'date'>>) => {
+      if (date > getLocalDateString()) return
+
+      let safeUpdates = updates
+      if (updates.completedCount !== undefined) {
+        const habit = habits.find((h) => h.id === habitId)
+        if (habit) {
+          const capped = Math.min(Math.max(updates.completedCount, 0), habit.targetPerDay)
+          safeUpdates = {
+            ...updates,
+            completedCount: capped,
+            status: computeStatus(capped, habit.targetPerDay),
+          }
+        }
+      }
+
       const existing = getCheckinByHabitAndDate(habitId, date)
       if (existing) {
-        updateCheckin(existing.id, updates)
+        updateCheckin(existing.id, safeUpdates)
       } else {
-        addCheckin({ habitId, date, completedCount: 0, status: 'Not Started', ...updates })
+        addCheckin({ habitId, date, completedCount: 0, status: 'Not Started', ...safeUpdates })
       }
     },
-    [getCheckinByHabitAndDate, addCheckin, updateCheckin]
+    [habits, getCheckinByHabitAndDate, addCheckin, updateCheckin]
   )
 
   const markComplete = useCallback(
@@ -100,6 +115,7 @@ export function useCheckinStore() {
   )
 
   return {
+    today,
     checkins,
     todayCheckins,
     checkinsByDate,

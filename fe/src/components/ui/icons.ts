@@ -11,6 +11,10 @@ import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import LockIcon from '@mui/icons-material/Lock'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import WhatshotIcon from '@mui/icons-material/Whatshot'
 
 export const Icons = {
   Add: AddIcon,
@@ -26,4 +30,8 @@ export const Icons = {
   Logout: LogoutIcon,
   Person: PersonIcon,
   Lock: LockIcon,
+  TrendingUp: TrendingUpIcon,
+  WarningAmber: WarningAmberIcon,
+  EmojiEvents: EmojiEventsIcon,
+  Whatshot: WhatshotIcon,
 }

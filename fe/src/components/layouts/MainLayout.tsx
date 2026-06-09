@@ -13,7 +13,8 @@ import {
 import { APP_CONSTANTS } from '@/constants'
 import { useBoundStore } from '@/store'
 import { Icons } from '@/components/ui/icons'
-import logoImg from '@/assets/logo.png'
+import logo1Img from '@/assets/logo1.png'
+import logo2Img from '@/assets/logo2.png'
 
 const USER_INITIAL = 'U'
 
@@ -55,14 +56,21 @@ export const MainLayout: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               flexGrow: 1,
+              gap: 1.5,
               textDecoration: 'none',
             }}
           >
             <Box
               component="img"
-              src={logoImg}
-              alt="Logo"
-              sx={{ height: 56, width: 'auto', objectFit: 'contain' }}
+              src={logo1Img}
+              alt="Logo 1"
+              sx={{ height: 48, width: 'auto', objectFit: 'contain' }}
+            />
+            <Box
+              component="img"
+              src={logo2Img}
+              alt="Logo 2"
+              sx={{ height: 48, width: 'auto', objectFit: 'contain' }}
             />
           </Box>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>

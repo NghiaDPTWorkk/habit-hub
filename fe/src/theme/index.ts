@@ -11,51 +11,51 @@ export const getTheme = (mode: 'light' | 'dark') =>
     palette: {
       mode,
       primary: {
-        main: '#059669',
-        light: mode === 'light' ? '#ECFDF5' : 'rgba(5, 150, 105, 0.12)',
-        dark: '#047857',
+        main: mode === 'light' ? '#1f883d' : '#238636',
+        light: mode === 'light' ? '#dafbe1' : 'rgba(35, 134, 54, 0.15)',
+        dark: mode === 'light' ? '#1a7f37' : '#2ea44f',
         contrastText: '#ffffff',
       },
       secondary: {
-        main: '#7C3AED',
-        light: mode === 'light' ? '#F5F3FF' : 'rgba(124, 58, 237, 0.12)',
-        dark: '#6D28D9',
+        main: mode === 'light' ? '#8250df' : '#8957e5',
+        light: mode === 'light' ? '#f5f0ff' : 'rgba(137, 87, 229, 0.15)',
+        dark: mode === 'light' ? '#6639b6' : '#a371f7',
         contrastText: '#ffffff',
       },
       error: {
-        main: '#E11D48',
-        light: mode === 'light' ? '#FFF1F2' : 'rgba(225, 29, 72, 0.12)',
-        dark: '#BE123C',
+        main: mode === 'light' ? '#cf222e' : '#f85149',
+        light: mode === 'light' ? '#ffebe9' : 'rgba(248, 81, 73, 0.15)',
+        dark: mode === 'light' ? '#a0111f' : '#da3633',
         contrastText: '#ffffff',
       },
       warning: {
-        main: '#D97706',
-        light: mode === 'light' ? '#FEF3C7' : 'rgba(217, 119, 6, 0.12)',
-        dark: '#92400E',
+        main: mode === 'light' ? '#9a6700' : '#d29922',
+        light: mode === 'light' ? '#fff8c5' : 'rgba(210, 153, 34, 0.15)',
+        dark: mode === 'light' ? '#704c00' : '#9e6a00',
         contrastText: '#ffffff',
       },
       success: {
-        main: '#059669',
-        light: mode === 'light' ? '#ECFDF5' : 'rgba(5, 150, 105, 0.12)',
-        dark: '#047857',
+        main: mode === 'light' ? '#1f883d' : '#238636',
+        light: mode === 'light' ? '#dafbe1' : 'rgba(35, 134, 54, 0.15)',
+        dark: mode === 'light' ? '#1a7f37' : '#2ea44f',
         contrastText: '#ffffff',
       },
       info: {
-        main: '#2563EB',
-        light: mode === 'light' ? '#EFF6FF' : 'rgba(37, 99, 235, 0.12)',
-        dark: '#1D4ED8',
+        main: mode === 'light' ? '#0969da' : '#2f81f7',
+        light: mode === 'light' ? '#ddf4ff' : 'rgba(47, 129, 247, 0.15)',
+        dark: mode === 'light' ? '#0550ae' : '#58a6ff',
         contrastText: '#ffffff',
       },
       background: {
-        default: mode === 'light' ? '#F8FAFC' : '#0F172A',
-        paper: mode === 'light' ? '#FFFFFF' : '#1E293B',
-        dark: '#0F172A',
+        default: mode === 'light' ? '#f6f8fa' : '#0d1117',
+        paper: mode === 'light' ? '#ffffff' : '#161b22',
+        dark: '#0d1117',
       },
       text: {
-        primary: mode === 'light' ? '#1E293B' : '#F8FAFC',
-        secondary: mode === 'light' ? '#64748B' : '#94A3B8',
+        primary: mode === 'light' ? '#1f2328' : '#e6edf3',
+        secondary: mode === 'light' ? '#656d76' : '#7d8590',
       },
-      divider: mode === 'light' ? '#e2e8f0' : '#334155',
+      divider: mode === 'light' ? '#d0d7de' : '#30363d',
     },
     typography: {
       fontFamily: [
@@ -95,51 +95,51 @@ export const getTheme = (mode: 'light' | 'dark') =>
         variants: [
           {
             props: { variant: 'contained', color: 'primary' },
-            style: {
+            style: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#10B981',
+                backgroundColor: theme.palette.primary.dark,
               },
-            },
+            }),
           },
           {
             props: { variant: 'contained', color: 'secondary' },
-            style: {
+            style: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#8B5CF6',
+                backgroundColor: theme.palette.secondary.dark,
               },
-            },
+            }),
           },
           {
             props: { variant: 'contained', color: 'success' },
-            style: {
+            style: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#10B981',
+                backgroundColor: theme.palette.success.dark,
               },
-            },
+            }),
           },
           {
             props: { variant: 'contained', color: 'error' },
-            style: {
+            style: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#F43F5E',
+                backgroundColor: theme.palette.error.dark,
               },
-            },
+            }),
           },
           {
             props: { variant: 'contained', color: 'warning' },
-            style: {
+            style: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#F59E0B',
+                backgroundColor: theme.palette.warning.dark,
               },
-            },
+            }),
           },
           {
             props: { variant: 'contained', color: 'info' },
-            style: {
+            style: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#3B82F6',
+                backgroundColor: theme.palette.info.dark,
               },
-            },
+            }),
           },
         ],
       },

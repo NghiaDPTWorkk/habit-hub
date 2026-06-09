@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom'
+import { alpha } from '@mui/material/styles'
 import {
   AppBar,
   Toolbar,
@@ -16,7 +17,11 @@ import { Icons } from '@/components/ui/icons'
 import logo3Img from '@/assets/logo3.png'
 
 const USER_INITIAL = 'U'
-const BRAND_NAME = 'TraceX'
+const BRAND_FIRST_PART = 'Trace'
+const BRAND_SECOND_PART = 'X'
+const BRAND_FONT_SIZE = '1.35rem'
+const BRAND_LETTER_SPACING = '-0.03em'
+const BRAND_X_COLOR = '#10B981'
 
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -56,18 +61,53 @@ export const MainLayout: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               flexGrow: 1,
-              gap: 1.5,
+              gap: 0.75,
               textDecoration: 'none',
             }}
           >
             <Box
-              component="img"
-              src={logo3Img}
-              alt="Logo"
-              sx={{ height: 36, width: 'auto', objectFit: 'contain' }}
-            />
-            <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
-              {BRAND_NAME}
+              sx={(theme) => ({
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 36,
+                width: 36,
+                borderRadius: 1.25,
+                bgcolor: theme.palette.grey[900],
+                border: '1px solid',
+                borderColor: alpha(theme.palette.primary.main, 0.35),
+                boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.15)}`,
+                p: 0.75,
+              })}
+            >
+              <Box
+                component="img"
+                src={logo3Img}
+                alt="Logo"
+                sx={{ height: '100%', width: '100%', objectFit: 'contain' }}
+              />
+            </Box>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                fontSize: BRAND_FONT_SIZE,
+                letterSpacing: BRAND_LETTER_SPACING,
+                color: 'text.primary',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              {BRAND_FIRST_PART}
+              <Box
+                component="span"
+                sx={{
+                  color: BRAND_X_COLOR,
+                  fontWeight: 900,
+                }}
+              >
+                {BRAND_SECOND_PART}
+              </Box>
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>

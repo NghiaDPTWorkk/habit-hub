@@ -11,6 +11,8 @@ import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import LockIcon from '@mui/icons-material/Lock'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
 
 export const Icons = {
   Add: AddIcon,
@@ -26,4 +28,6 @@ export const Icons = {
   Logout: LogoutIcon,
   Person: PersonIcon,
   Lock: LockIcon,
+  LightMode: LightModeIcon,
+  DarkMode: DarkModeIcon,
 }

@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import { Box, Typography } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
+import { Icons } from '@/components/ui/icons'
 import { useBoundStore } from '@/store/useBoundStore'
-import { HabitForm, type HabitFormState } from './HabitForm'
+import { useHabitStore } from '@/features/habits/hooks'
+import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
 import { FilterSideBar } from './FilterSideBar'
 import type { HabitFilters } from './FilterSideBar'
@@ -11,15 +13,13 @@ import type { Habit } from '@/types'
 
 const PAGE_TITLE = 'Habits'
 const PAGE_DESC = 'Build and manage all the habits you want to track.'
+const ADD_HABIT_LABEL = 'Add Habit'
 
-const initialFormState: HabitFormState = {
-  name: '',
-  category: 'Health',
-  frequency: 'Daily',
-  specificDays: null,
-  targetPerDay: 1,
-  priority: 'Medium',
-  status: 'Active',
+const DEFAULT_FILTERS: HabitFilters = {
+  category: 'All',
+  frequency: 'All',
+  priority: 'All',
+  status: 'All',
 }
 
 const todayString = new Date().toISOString().split('T')[0]
@@ -33,22 +33,13 @@ const isDueToday = (habit: Habit) => {
 }
 
 export const HabitsPage: React.FC = () => {
-  const habits = useBoundStore((state) => state.habits)
+  const { habits, deleteHabit, pauseHabit, resumeHabit, archiveHabit } = useHabitStore()
   const checkins = useBoundStore((state) => state.checkins)
-  const addHabit = useBoundStore((state) => state.addHabit)
-  const updateHabit = useBoundStore((state) => state.updateHabit)
-  const deleteHabit = useBoundStore((state) => state.deleteHabit)
-
-  const DEFAULT_FILTERS: HabitFilters = {
-    category: 'All',
-    frequency: 'All',
-    priority: 'All',
-    status: 'All',
-  }
 
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
-  const [formState, setFormState] = useState<HabitFormState>(initialFormState)
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalKey, setModalKey] = useState(0)
+  const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined)
 
   const todayCheckinByHabit = useMemo(
     () =>
@@ -58,7 +49,7 @@ export const HabitsPage: React.FC = () => {
         }
         return acc
       }, {}),
-    [checkins]
+    [checkins],
   )
 
   const filteredHabits = useMemo(
@@ -78,65 +69,25 @@ export const HabitsPage: React.FC = () => {
         }
         return true
       }),
-    [habits, filters]
+    [habits, filters],
   )
 
-  const clearForm = () => {
-    setFormState(initialFormState)
-    setEditingId(null)
-  }
-
-  const handleSubmit = () => {
-    const payload = {
-      name: formState.name.trim(),
-      category: formState.category,
-      frequency: formState.frequency,
-      specificDays: formState.frequency === 'Daily' ? null : formState.specificDays || [],
-      targetPerDay: Number(formState.targetPerDay) || 1,
-      priority: formState.priority,
-      status: formState.status,
-    }
-
-    if (!payload.name) {
-      return
-    }
-
-    if (editingId !== null) {
-      updateHabit(editingId, payload)
-    } else {
-      addHabit(payload)
-    }
-
-    clearForm()
-  }
-
   const handleEdit = (habit: Habit) => {
-    setEditingId(habit.id)
-    setFormState({
-      name: habit.name,
-      category: habit.category,
-      frequency: habit.frequency,
-      specificDays: habit.specificDays ?? null,
-      targetPerDay: habit.targetPerDay,
-      priority: habit.priority,
-      status: habit.status,
-    })
+    setHabitToEdit(habit)
+    setModalKey((prev) => prev + 1)
+    setModalOpen(true)
   }
 
   const handlePauseResume = (habit: Habit) => {
     if (habit.status === 'Active') {
-      updateHabit(habit.id, { status: 'Paused' })
+      pauseHabit(habit.id)
       return
     }
-    if (habit.status === 'Paused') {
-      updateHabit(habit.id, { status: 'Active' })
-      return
-    }
-    updateHabit(habit.id, { status: 'Active' })
+    resumeHabit(habit.id)
   }
 
   const handleArchive = (habit: Habit) => {
-    updateHabit(habit.id, { status: 'Archived' })
+    archiveHabit(habit.id)
   }
 
   const isHabitMissed = (habit: Habit) => {
@@ -169,13 +120,17 @@ export const HabitsPage: React.FC = () => {
 
         <Box sx={{ display: 'grid', gap: 3 }}>
           <Card sx={{ p: 2 }}>
-            <HabitForm
-              formState={formState}
-              setFormState={setFormState}
-              editingId={editingId}
-              onSubmit={handleSubmit}
-              onReset={clearForm}
-            />
+            <Button
+              variant="contained"
+              startIcon={<Icons.Add />}
+              onClick={() => {
+                setHabitToEdit(undefined)
+                setModalKey((prev) => prev + 1)
+                setModalOpen(true)
+              }}
+            >
+              {ADD_HABIT_LABEL}
+            </Button>
           </Card>
 
           <Card sx={{ p: 2 }}>
@@ -191,6 +146,13 @@ export const HabitsPage: React.FC = () => {
           </Card>
         </Box>
       </Box>
+
+      <HabitFormModal
+        key={modalKey}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        habitToEdit={habitToEdit}
+      />
     </Box>
   )
 }

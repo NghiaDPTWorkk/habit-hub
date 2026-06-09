@@ -55,7 +55,6 @@ export const MainLayout: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               flexGrow: 1,
-              gap: 1.5,
               textDecoration: 'none',
             }}
           >
@@ -63,11 +62,8 @@ export const MainLayout: React.FC = () => {
               component="img"
               src={logoImg}
               alt="Logo"
-              sx={{ height: 48, width: 'auto', objectFit: 'contain' }}
+              sx={{ height: 56, width: 'auto', objectFit: 'contain' }}
             />
-            <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
-              {APP_CONSTANTS.TITLE}
-            </Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Button

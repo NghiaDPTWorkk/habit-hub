@@ -5,6 +5,9 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './routes'
 import { theme } from '@/theme'
+import { initStore } from '@/storage/initStore'
+
+initStore()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

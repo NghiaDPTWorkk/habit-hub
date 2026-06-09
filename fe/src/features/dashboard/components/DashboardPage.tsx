@@ -1,21 +1,7 @@
 import React from 'react'
-import {
-  Button,
-  Box,
-  StatusPill,
-  Typography,
-  ConfirmDialog,
-  ProgressBar,
-  Card,
-  TextField,
-  TextArea,
-  DropdownMenu,
-  StatCard,
-  ShareDialog,
-  MiniChart,
-  CalendarHeatmap,
-} from '@/components/ui'
+import { Button, Box, StatusPill, Typography, ConfirmDialog, ProgressBar, Card, TextField, TextArea, DropdownMenu, StatCard, ShareDialog, MiniChart, CalendarHeatmap, } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
+import { useBoundStore } from '@/store'
 
 const PAGE_TITLE = 'Dashboard Page'
 const PAGE_DESC = 'System overview dashboard.'
@@ -37,6 +23,7 @@ const SECTION_STATCARDS = 'Stat Cards:'
 const SECTION_SHARE = 'Share Dialog:'
 const SECTION_MINICHART = 'Weekly Progress Chart:'
 const SECTION_HEATMAP = 'Check-in Activity Grid:'
+const SECTION_TOAST = 'Toast Notifications:'
 const BTN_TRIGGER_DIALOG = 'Open Confirm Dialog'
 const DIALOG_TITLE = 'Delete Habit'
 const DIALOG_CONTENT = 'Are you sure you want to delete this habit? This action cannot be undone.'
@@ -80,12 +67,22 @@ const CHART_LABEL_WORK = 'Work & Study'
 const CHART_LABEL_MIND = 'Mindset & Reading'
 const CHART_COLOR_PRIMARY = 'primary'
 
+const BTN_TOAST_SUCCESS = 'Success Toast'
+const BTN_TOAST_ERROR = 'Error Toast'
+const BTN_TOAST_WARNING = 'Warning Toast'
+const BTN_TOAST_INFO = 'Info Toast'
+const TOAST_MSG_SUCCESS = 'goal created successfully!'
+const TOAST_MSG_ERROR = 'something went wrong!'
+const TOAST_MSG_WARNING = 'you are almost at the limit!'
+const TOAST_MSG_INFO = 'new update available.'
+
 export const DashboardPage: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
   const [isDialogLoading, setIsDialogLoading] = React.useState(false)
   const [isShareOpen, setIsShareOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
   const [textValue, setTextValue] = React.useState('')
+  const showToast = useBoundStore((s) => s.showToast)
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true)
@@ -164,23 +161,18 @@ export const DashboardPage: React.FC = () => {
         <Button variant="contained" color="primary">
           {BTN_PRIMARY}
         </Button>
-
         <Button variant="contained" color="secondary">
           {BTN_SECONDARY}
         </Button>
-
         <Button variant="contained" color="error">
           {BTN_ERROR}
         </Button>
-
         <Button variant="contained" color="warning">
           {BTN_WARNING}
         </Button>
-
         <Button variant="contained" color="success">
           {BTN_SUCCESS}
         </Button>
-
         <Button variant="contained" color="primary" loading>
           {BTN_LOADING}
         </Button>
@@ -304,6 +296,24 @@ export const DashboardPage: React.FC = () => {
       <Box>
         <Button variant="outlined" color="primary" onClick={handleOpenShare}>
           {BTN_OPEN_SHARE}
+        </Button>
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_TOAST}
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Button variant="contained" color="success" onClick={() => showToast(TOAST_MSG_SUCCESS, 'success')}>
+          {BTN_TOAST_SUCCESS}
+        </Button>
+        <Button variant="contained" color="error" onClick={() => showToast(TOAST_MSG_ERROR, 'error')}>
+          {BTN_TOAST_ERROR}
+        </Button>
+        <Button variant="contained" color="warning" onClick={() => showToast(TOAST_MSG_WARNING, 'warning')}>
+          {BTN_TOAST_WARNING}
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => showToast(TOAST_MSG_INFO, 'info')}>
+          {BTN_TOAST_INFO}
         </Button>
       </Box>
 

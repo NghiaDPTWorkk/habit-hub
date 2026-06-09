@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import dayjs, { type Dayjs } from 'dayjs'
 import { Box, Typography } from '@/components/ui'
 import { DatePicker } from '@/components/ui'
 import { pxToRem } from '@/utils'
+import { useBoundStore } from '@/store'
+import { useCheckinStore } from '../hooks'
 import { CHECKIN_CONTENT } from '../constants'
-import { MOCK_HISTORY } from '../mock'
 import { CheckinHistoryCard } from './CheckinHistoryCard'
 
 const VARIANT_H5 = 'h5'
@@ -16,9 +17,28 @@ const EMPTY_MESSAGE = 'No data found for this date'
 
 export const CheckinsPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs())
+  const { checkinsByDate } = useCheckinStore()
+  const habits = useBoundStore((state) => state.habits)
 
   const dateStr = selectedDate?.format('YYYY-MM-DD') ?? ''
-  const records = MOCK_HISTORY[dateStr] ?? []
+
+  const records = useMemo(() => {
+    const dateCheckins = checkinsByDate[dateStr] ?? []
+    return dateCheckins
+      .map((checkin) => {
+        const habit = habits.find((h) => h.id === checkin.habitId)
+        if (!habit) return null
+        return {
+          id: checkin.id,
+          habitName: habit.name,
+          category: habit.category,
+          targetPerDay: habit.targetPerDay,
+          completedCount: checkin.completedCount,
+          status: checkin.status,
+        }
+      })
+      .filter((r): r is NonNullable<typeof r> => r !== null)
+  }, [checkinsByDate, dateStr, habits])
 
   return (
     <Box sx={{ p: 3 }}>

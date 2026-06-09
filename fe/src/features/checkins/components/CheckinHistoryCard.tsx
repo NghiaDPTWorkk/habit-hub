@@ -2,7 +2,6 @@ import React from 'react'
 import { Box, Card, Typography } from '@/components/ui'
 import { ProgressBar } from '@/components/ui'
 import { CHECKIN_STATUS_LABEL } from '../constants'
-import type { MockCheckinRecord } from '../mock'
 import type { CheckinStatus } from '@/types'
 
 const VARIANT_SUBTITLE1 = 'subtitle1'
@@ -22,7 +21,13 @@ const STATUS_PROGRESS_COLOR: Record<CheckinStatus, 'success' | 'warning' | 'prim
   'Not Started': 'primary',
 }
 
-export type CheckinHistoryCardProps = Omit<MockCheckinRecord, 'id'>
+export type CheckinHistoryCardProps = {
+  habitName: string
+  category: string
+  targetPerDay: number
+  completedCount: number
+  status: CheckinStatus
+}
 
 export const CheckinHistoryCard: React.FC<CheckinHistoryCardProps> = ({
   habitName,

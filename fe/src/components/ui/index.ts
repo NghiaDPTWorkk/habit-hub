@@ -20,6 +20,10 @@ export {
   Select,
   FormControl,
   InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material'
 export * from './Button'
 export * from './StatusPill'

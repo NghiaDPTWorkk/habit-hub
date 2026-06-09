@@ -63,7 +63,7 @@ export const MainLayout: React.FC = () => {
               component="img"
               src={logoImg}
               alt="Logo"
-              sx={{ height: 32, width: 32, objectFit: 'contain' }}
+              sx={{ height: 48, width: 'auto', objectFit: 'contain' }}
             />
             <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
               {APP_CONSTANTS.TITLE}

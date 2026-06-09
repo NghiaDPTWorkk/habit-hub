@@ -18,7 +18,7 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
         ...state.goals,
         {
           ...goal,
-          id: Date.now(),
+          id: state.goals.length > 0 ? Math.max(...state.goals.map((g) => g.id)) + 1 : 1,
         },
       ],
     })),

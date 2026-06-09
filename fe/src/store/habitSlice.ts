@@ -18,7 +18,7 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
         ...state.habits,
         {
           ...habit,
-          id: Date.now(),
+          id: state.habits.length > 0 ? Math.max(...state.habits.map((h) => h.id)) + 1 : 1,
           createdAt: new Date().toISOString().split('T')[0],
         },
       ],

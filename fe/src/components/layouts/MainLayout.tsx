@@ -13,10 +13,10 @@ import {
 import { APP_CONSTANTS } from '@/constants'
 import { useBoundStore } from '@/store'
 import { Icons } from '@/components/ui/icons'
-import logo1Img from '@/assets/logo1.png'
-import logo2Img from '@/assets/logo2.png'
+import logo3Img from '@/assets/logo3.png'
 
 const USER_INITIAL = 'U'
+const BRAND_NAME = 'TraceX'
 
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -62,16 +62,13 @@ export const MainLayout: React.FC = () => {
           >
             <Box
               component="img"
-              src={logo1Img}
-              alt="Logo 1"
-              sx={{ height: 48, width: 'auto', objectFit: 'contain' }}
+              src={logo3Img}
+              alt="Logo"
+              sx={{ height: 36, width: 'auto', objectFit: 'contain' }}
             />
-            <Box
-              component="img"
-              src={logo2Img}
-              alt="Logo 2"
-              sx={{ height: 48, width: 'auto', objectFit: 'contain' }}
-            />
+            <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
+              {BRAND_NAME}
+            </Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Button

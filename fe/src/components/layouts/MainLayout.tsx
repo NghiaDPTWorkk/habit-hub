@@ -13,6 +13,7 @@ import {
 import { APP_CONSTANTS } from '@/constants'
 import { useBoundStore } from '@/store'
 import { Icons } from '@/components/ui/icons'
+import logoImg from '@/assets/logo.png'
 
 const USER_INITIAL = 'U'
 
@@ -47,13 +48,27 @@ export const MainLayout: React.FC = () => {
         }}
       >
         <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, fontWeight: 800, color: 'primary.main' }}
+          <Box
+            component={RouterLink}
+            to="/dashboard"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexGrow: 1,
+              gap: 1.5,
+              textDecoration: 'none',
+            }}
           >
-            {APP_CONSTANTS.TITLE}
-          </Typography>
+            <Box
+              component="img"
+              src={logoImg}
+              alt="Logo"
+              sx={{ height: 32, width: 32, objectFit: 'contain' }}
+            />
+            <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
+              {APP_CONSTANTS.TITLE}
+            </Typography>
+          </Box>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Button
               component={RouterLink}

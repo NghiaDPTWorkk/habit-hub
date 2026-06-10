@@ -15,6 +15,7 @@ import {
   MiniChart,
   CalendarHeatmap,
 } from '@/components/ui'
+import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { Icons } from '@/components/ui/icons'
 
 const PAGE_TITLE = 'Dashboard Page'
@@ -36,6 +37,7 @@ const SECTION_DROPDOWN = 'Dropdown Menu (Export):'
 const SECTION_STATCARDS = 'Stat Cards:'
 const SECTION_SHARE = 'Share Dialog:'
 const SECTION_MINICHART = 'Weekly Progress Chart:'
+const SECTION_CATEGORY_CHART = 'Category Distribution Chart:'
 const SECTION_HEATMAP = 'Check-in Activity Grid:'
 const BTN_TRIGGER_DIALOG = 'Open Confirm Dialog'
 const DIALOG_TITLE = 'Delete Habit'
@@ -240,6 +242,13 @@ export const DashboardPage: React.FC = () => {
       </Typography>
       <Box sx={{ maxWidth: 400, mb: 3 }}>
         <MiniChart data={chartData} />
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_CATEGORY_CHART}
+      </Typography>
+      <Box sx={{ maxWidth: 400, mb: 3 }}>
+        <CategoryDistributionChart />
       </Box>
 
       <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>

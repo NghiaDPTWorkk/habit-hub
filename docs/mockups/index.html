@@ -502,13 +502,16 @@
 
       .at-risk-content {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 12px;
+        flex: 1;
+        min-width: 0;
       }
 
-      .at-risk-content svg {
+      .at-risk-content > svg {
         stroke: var(--color-accent);
         flex-shrink: 0;
+        margin-top: 1px;
       }
 
       .at-risk-text h4 {
@@ -524,20 +527,65 @@
       }
 
       .at-risk-btn {
-        padding: 6px 14px;
+        padding: 8px 16px;
         font-size: 0.8rem;
-        font-weight: 500;
+        font-weight: 600;
         background-color: var(--color-accent);
         color: white;
-        border-radius: 6px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 8px hsla(32, 95%, 50%, 0.3);
+        animation: subtlePulse 2.5s ease-in-out infinite;
       }
 
+      .at-risk-btn:hover {
+        background-color: hsl(32, 95%, 42%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px hsla(32, 95%, 50%, 0.4);
+        animation: none;
+      }
+
+      .at-risk-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+
+      @keyframes subtlePulse {
+        0%, 100% { box-shadow: 0 2px 8px hsla(32, 95%, 50%, 0.3); }
+        50%       { box-shadow: 0 2px 14px hsla(32, 95%, 50%, 0.55); }
+      }
+
+      /* Phone-mode simulator overrides */
       #device-wrapper.phone-mode .at-risk-banner {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        gap: 12px;
       }
       #device-wrapper.phone-mode .at-risk-btn {
         width: 100%;
+        justify-content: center;
+        padding: 10px 16px;
+      }
+
+      /* Real-device mobile */
+      @media (max-width: 600px) {
+        .at-risk-banner {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+        }
+        .at-risk-btn {
+          width: 100%;
+          justify-content: center;
+          padding: 10px 16px;
+        }
       }
 
       /* Dashboard KPI Grid (4 columns styled nicely) */
@@ -1315,53 +1363,194 @@
         border-radius: 3px;
       }
 
+      /* 7-Day Trend chart enhancements */
+      .trend-chart-wrapper {
+        width: 100%;
+        padding: 4px 0 0;
+      }
+
+      .trend-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .trend-stat-pill {
+        background-color: var(--bg-app);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .trend-stat-pill .t-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .trend-stat-pill .t-val {
+        font-size: 1.15rem;
+        font-family: var(--font-heading);
+        font-weight: 600;
+        color: var(--color-primary);
+      }
+
       /* Heatmap Calendar Contribution Graph */
+      .heatmap-wrapper {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 4px;
+      }
+
+      .heatmap-day-labels {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding-top: 20px;
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        text-align: right;
+        line-height: 1;
+        flex-shrink: 0;
+        gap: 0;
+      }
+
+      .heatmap-day-labels span {
+        height: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .heatmap-right {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .heatmap-months-row {
+        display: flex;
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        margin-bottom: 5px;
+        gap: 0;
+        padding-left: 2px;
+        min-width: max-content;
+      }
+
+      .heatmap-months-row span {
+        display: inline-block;
+      }
+
       .heatmap-scroll {
         overflow-x: auto;
-        padding-bottom: 6px;
-        margin-top: 8px;
+        padding-bottom: 8px;
         scrollbar-width: thin;
+        scrollbar-color: var(--border-color) transparent;
+      }
+
+      .heatmap-scroll::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      .heatmap-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .heatmap-scroll::-webkit-scrollbar-thumb {
+        background-color: var(--border-color);
+        border-radius: 2px;
       }
 
       .heatmap-grid {
         display: grid;
         grid-auto-flow: column;
-        grid-template-rows: repeat(7, 10px);
-        grid-auto-columns: 10px;
+        grid-template-rows: repeat(7, 14px);
+        grid-auto-columns: 14px;
         gap: 3px;
         min-width: max-content;
       }
 
       .heatmap-cell {
-        width: 10px;
-        height: 10px;
-        border-radius: 2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
         cursor: pointer;
         background-color: var(--border-color);
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+
+      .heatmap-cell:hover {
+        transform: scale(1.25);
+        filter: brightness(1.1);
+        z-index: 2;
+        position: relative;
       }
 
       .heatmap-cell.level-0 {
         background-color: var(--border-color);
       }
       .heatmap-cell.level-1 {
-        background-color: hsla(145, 63%, 42%, 0.25);
+        background-color: hsla(145, 63%, 42%, 0.22);
       }
       .heatmap-cell.level-2 {
-        background-color: hsla(145, 63%, 42%, 0.6);
+        background-color: hsla(145, 63%, 42%, 0.55);
       }
       .heatmap-cell.level-3 {
         background-color: hsl(145, 63%, 42%);
       }
 
+      /* Heatmap legend strip */
+      .heatmap-legend-strip {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 12px;
+        justify-content: flex-end;
+      }
+
+      .heatmap-legend-cell {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        display: inline-block;
+      }
+
+      /* Heatmap detail callout */
+      .heatmap-detail-callout {
+        margin-top: 14px;
+        padding: 10px 14px;
+        background-color: var(--bg-app);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
       /* Modals */
+      /* ==================== MODALS ==================== */
       .modal-backdrop {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(15, 23, 42, 0.3);
-        backdrop-filter: blur(4px);
+        background-color: rgba(15, 23, 42, 0.35);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
         display: none;
         align-items: center;
         justify-content: center;
@@ -1379,17 +1568,20 @@
       .modal-content {
         background-color: var(--bg-card);
         border: 1px solid var(--border-color);
-        border-radius: 14px;
+        border-radius: 16px;
         width: 100%;
         max-width: 440px;
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
-        transform: scale(0.96);
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.18);
+        transform: scale(0.96) translateY(0);
+        transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 32px);
       }
 
       .modal-backdrop.show .modal-content {
-        transform: scale(1);
+        transform: scale(1) translateY(0);
       }
 
       .modal-header {
@@ -1398,6 +1590,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-shrink: 0;
+      }
+
+      .modal-header h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-main);
       }
 
       .modal-body {
@@ -1405,6 +1604,9 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+        overflow-y: auto;
+        flex: 1;
+        overscroll-behavior: contain;
       }
 
       .modal-footer {
@@ -1413,8 +1615,27 @@
         display: flex;
         justify-content: flex-end;
         gap: 10px;
+        flex-shrink: 0;
+        background-color: var(--bg-card);
       }
 
+      /* Close button in modal header */
+      .modal-close-btn {
+        background: transparent;
+        border: none;
+        padding: 6px;
+        border-radius: 8px;
+        color: var(--text-muted);
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background-color 0.15s ease;
+      }
+      .modal-close-btn:hover {
+        background-color: var(--bg-app);
+        color: var(--text-main);
+      }
+
+      /* Form elements inside modals */
       .form-group {
         display: flex;
         flex-direction: column;
@@ -1428,21 +1649,26 @@
       }
 
       .form-input {
-        padding: 8px 12px;
-        border-radius: 6px;
+        padding: 10px 12px;
+        border-radius: 8px;
         border: 1px solid var(--border-color);
-        background-color: var(--bg-card);
+        background-color: var(--bg-app);
         font-size: 0.9rem;
         outline: none;
+        width: 100%;
+        color: var(--text-main);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
       }
 
       .form-input:focus {
         border-color: var(--color-primary);
         box-shadow: var(--focus-ring);
+        background-color: var(--bg-card);
       }
 
       .form-input.error {
         border-color: var(--color-error);
+        box-shadow: 0 0 0 3px var(--color-error-tint);
       }
 
       .error-msg {
@@ -1455,6 +1681,8 @@
       .error-msg.active {
         display: block;
       }
+
+
 
       /* Toast Notifications */
       .toast-container {
@@ -1777,6 +2005,9 @@
       }
 
       /* Premium Mobile Optimizations & Responsive Fixes */
+      /* ========================================================
+         PHONE-MODE SIMULATOR OVERRIDES
+         ======================================================== */
       #device-wrapper.phone-mode .col-priority,
       #device-wrapper.phone-mode .col-category,
       #device-wrapper.phone-mode .desktop-only-text {
@@ -1810,6 +2041,8 @@
 
       #device-wrapper.phone-mode .top-header {
         order: 1;
+        flex-wrap: wrap;
+        gap: 10px;
       }
       #device-wrapper.phone-mode .tab-pane {
         order: 2;
@@ -1839,11 +2072,119 @@
         border-radius: 50% !important;
       }
 
+      /* 7-Day Trend — phone mode */
+      #device-wrapper.phone-mode .trend-stats-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      #device-wrapper.phone-mode .trend-stat-pill {
+        padding: 8px 10px;
+      }
+      #device-wrapper.phone-mode .trend-stat-pill .t-val {
+        font-size: 1rem;
+      }
+      #device-wrapper.phone-mode #weekly-bar-section {
+        padding: 14px;
+      }
+
+      /* Heatmap — phone mode */
+      #device-wrapper.phone-mode #heatmap-section {
+        padding: 14px;
+      }
+      #device-wrapper.phone-mode .heatmap-grid {
+        grid-template-rows: repeat(7, 11px);
+        grid-auto-columns: 11px;
+        gap: 2px;
+      }
+      #device-wrapper.phone-mode .heatmap-cell {
+        width: 11px;
+        height: 11px;
+      }
+      #device-wrapper.phone-mode .heatmap-day-labels span {
+        height: 11px;
+        font-size: 0.6rem;
+      }
+      #device-wrapper.phone-mode .heatmap-day-labels {
+        padding-top: 18px;
+        gap: 2px;
+      }
+      #device-wrapper.phone-mode .heatmap-legend-strip {
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      /* Section cards — phone mode */
+      #device-wrapper.phone-mode .section-card {
+        padding: 14px;
+      }
+
+      /* Modal — phone-mode SIMULATOR (bottom sheet style) */
+      #device-wrapper.phone-mode .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+      #device-wrapper.phone-mode .modal-content {
+        max-width: 100%;
+        max-height: 90%;
+        border-radius: 20px 20px 0 0;
+        border-bottom: none;
+        transform: translateY(20px);
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
+      }
+      #device-wrapper.phone-mode .modal-backdrop.show .modal-content {
+        transform: translateY(0);
+      }
+      /* Drag handle indicator */
+      #device-wrapper.phone-mode .modal-header::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 36px;
+        height: 4px;
+        background-color: var(--border-color);
+        border-radius: 2px;
+      }
+      #device-wrapper.phone-mode .modal-header {
+        position: relative;
+        padding-top: 22px;
+      }
+      #device-wrapper.phone-mode .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 16px;
+        -webkit-overflow-scrolling: touch;
+      }
+      #device-wrapper.phone-mode .modal-footer {
+        flex-direction: row;
+        padding: 12px 16px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+        gap: 10px;
+      }
+      #device-wrapper.phone-mode .modal-footer button {
+        flex: 1;
+        padding: 11px 16px !important;
+        font-size: 0.9rem !important;
+      }
+      #device-wrapper.phone-mode .form-input {
+        padding: 12px;
+        font-size: 1rem;
+      }
+
+      /* ========================================================
+         REAL DEVICE RESPONSIVE — max-width: 768px
+         ======================================================== */
       @media (max-width: 768px) {
         .col-priority,
         .col-category,
         .desktop-only-text {
           display: none !important;
+        }
+
+        .top-header {
+          flex-wrap: wrap;
+          gap: 10px;
         }
 
         .habits-filter-row {
@@ -1871,9 +2212,6 @@
           max-width: 100% !important;
         }
 
-        .top-header {
-          order: 1;
-        }
         .tab-pane {
           order: 2;
         }
@@ -1900,6 +2238,153 @@
           height: 36px !important;
           justify-content: center !important;
           border-radius: 50% !important;
+        }
+
+        /* 7-Day Trend — real mobile */
+        .trend-stats-row {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+        .trend-stat-pill {
+          padding: 8px 10px;
+        }
+        .trend-stat-pill .t-val {
+          font-size: 1rem;
+        }
+        #weekly-bar-section {
+          padding: 14px;
+        }
+
+        /* Heatmap — real mobile */
+        #heatmap-section {
+          padding: 14px;
+        }
+        .heatmap-grid {
+          grid-template-rows: repeat(7, 11px);
+          grid-auto-columns: 11px;
+          gap: 2px;
+        }
+        .heatmap-cell {
+          width: 11px;
+          height: 11px;
+        }
+        .heatmap-day-labels span {
+          height: 11px;
+          font-size: 0.6rem;
+        }
+        .heatmap-day-labels {
+          padding-top: 18px;
+          gap: 2px;
+        }
+        .heatmap-legend-strip {
+          margin-top: 10px;
+          flex-wrap: wrap;
+        }
+
+        /* Section cards */
+        .section-card {
+          padding: 14px;
+        }
+
+        /* Modals — bottom-sheet on real mobile */
+        .modal-backdrop {
+          align-items: flex-end;
+          padding: 0;
+        }
+        .modal-content {
+          max-width: 100%;
+          max-height: 92vh;
+          border-radius: 20px 20px 0 0;
+          border-bottom: none;
+          transform: translateY(20px);
+          box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
+        }
+        .modal-backdrop.show .modal-content {
+          transform: translateY(0);
+        }
+        /* Drag handle */
+        .modal-header {
+          position: relative;
+          padding-top: 22px;
+        }
+        .modal-header::before {
+          content: '';
+          position: absolute;
+          top: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 36px;
+          height: 4px;
+          background-color: var(--border-color);
+          border-radius: 2px;
+        }
+        .modal-body {
+          max-height: 60vh;
+          -webkit-overflow-scrolling: touch;
+          padding: 16px;
+        }
+        .modal-footer {
+          padding: 12px 16px;
+          padding-bottom: max(12px, env(safe-area-inset-bottom));
+          gap: 10px;
+        }
+        /* Full-width action buttons */
+        .modal-footer button {
+          flex: 1;
+          padding: 12px 16px !important;
+          font-size: 0.9rem !important;
+          min-height: 44px;
+        }
+        /* Notes modal footer (has left delete + right cancel/save) */
+        .modal-footer[style*="space-between"] {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .modal-footer[style*="space-between"] > div {
+          display: flex;
+          gap: 8px;
+          flex: 1;
+        }
+        .modal-footer[style*="space-between"] > div button {
+          flex: 1;
+        }
+        /* Larger touch-friendly inputs */
+        .form-input {
+          padding: 12px;
+          font-size: 1rem;
+          border-radius: 10px;
+        }
+        .form-group label {
+          font-size: 0.85rem;
+        }
+
+        /* Stats summary bar on progress tab */
+        .daily-progress-section {
+          padding: 12px 14px;
+        }
+
+        /* Goal cards */
+        .goal-card {
+          padding: 14px;
+        }
+      }
+
+      /* Extra-small screens */
+      @media (max-width: 400px) {
+        .trend-stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .trend-stat-pill:last-child {
+          grid-column: span 2;
+        }
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .heatmap-day-labels {
+          display: none;
+        }
+        .modal-content {
+          border-radius: 12px;
         }
       }
 
@@ -2444,7 +2929,8 @@
             style="display: none; margin-bottom: 8px"
           >
             <div class="at-risk-banner">
-              <div class="at-risk-content" style="width: 100%">
+              <!-- Left: icon + text -->
+              <div class="at-risk-content">
                 <svg
                   width="20"
                   height="20"
@@ -2452,7 +2938,6 @@
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
-                  style="align-self: flex-start; margin-top: 2px"
                 >
                   <path
                     d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
@@ -2460,12 +2945,12 @@
                   <line x1="12" y1="9" x2="12" y2="13"></line>
                   <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
-                <div class="at-risk-text" style="flex: 1; width: 100%">
-                  <h4>Attention needed habits</h4>
+                <div class="at-risk-text">
+                  <h4>Habits need your attention</h4>
                   <div
                     id="at-risk-details-list"
                     style="
-                      margin-top: 8px;
+                      margin-top: 6px;
                       display: flex;
                       flex-direction: column;
                       gap: 4px;
@@ -2475,6 +2960,29 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Right: CTA button (AC2) -->
+              <button
+                class="at-risk-btn"
+                id="at-risk-checkin-btn"
+                onclick="switchTab('calendar')"
+                title="Go to Check-in now"
+              >
+                Go to Check-in
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -2580,15 +3088,35 @@
                 <!-- 7 days compliance bar chart -->
                 <div class="section-card" id="weekly-bar-section">
                   <div class="section-header">
-                    <h3 class="section-title">7-Day Trend</h3>
+                    <h3 class="section-title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                      7-Day Trend
+                    </h3>
+                    <span id="weekly-avg-badge" style="font-size:0.75rem;font-weight:600;color:var(--color-primary);background-color:var(--color-primary-tint);border:1px solid var(--color-primary-border);padding:3px 10px;border-radius:20px;">Avg —%</span>
                   </div>
-                  <div class="chart-container-inner" style="padding: 5px 0">
+                  <div class="trend-chart-wrapper">
+                    <!-- Summary stats row -->
+                    <div class="trend-stats-row" id="trend-stats-row">
+                      <div class="trend-stat-pill">
+                        <span class="t-label">Best Day</span>
+                        <span class="t-val" id="trend-best-day">—</span>
+                      </div>
+                      <div class="trend-stat-pill">
+                        <span class="t-label">Completed</span>
+                        <span class="t-val" id="trend-days-completed">—/7</span>
+                      </div>
+                      <div class="trend-stat-pill">
+                        <span class="t-label">7-Day Avg</span>
+                        <span class="t-val" id="trend-avg-rate">—%</span>
+                      </div>
+                    </div>
+                    <!-- SVG bar chart -->
                     <svg
                       id="weekly-trend-bar-chart"
                       width="100%"
-                      height="110"
-                      viewBox="0 0 200 110"
-                      style="overflow: visible"
+                      height="160"
+                      viewBox="0 0 280 160"
+                      style="overflow: visible; display: block;"
                     ></svg>
                   </div>
                 </div>
@@ -2599,93 +3127,55 @@
             <div class="section-card" id="heatmap-section">
               <div class="section-header">
                 <h3 class="section-title">
-                  Activity History (Contributions Heatmap)
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Activity History
                 </h3>
-                <div class="legend-item" style="font-size: 0.72rem">
-                  <span>Less</span>
-                  <div
-                    class="heatmap-cell level-0"
-                    style="display: inline-block; margin: 0 2px"
-                  ></div>
-                  <div
-                    class="heatmap-cell level-1"
-                    style="display: inline-block; margin: 0 2px"
-                  ></div>
-                  <div
-                    class="heatmap-cell level-2"
-                    style="display: inline-block; margin: 0 2px"
-                  ></div>
-                  <div
-                    class="heatmap-cell level-3"
-                    style="display: inline-block; margin: 0 2px"
-                  ></div>
-                  <span>More</span>
-                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);font-weight:500;">Last 14 weeks</span>
               </div>
-              <p
-                style="
-                  font-size: 0.78rem;
-                  color: var(--text-muted);
-                  margin-bottom: 10px;
-                "
-              >
-                Reflects daily check-in activity. Click any square to view
-                details.
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">
+                Daily check-in activity map — click any cell to view details.
               </p>
 
-              <div style="display: flex; gap: 8px; align-items: flex-end">
-                <!-- Mon-Sun weekday row tags -->
-                <div
-                  style="
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    height: 76px;
-                    padding-bottom: 2px;
-                    font-size: 0.68rem;
-                    color: var(--text-muted);
-                    text-align: right;
-                    width: 18px;
-                    line-height: 1;
-                  "
-                >
+              <!-- Main heatmap layout -->
+              <div class="heatmap-wrapper">
+                <!-- Day labels (Mon-Sun) -->
+                <div class="heatmap-day-labels">
+                  <span>Mon</span>
                   <span>Tue</span>
+                  <span>Wed</span>
                   <span>Thu</span>
+                  <span>Fri</span>
                   <span>Sat</span>
+                  <span>Sun</span>
                 </div>
-                <div class="heatmap-scroll" style="flex: 1">
-                  <!-- Month names header -->
-                  <div
-                    style="
-                      display: flex;
-                      font-size: 0.68rem;
-                      color: var(--text-muted);
-                      margin-bottom: 5px;
-                      gap: 36px;
-                      padding-left: 2px;
-                    "
-                    id="heatmap-months-labels"
-                  >
-                    <span>Mar</span>
-                    <span>Apr</span>
-                    <span>May</span>
-                    <span>Jun</span>
-                  </div>
-                  <div id="contribution-heatmap-grid" class="heatmap-grid">
-                    <!-- Spanned dynamically -->
+                <!-- Scrollable area -->
+                <div class="heatmap-right">
+                  <div class="heatmap-scroll">
+                    <!-- Month names header -->
+                    <div id="heatmap-months-labels" class="heatmap-months-row">
+                      <!-- Filled dynamically -->
+                    </div>
+                    <div id="contribution-heatmap-grid" class="heatmap-grid">
+                      <!-- Filled dynamically -->
+                    </div>
                   </div>
                 </div>
               </div>
-              <div
-                id="heatmap-cell-detail"
-                style="
-                  font-size: 0.78rem;
-                  margin-top: 8px;
-                  color: var(--text-muted);
-                  font-weight: 500;
-                "
-              >
-                Click any cell to view check-in progress for that date.
+
+              <!-- Legend strip -->
+              <div class="heatmap-legend-strip">
+                <span>Less</span>
+                <span class="heatmap-legend-cell" style="background-color: var(--border-color);"></span>
+                <span class="heatmap-legend-cell" style="background-color: hsla(145, 63%, 42%, 0.22);"></span>
+                <span class="heatmap-legend-cell" style="background-color: hsla(145, 63%, 42%, 0.55);"></span>
+                <span class="heatmap-legend-cell" style="background-color: hsl(145, 63%, 42%);"></span>
+                <span>More</span>
+              </div>
+
+              <!-- Detail callout -->
+              <div class="heatmap-detail-callout" id="heatmap-cell-detail">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Click any cell to view check-in activity for that date.
               </div>
             </div>
           </div>
@@ -5441,10 +5931,10 @@
       // Draw SVG Bar Chart (Weekly Trend US-027)
       function compileWeeklyTrendBarChart() {
         const svg = document.getElementById("weekly-trend-bar-chart");
+        if (!svg) return;
         svg.innerHTML = "";
 
-        const dayNamesVi = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        const dayNamesEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
         const dates = [];
         for (let i = 6; i >= 0; i--) {
@@ -5453,83 +5943,154 @@
           dates.push(d);
         }
 
-        const barWidth = 12;
-        const spacing = 12;
-        const startX = 16;
-        const startY = 88;
-        const maxHeight = 65;
+        // Chart dimensions (viewBox 0 0 280 160)
+        const svgW = 280;
+        const svgH = 160;
+        const padL = 28;  // space for Y labels
+        const padR = 8;
+        const padT = 18;  // space for value labels above bars
+        const padB = 22;  // space for day name labels
+        const chartW = svgW - padL - padR;
+        const chartH = svgH - padT - padB;
+        const baseY = padT + chartH;
+        const numBars = 7;
+        const barGap = chartW / numBars;
+        const barWidth = barGap * 0.52;
 
+        // Compute rates
+        const rates = dates.map((date) => {
+          const dateStr = getLocalDateString(state.settings.timezoneOffset, date);
+          const dayNameEn = dayNames[date.getDay()];
+          const scheduled = state.habits.filter((h) => !h.archived && h.frequency.includes(dayNameEn));
+          const checks = state.checkins[dateStr] ? Object.keys(state.checkins[dateStr]).length : 0;
+          return scheduled.length > 0 ? Math.min(1, checks / scheduled.length) : 0;
+        });
+
+        // Summary stats
+        const avgRate = rates.reduce((a, b) => a + b, 0) / 7;
+        const daysCompleted = rates.filter((r) => r > 0).length;
+        const bestDayIdx = rates.indexOf(Math.max(...rates));
+        const bestDayName = dayNames[dates[bestDayIdx].getDay()];
+        const el = (id) => document.getElementById(id);
+        if (el("trend-avg-rate")) el("trend-avg-rate").textContent = `${Math.round(avgRate * 100)}%`;
+        if (el("trend-days-completed")) el("trend-days-completed").textContent = `${daysCompleted}/7`;
+        if (el("trend-best-day")) el("trend-best-day").textContent = bestDayName || "—";
+        if (el("weekly-avg-badge")) el("weekly-avg-badge").textContent = `Avg ${Math.round(avgRate * 100)}%`;
+
+        const ns = "http://www.w3.org/2000/svg";
+        const mk = (tag) => document.createElementNS(ns, tag);
+
+        // Defs for gradient
+        const defs = mk("defs");
+        const grad = mk("linearGradient");
+        grad.setAttribute("id", "barGrad");
+        grad.setAttribute("x1", "0"); grad.setAttribute("y1", "0");
+        grad.setAttribute("x2", "0"); grad.setAttribute("y2", "1");
+        const stop1 = mk("stop");
+        stop1.setAttribute("offset", "0%");
+        stop1.setAttribute("stop-color", "hsl(145, 63%, 52%)");
+        const stop2 = mk("stop");
+        stop2.setAttribute("offset", "100%");
+        stop2.setAttribute("stop-color", "hsl(145, 63%, 38%)");
+        grad.appendChild(stop1); grad.appendChild(stop2);
+        defs.appendChild(grad);
+        svg.appendChild(defs);
+
+        // Y-axis grid lines + labels at 0%, 50%, 100%
+        [0, 0.5, 1].forEach((pct) => {
+          const gy = baseY - pct * chartH;
+          const line = mk("line");
+          line.setAttribute("x1", padL.toString());
+          line.setAttribute("x2", (svgW - padR).toString());
+          line.setAttribute("y1", gy.toString());
+          line.setAttribute("y2", gy.toString());
+          line.setAttribute("stroke", "var(--border-color)");
+          line.setAttribute("stroke-width", "1");
+          line.setAttribute("stroke-dasharray", pct === 0 ? "none" : "3 3");
+          svg.appendChild(line);
+
+          const ytxt = mk("text");
+          ytxt.setAttribute("x", (padL - 4).toString());
+          ytxt.setAttribute("y", (gy + 3).toString());
+          ytxt.setAttribute("font-size", "8px");
+          ytxt.setAttribute("text-anchor", "end");
+          ytxt.setAttribute("fill", "var(--text-muted)");
+          ytxt.textContent = `${Math.round(pct * 100)}%`;
+          svg.appendChild(ytxt);
+        });
+
+        // Bars
         dates.forEach((date, index) => {
-          const dateStr = getLocalDateString(
-            state.settings.timezoneOffset,
-            date,
-          );
-          const dayNameVi = dayNamesVi[date.getDay()];
-          const dayNameEn = dayNamesEn[date.getDay()];
+          const rate = rates[index];
+          const dayName = dayNames[date.getDay()];
+          const isToday = index === 6;
+          const barH = Math.max(rate > 0 ? 4 : 0, Math.floor(rate * chartH));
+          const bx = padL + index * barGap + (barGap - barWidth) / 2;
+          const by = baseY - barH;
 
-          const scheduledOnDate = state.habits.filter(
-            (h) => !h.archived && h.frequency.includes(dayNameEn),
-          );
-          const checksOnDate = state.checkins[dateStr]
-            ? Object.keys(state.checkins[dateStr]).length
-            : 0;
+          // Background track
+          const track = mk("rect");
+          track.setAttribute("x", bx.toString());
+          track.setAttribute("y", padT.toString());
+          track.setAttribute("width", barWidth.toString());
+          track.setAttribute("height", chartH.toString());
+          track.setAttribute("rx", "5");
+          track.setAttribute("fill", "var(--border-color)");
+          track.setAttribute("opacity", "0.5");
+          svg.appendChild(track);
 
-          let rate = 0;
-          if (scheduledOnDate.length > 0) {
-            rate = Math.min(1, checksOnDate / scheduledOnDate.length);
+          // Bar fill
+          const rect = mk("rect");
+          rect.setAttribute("x", bx.toString());
+          rect.setAttribute("y", by.toString());
+          rect.setAttribute("width", barWidth.toString());
+          rect.setAttribute("height", barH.toString());
+          rect.setAttribute("rx", "5");
+          rect.setAttribute("fill", isToday ? "url(#barGrad)" : "var(--color-primary)");
+          rect.setAttribute("opacity", isToday ? "1" : "0.8");
+          rect.setAttribute("style", "transition: all 0.4s ease-in-out; cursor: pointer;");
+          svg.appendChild(rect);
+
+          // Value label above bar
+          if (rate > 0) {
+            const textVal = mk("text");
+            textVal.setAttribute("x", (bx + barWidth / 2).toString());
+            textVal.setAttribute("y", (by - 5).toString());
+            textVal.setAttribute("font-size", "8px");
+            textVal.setAttribute("text-anchor", "middle");
+            textVal.setAttribute("fill", isToday ? "var(--color-primary)" : "var(--text-main)");
+            textVal.setAttribute("font-weight", "600");
+            textVal.textContent = `${Math.round(rate * 100)}%`;
+            svg.appendChild(textVal);
           }
 
-          const height = Math.floor(rate * maxHeight);
-          const x = startX + index * (barWidth + spacing);
-          const y = startY - height;
-
-          const rect = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "rect",
-          );
-          rect.setAttribute("x", x.toString());
-          rect.setAttribute("y", y.toString());
-          rect.setAttribute("width", barWidth.toString());
-          rect.setAttribute("height", height.toString());
-          rect.setAttribute("rx", "2");
-          rect.setAttribute("fill", "var(--color-primary)");
-          rect.setAttribute(
-            "style",
-            "transition: all 0.4s ease-in-out; cursor: pointer;",
-          );
-
-          const textVal = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "text",
-          );
-          textVal.setAttribute("x", (x + barWidth / 2).toString());
-          textVal.setAttribute("y", (y - 4).toString());
-          textVal.setAttribute("font-size", "6.5px");
-          textVal.setAttribute("text-anchor", "middle");
-          textVal.setAttribute("fill", "var(--text-main)");
-          textVal.setAttribute("font-weight", "500");
-          textVal.textContent = `${Math.floor(rate * 100)}%`;
-
-          const label = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "text",
-          );
-          label.setAttribute("x", (x + barWidth / 2).toString());
-          label.setAttribute("y", (startY + 11).toString());
-          label.setAttribute("font-size", "7px");
+          // Day label below
+          const label = mk("text");
+          label.setAttribute("x", (bx + barWidth / 2).toString());
+          label.setAttribute("y", (baseY + 14).toString());
+          label.setAttribute("font-size", "9px");
           label.setAttribute("text-anchor", "middle");
-          label.setAttribute("fill", "var(--text-muted)");
-          label.textContent = dayNameVi;
-
-          svg.appendChild(rect);
-          svg.appendChild(textVal);
+          label.setAttribute("fill", isToday ? "var(--color-primary)" : "var(--text-muted)");
+          label.setAttribute("font-weight", isToday ? "700" : "400");
+          label.textContent = dayName;
           svg.appendChild(label);
+
+          // Today dot indicator
+          if (isToday) {
+            const dot = mk("circle");
+            dot.setAttribute("cx", (bx + barWidth / 2).toString());
+            dot.setAttribute("cy", (baseY + 6).toString());
+            dot.setAttribute("r", "2.5");
+            dot.setAttribute("fill", "var(--color-primary)");
+            svg.appendChild(dot);
+          }
         });
       }
 
       // 9. HEATMAP CALENDAR GENERATION (US-026)
       function compileActivityHeatmap() {
         const grid = document.getElementById("contribution-heatmap-grid");
+        if (!grid) return;
         grid.innerHTML = "";
 
         const daysToShow = 98; // 14 weeks
@@ -5540,6 +6101,29 @@
           const d = new Date();
           d.setDate(today.getDate() - i);
           dateList.push(d);
+        }
+
+        // Render month labels dynamically
+        const monthsEl = document.getElementById("heatmap-months-labels");
+        if (monthsEl) {
+          monthsEl.innerHTML = "";
+          const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+          const cellSize = 14; // matches CSS
+          const gapSize = 3;
+          const step = cellSize + gapSize;
+          let lastMonth = -1;
+          dateList.forEach((d, i) => {
+            const weekCol = Math.floor(i / 7);
+            if (d.getDate() <= 7 && d.getMonth() !== lastMonth) {
+              lastMonth = d.getMonth();
+              const span = document.createElement("span");
+              span.textContent = monthNames[d.getMonth()];
+              span.style.marginLeft = weekCol === 0 ? "0" : `${weekCol * step - 12}px`;
+              if (weekCol > 0) span.style.position = "absolute";
+              monthsEl.appendChild(span);
+            }
+          });
+          monthsEl.style.position = "relative";
         }
 
         dateList.forEach((d) => {
@@ -5555,10 +6139,11 @@
 
           const cell = document.createElement("div");
           cell.className = `heatmap-cell level-${level}`;
-          cell.setAttribute("title", `${key}: ${checkinCount} check-ins`);
+          cell.setAttribute("title", `${key}: ${checkinCount} check-in(s)`);
           cell.onclick = () => {
-            document.getElementById("heatmap-cell-detail").innerHTML =
-              `<strong>Activity on ${key}:</strong> ${checkinCount} habit(s) completed.`;
+            const detail = document.getElementById("heatmap-cell-detail");
+            const icon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+            detail.innerHTML = `${icon} <span><strong>${key}</strong>: ${checkinCount} habit(s) completed.</span>`;
             selectedCalendarDateStr = key;
             renderCalendar();
             renderSelectedDateDetails(key);

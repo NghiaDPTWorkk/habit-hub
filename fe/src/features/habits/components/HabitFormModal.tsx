@@ -79,9 +79,11 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof HabitFormValues, string>> = {}
       result.error.issues.forEach((err: ZodIssue) => {
-        const field = err.path[0] as keyof HabitFormValues
-        if (!fieldErrors[field]) {
-          fieldErrors[field] = err.message
+        if (err.path.length > 0) {
+          const field = err.path[0] as keyof HabitFormValues
+          if (!fieldErrors[field]) {
+            fieldErrors[field] = err.message
+          }
         }
       })
       setErrors(fieldErrors)

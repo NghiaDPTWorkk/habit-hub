@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Box, StatusPill, Typography, ConfirmDialog, ProgressBar, Card, TextField, TextArea, DropdownMenu, StatCard, ShareDialog, MiniChart, CalendarHeatmap, } from '@/components/ui'
+import { Button, StatusPill, ConfirmDialog, ProgressBar, Card, TextField, TextArea, DropdownMenu, StatCard, ShareDialog, MiniChart, CalendarHeatmap } from '@/components/ui'
+import { Typography, Box } from '@mui/material'
 import { Icons } from '@/components/ui/icons'
 import { useBoundStore } from '@/store'
 
@@ -83,6 +84,13 @@ export const DashboardPage: React.FC = () => {
   const [inputValue, setInputValue] = React.useState('')
   const [textValue, setTextValue] = React.useState('')
   const showToast = useBoundStore((s) => s.showToast)
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true)
@@ -95,7 +103,7 @@ export const DashboardPage: React.FC = () => {
 
   const handleConfirmDialog = () => {
     setIsDialogLoading(true)
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setIsDialogOpen(false)
       setIsDialogLoading(false)
     }, 1500)
@@ -105,7 +113,7 @@ export const DashboardPage: React.FC = () => {
     setInputValue(event.target.value)
   }
 
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(event.target.value)
   }
 
@@ -142,7 +150,10 @@ export const DashboardPage: React.FC = () => {
     for (let i = 0; i < 90; i++) {
       const date = new Date(today)
       date.setDate(today.getDate() - i)
-      const dateStr = date.toISOString().split('T')[0]
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
       const count = i % 3 === 0 ? 2 : i % 5 === 0 ? 1 : i % 7 === 0 ? 3 : 0
       dataList.push({ date: dateStr, count })
     }

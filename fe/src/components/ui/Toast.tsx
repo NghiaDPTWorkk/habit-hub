@@ -15,13 +15,13 @@ export const Toast: React.FC = () => {
 
   return (
     <Snackbar
-      open={toast.open}
+      open={toast?.open ?? false}
       autoHideDuration={TOAST_DURATION_MS}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
     >
-      <Alert onClose={hideToast} severity={toast.severity} variant="filled" sx={{ width: '100%' }}>
-        {toast.message}
+      <Alert onClose={hideToast} severity={toast?.severity ?? 'info'} variant="filled" sx={{ width: '100%' }}>
+        {toast?.message ?? ''}
       </Alert>
     </Snackbar>
   )

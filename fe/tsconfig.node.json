@@ -18,7 +18,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Force TypeScript to resolve 'vite' to the project copy, not vitest's bundled copy */
+    "paths": {
+      "vite": ["./node_modules/vite/dist/node/index.d.ts"],
+      "vite/*": ["./node_modules/vite/*"]
+    }
   },
   "include": ["vite.config.ts"]
 }

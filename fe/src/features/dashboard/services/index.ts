@@ -96,8 +96,7 @@ export function isAtRisk(habit: Habit, checkins: Checkin[]): boolean {
 }
 
 export function goalProgress(goal: Goal, habit: Habit, checkins: Checkin[]): number {
-  const value =
-    goal.targetType === 'streak'
+  const value = goal.targetType === 'streak'
       ? currentStreak(habit, checkins)
       : totalCompletions(habit, checkins)
   return Math.min(100, Math.round((value / goal.targetValue) * 100))

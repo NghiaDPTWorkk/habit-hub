@@ -41,8 +41,10 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
       newErrors.habitId = SHARED_MESSAGES.GOALS.VALIDATION_ALL_REQUIRED
     }
 
-    if (!targetValue || Number(targetValue) <= 0) {
-      newErrors.targetValue = SHARED_MESSAGES.GOALS.VALIDATION_TARGET_POSITIVE
+    if (!targetValue) {
+      newErrors.targetValue = SHARED_MESSAGES.GOALS.VALIDATION_ALL_REQUIRED
+    } else if (!Number.isInteger(Number(targetValue)) || Number(targetValue) <= 0) {
+      newErrors.targetValue = SHARED_MESSAGES.GOALS.VALIDATION_INTEGER
     }
 
     setErrors(newErrors)
@@ -131,11 +133,12 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
             value={targetValue}
             onChange={(e) => {
               setTargetValue(e.target.value)
-              if (e.target.value && Number(e.target.value) > 0) {
+              if (e.target.value && Number.isInteger(Number(e.target.value)) && Number(e.target.value) > 0) {
                 setErrors((prev) => ({ ...prev, targetValue: '' }))
               }
             }}
             error={!!errors.targetValue}
+            slotProps={{ htmlInput: { step: 1, min: 1 } }}
           />
           {errors.targetValue && <FormHelperText>{errors.targetValue}</FormHelperText>}
         </FormControl>

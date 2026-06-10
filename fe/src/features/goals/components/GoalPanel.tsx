@@ -86,8 +86,6 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
     <Stack spacing={2}>
       {goals.map((goal) => {
         const progress = getGoalProgress(goal, checkins)
-        const progressStatus =
-          progress.isCompleted ? 'completed' : progress.isAt80Percent ? 'warning' : 'normal'
         const habitName = getHabitName(goal.habitId)
         const targetLabel = getTargetLabel(goal)
 
@@ -115,7 +113,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                     </Typography>
                   </Box>
                   <Box>
-                    <ProgressBar value={progress.percentage} status={progressStatus} />
+                    <ProgressBar value={progress.percentage} />
                     <Typography
                       variant="caption"
                       sx={{ color: 'text.secondary', mt: 1, display: 'block' }}

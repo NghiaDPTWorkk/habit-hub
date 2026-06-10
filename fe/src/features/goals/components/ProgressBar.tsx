@@ -3,24 +3,18 @@ import { Box, LinearProgress, Typography, useTheme } from '@/components/ui'
 
 interface ProgressBarProps {
   value: number
-  status: 'normal' | 'warning' | 'completed'
 }
 
 const PROGRESS_LABEL = 'Progress'
 const PERCENTAGE_SUFFIX = '%'
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ value, status }) => {
+export const ProgressBar: React.FC<ProgressBarProps> = ({ value }) => {
   const theme = useTheme()
 
   const getColor = (): string => {
-    switch (status) {
-      case 'warning':
-        return theme.palette.warning.main
-      case 'completed':
-        return theme.palette.success.main
-      default:
-        return theme.palette.primary.main
-    }
+    if (value >= 100) return theme.palette.success.main
+    if (value >= 50) return theme.palette.warning.main
+    return theme.palette.grey[400]
   }
 
   const color = getColor()
@@ -45,6 +39,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ value, status }) => {
           backgroundColor: theme.palette.divider,
           '& .MuiLinearProgress-bar': {
             backgroundColor: color,
+            transition: 'transform 0.5s ease-in-out, background-color 0.3s ease',
           },
         }}
       />

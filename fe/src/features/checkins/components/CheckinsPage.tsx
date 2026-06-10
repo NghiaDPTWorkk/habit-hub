@@ -6,39 +6,26 @@ import { pxToRem } from '@/utils'
 import { useBoundStore } from '@/store'
 import { useCheckinStore } from '../hooks'
 import { CHECKIN_CONTENT } from '../constants'
-import { CheckinHistoryCard } from './CheckinHistoryCard'
+import type { Habit } from '@/types'
+import { CheckinItemCard } from './CheckinItemCard'
+import { MultiCountModal } from './MultiCountModal'
 
 const VARIANT_H5 = 'h5'
 const VARIANT_BODY2 = 'body2'
 const VARIANT_BODY1 = 'body1'
 const COLOR_TEXT_SECONDARY = 'text.secondary'
 const PICKER_LABEL = 'Select date'
-const EMPTY_MESSAGE = 'No data found for this date'
+const STATUS_ACTIVE = 'Active'
 
 export const CheckinsPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs())
-  const { checkinsByDate } = useCheckinStore()
+  const [modalHabit, setModalHabit] = useState<Habit | null>(null)
+  const { getCheckinByHabitAndDate } = useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
 
   const dateStr = selectedDate?.format('YYYY-MM-DD') ?? ''
 
-  const records = useMemo(() => {
-    const dateCheckins = checkinsByDate[dateStr] ?? []
-    return dateCheckins
-      .map((checkin) => {
-        const habit = habits.find((h) => h.id === checkin.habitId)
-        if (!habit) return null
-        return {
-          id: checkin.id,
-          habitName: habit.name,
-          category: habit.category,
-          targetPerDay: habit.targetPerDay,
-          completedCount: checkin.completedCount,
-          status: checkin.status,
-        }
-      })
-      .filter((r): r is NonNullable<typeof r> => r !== null)
-  }, [checkinsByDate, dateStr, habits])
+  const activeHabits = useMemo(() => habits.filter((h) => h.status === STATUS_ACTIVE), [habits])
 
   return (
     <Box sx={{ p: 3 }}>
@@ -58,17 +45,35 @@ export const CheckinsPage: React.FC = () => {
         />
       </Box>
 
-      {records.length === 0 ? (
+      {activeHabits.length === 0 ? (
         <Typography variant={VARIANT_BODY1} color={COLOR_TEXT_SECONDARY}>
-          {EMPTY_MESSAGE}
+          {CHECKIN_CONTENT.PLACEHOLDERS.NO_HABITS}
         </Typography>
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {records.map(({ id, ...rest }) => (
-            <CheckinHistoryCard key={id} {...rest} />
+          {activeHabits.map((habit) => (
+            <CheckinItemCard
+              key={habit.id}
+              habit={habit}
+              checkin={getCheckinByHabitAndDate(habit.id, dateStr)}
+              today={dateStr}
+              onOpenModal={() => setModalHabit(habit)}
+            />
           ))}
         </Box>
       )}
+
+      <MultiCountModal
+        open={!!modalHabit}
+        onClose={() => setModalHabit(null)}
+        habitId={modalHabit?.id ?? 0}
+        habitName={modalHabit?.name ?? ''}
+        targetPerDay={modalHabit?.targetPerDay ?? 1}
+        date={dateStr}
+        currentCount={
+          modalHabit ? (getCheckinByHabitAndDate(modalHabit.id, dateStr)?.completedCount ?? 0) : 0
+        }
+      />
     </Box>
   )
 }

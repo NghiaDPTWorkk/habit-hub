@@ -16,6 +16,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import WhatshotIcon from '@mui/icons-material/Whatshot'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 export const Icons = {
   Add: AddIcon,
@@ -36,4 +37,5 @@ export const Icons = {
   WarningAmber: WarningAmberIcon,
   EmojiEvents: EmojiEventsIcon,
   Whatshot: WhatshotIcon,
+  ExpandMore: ExpandMoreIcon,
 }

@@ -8,7 +8,6 @@ import {
   Tooltip,
 } from '@/components/ui'
 import { ProgressBar } from '@/components/ui'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary, Category } from '@/types'
 
@@ -149,7 +148,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
 
   return (
     <Accordion defaultExpanded={defaultExpanded} disableGutters elevation={1}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary expandIcon={<Icons.ExpandMore />}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', pr: 1 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
             {category}

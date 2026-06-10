@@ -38,7 +38,6 @@ export const HabitsPage: React.FC = () => {
 
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
   const [modalOpen, setModalOpen] = useState(false)
-  const [modalKey, setModalKey] = useState(0)
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined)
 
   const todayCheckinByHabit = useMemo(
@@ -74,7 +73,6 @@ export const HabitsPage: React.FC = () => {
 
   const handleEdit = (habit: Habit) => {
     setHabitToEdit(habit)
-    setModalKey((prev) => prev + 1)
     setModalOpen(true)
   }
 
@@ -125,7 +123,6 @@ export const HabitsPage: React.FC = () => {
               startIcon={<Icons.Add />}
               onClick={() => {
                 setHabitToEdit(undefined)
-                setModalKey((prev) => prev + 1)
                 setModalOpen(true)
               }}
             >
@@ -148,7 +145,6 @@ export const HabitsPage: React.FC = () => {
       </Box>
 
       <HabitFormModal
-        key={modalKey}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         habitToEdit={habitToEdit}

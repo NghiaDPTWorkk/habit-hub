@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Typography,
@@ -67,6 +67,26 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
       : defaultHabitFormValues,
   )
   const [errors, setErrors] = useState<Partial<Record<keyof HabitFormValues, string>>>({})
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        setFormValues(
+          habitToEdit
+            ? {
+                name: habitToEdit.name,
+                category: habitToEdit.category,
+                frequency: habitToEdit.frequency,
+                specificDays: habitToEdit.specificDays,
+                targetPerDay: habitToEdit.targetPerDay,
+                priority: habitToEdit.priority,
+              }
+            : defaultHabitFormValues,
+        )
+        setErrors({})
+      }, 0)
+    }
+  }, [open, habitToEdit])
 
   const handleClose = () => {
     setFormValues(defaultHabitFormValues)

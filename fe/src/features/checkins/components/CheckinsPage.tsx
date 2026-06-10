@@ -18,12 +18,12 @@ const PICKER_LABEL = 'Select date'
 const STATUS_ACTIVE = 'Active'
 
 export const CheckinsPage: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs())
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
   const [modalHabit, setModalHabit] = useState<Habit | null>(null)
   const { getCheckinByHabitAndDate } = useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
 
-  const dateStr = selectedDate?.format('YYYY-MM-DD') ?? ''
+  const dateStr = selectedDate.format('YYYY-MM-DD')
 
   const activeHabits = useMemo(() => habits.filter((h) => h.status === STATUS_ACTIVE), [habits])
 
@@ -39,7 +39,9 @@ export const CheckinsPage: React.FC = () => {
       <Box sx={{ mb: 3, maxWidth: pxToRem(256) }}>
         <DatePicker
           value={selectedDate}
-          onChange={setSelectedDate}
+          onChange={(v) => {
+            if (v) setSelectedDate(v)
+          }}
           label={PICKER_LABEL}
           disableFuture
         />

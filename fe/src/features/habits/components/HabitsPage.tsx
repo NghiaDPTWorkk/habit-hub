@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Box, Typography } from '@/components/ui'
+import { Box, Typography, Drawer, IconButton } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
 import { Icons } from '@/components/ui/icons'
@@ -14,6 +14,7 @@ import type { Habit } from '@/types'
 const PAGE_TITLE = 'Habits'
 const PAGE_DESC = 'Build and manage all the habits you want to track.'
 const ADD_HABIT_LABEL = 'Add Habit'
+const FILTER_BUTTON_LABEL = 'Filters'
 
 const DEFAULT_FILTERS: HabitFilters = {
   category: 'All',
@@ -39,6 +40,7 @@ export const HabitsPage: React.FC = () => {
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
   const [modalOpen, setModalOpen] = useState(false)
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined)
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
   const todayCheckinByHabit = useMemo(
     () =>
@@ -48,7 +50,7 @@ export const HabitsPage: React.FC = () => {
         }
         return acc
       }, {}),
-    [checkins],
+    [checkins]
   )
 
   const filteredHabits = useMemo(
@@ -68,7 +70,7 @@ export const HabitsPage: React.FC = () => {
         }
         return true
       }),
-    [habits, filters],
+    [habits, filters]
   )
 
   const handleEdit = (habit: Habit) => {
@@ -100,34 +102,51 @@ export const HabitsPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, maxWidth: '100vw' }}>
       <Typography variant="h4" gutterBottom>
         {PAGE_TITLE}
       </Typography>
       <Typography variant="body1" sx={{ mb: 3 }}>
         {PAGE_DESC}
       </Typography>
-      <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '320px 1fr' } }}>
-        <Card sx={{ p: 2 }}>
-          <FilterSideBar
-            filters={filters}
-            onChange={setFilters}
-            onClear={() => setFilters(DEFAULT_FILTERS)}
-          />
-        </Card>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 3,
+          gridTemplateColumns: { xs: '1fr', md: '320px 1fr' },
+          maxWidth: '100vw',
+        }}
+      >
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Card sx={{ p: 2 }}>
+            <FilterSideBar
+              filters={filters}
+              onChange={setFilters}
+              onClear={() => setFilters(DEFAULT_FILTERS)}
+            />
+          </Card>
+        </Box>
 
         <Box sx={{ display: 'grid', gap: 3 }}>
           <Card sx={{ p: 2 }}>
-            <Button
-              variant="contained"
-              startIcon={<Icons.Add />}
-              onClick={() => {
-                setHabitToEdit(undefined)
-                setModalOpen(true)
-              }}
-            >
-              {ADD_HABIT_LABEL}
-            </Button>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                startIcon={<Icons.Add />}
+                onClick={() => {
+                  setHabitToEdit(undefined)
+                  setModalOpen(true)
+                }}
+              >
+                {ADD_HABIT_LABEL}
+              </Button>
+              <IconButton
+                sx={{ display: { xs: 'flex', md: 'none' } }}
+                onClick={() => setFilterDrawerOpen(true)}
+              >
+                <Typography variant="button">{FILTER_BUTTON_LABEL}</Typography>
+              </IconButton>
+            </Box>
           </Card>
 
           <Card sx={{ p: 2 }}>
@@ -143,6 +162,19 @@ export const HabitsPage: React.FC = () => {
           </Card>
         </Box>
       </Box>
+
+      <Drawer anchor="left" open={filterDrawerOpen} onClose={() => setFilterDrawerOpen(false)}>
+        <Box sx={{ maxWidth: 280, p: 2 }}>
+          <FilterSideBar
+            filters={filters}
+            onChange={setFilters}
+            onClear={() => {
+              setFilters(DEFAULT_FILTERS)
+              setFilterDrawerOpen(false)
+            }}
+          />
+        </Box>
+      </Drawer>
 
       <HabitFormModal
         open={modalOpen}

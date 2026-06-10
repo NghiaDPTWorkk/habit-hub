@@ -56,6 +56,13 @@ const clamp = (value: number, min: number, max: number): number => {
   return Math.max(min, Math.min(max, value))
 }
 
+const toLocalDateString = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set) => ({
   goals: [],
 
@@ -66,7 +73,7 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
         {
           ...goal,
           id: Date.now().toString(),
-          createdAt: new Date().toISOString().split('T')[0],
+          createdAt: toLocalDateString(new Date()),
         },
       ],
     })),

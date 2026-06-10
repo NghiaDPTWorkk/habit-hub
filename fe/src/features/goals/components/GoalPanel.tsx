@@ -13,7 +13,7 @@ interface GoalPanelProps {
 
 const EMPTY_STATE_ICON = '🎯'
 const DATE_SEPARATOR = '/'
-const COLON_SEPARATOR = ':'
+const COLON_SEPARATOR = ': '
 const NOTIFIED_GOALS_KEY = 'habit-hub-notified-goals'
 
 const getNotifiedGoals = (): Set<string> => {

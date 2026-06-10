@@ -97,7 +97,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
             disabled={isEditing}
           >
             {habits.map((habit) => (
-              <MenuItem key={habit.id} value={String(habit.id)}>
+              <MenuItem key={habit.id} value={habit.id}>
                 {habit.name}
               </MenuItem>
             ))}

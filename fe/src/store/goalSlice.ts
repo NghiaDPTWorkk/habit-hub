@@ -4,9 +4,11 @@ import type { BoundStore } from './types'
 
 export interface GoalSlice {
   goals: Goal[]
+  notifiedGoals: Record<string, boolean>
   addGoal: (goal: Omit<Goal, 'id' | 'createdAt'>) => void
   updateGoal: (id: string, updates: Partial<Omit<Goal, 'id' | 'createdAt'>>) => void
   deleteGoal: (id: string) => void
+  markGoalNotified: (key: string) => void
   getGoalProgress: (goal: Goal, checkins: Checkin[]) => GoalProgress
 }
 
@@ -65,6 +67,12 @@ const toLocalDateString = (date: Date): string => {
 
 export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set) => ({
   goals: [],
+  notifiedGoals: {},
+
+  markGoalNotified: (key) =>
+    set((state) => ({
+      notifiedGoals: { ...state.notifiedGoals, [key]: true },
+    })),
 
   addGoal: (goal) =>
     set((state) => ({
@@ -94,7 +102,7 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
         ? calculateConsecutiveStreak(goal.habitId, checkins)
         : calculateTotalCompletions(goal.habitId, checkins)
 
-    const percentage = clamp((currentValue / goal.targetValue) * 100, 0, 100)
+    const percentage = clamp(Math.round((currentValue / goal.targetValue) * 100), 0, 100)
     const isAt80Percent = percentage >= 80 && percentage < 100
     const isCompleted = percentage >= 100
 

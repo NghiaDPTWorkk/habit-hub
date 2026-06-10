@@ -14,47 +14,25 @@ interface GoalPanelProps {
 const EMPTY_STATE_ICON = '🎯'
 const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
-const NOTIFIED_GOALS_KEY = 'habit-hub-notified-goals'
-
-const getNotifiedGoals = (): Set<string> => {
-  try {
-    const raw = localStorage.getItem(NOTIFIED_GOALS_KEY)
-    return new Set(raw ? (JSON.parse(raw) as string[]) : [])
-  } catch {
-    return new Set()
-  }
-}
-
-const saveNotifiedGoal = (key: string): void => {
-  try {
-    const current = getNotifiedGoals()
-    current.add(key)
-    localStorage.setItem(NOTIFIED_GOALS_KEY, JSON.stringify([...current]))
-  } catch {
-    // ignore
-  }
-}
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
+  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast, notifiedGoals, markGoalNotified } = useBoundStore()
 
   useEffect(() => {
-    const notified = getNotifiedGoals()
-
     goals.forEach((goal) => {
       const progress = getGoalProgress(goal, checkins)
       const completedKey = `${goal.id}-completed`
       const at80Key = `${goal.id}-80percent`
 
-      if (progress.isCompleted && !notified.has(completedKey)) {
-        saveNotifiedGoal(completedKey)
+      if (progress.isCompleted && !notifiedGoals[completedKey]) {
+        markGoalNotified(completedKey)
         showToast(SHARED_MESSAGES.GOALS.COMPLETED, 'success')
-      } else if (progress.isAt80Percent && !notified.has(at80Key)) {
-        saveNotifiedGoal(at80Key)
+      } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
+        markGoalNotified(at80Key)
         showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT, 'info')
       }
     })
-  }, [goals, checkins, getGoalProgress, showToast])
+  }, [goals, checkins, getGoalProgress, showToast, notifiedGoals, markGoalNotified])
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)

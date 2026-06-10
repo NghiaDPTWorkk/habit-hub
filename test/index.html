@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TraceX - Check-in Test</title>
+    <style>
+      :root {
+        --primary: #0d9488;
+        --secondary: #6366f1;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 24px;
+      }
+      .card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .card-title {
+        font-weight: bold;
+        margin-bottom: 12px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+      .calendar-day {
+        padding: 6px 0;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .calendar-day:hover {
+        background: var(--border);
+      }
+      .calendar-day.selected {
+        background: var(--secondary);
+        color: #fff;
+      }
+      .calendar-day.today-marker {
+        border: 1px solid var(--secondary);
+      }
+      .calendar-day.empty {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .weekly-compliance {
+        display: flex;
+        justify-content: space-around;
+        background: var(--bg);
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      .weekly-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      .weekly-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #cbd5e1;
+        margin-top: 4px;
+      }
+      .weekly-dot.completed {
+        background: var(--primary);
+      }
+      .weekly-dot.partial {
+        background: var(--secondary);
+      }
+      .weekly-dot.missed {
+        background: #ef4444;
+      }
+      .habit-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .progress-track {
+        background: var(--border);
+        height: 6px;
+        border-radius: 3px;
+        width: 100px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--primary);
+        transition: width 0.3s ease-in-out;
+      }
+      .progress-fill.partial {
+        background: var(--secondary);
+      }
+      .progress-fill.missed {
+        background: #ef4444;
+      }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+      }
+      .status-badge.completed {
+        background: #f0fdfa;
+        color: var(--primary);
+      }
+      .status-badge.partial {
+        background: #eef2ff;
+        color: var(--secondary);
+      }
+      .status-badge.missed {
+        background: #fef2f2;
+        color: #ef4444;
+      }
+      button {
+        padding: 2px 8px;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 4px;
+      }
+      button:hover {
+        background: var(--bg);
+      }
+      .toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 1000;
+      }
+      .toast {
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 10px 16px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.hide {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h3>TraceX - Check-in Test</h3>
+      <span style="font-size: 0.85rem; color: var(--text-muted)"
+        >Environment: Test Mockup</span
+      >
+    </div>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <div>
+        <div class="card">
+          <div class="card-title">Select Date</div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 10px;
+            "
+          >
+            <button onclick="navigateMonth(-1)">&lt;</button>
+            <span
+              id="calendar-title"
+              style="font-weight: bold; font-size: 0.9rem"
+              >June 2026</span
+            >
+            <button onclick="navigateMonth(1)">&gt;</button>
+          </div>
+          <div class="calendar-grid">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span
+            ><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div
+            id="calendar-days"
+            class="calendar-grid"
+            style="margin-top: 4px"
+          ></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Filter</div>
+          <select
+            id="filter-status"
+            onchange="loadSelectedDateLog()"
+            style="
+              width: 100%;
+              padding: 6px;
+              border-radius: 4px;
+              border: 1px solid var(--border);
+            "
+          >
+            <option value="All">All Logs</option>
+            <option value="Completed">Completed Only</option>
+            <option value="Partial">Partial Only</option>
+            <option value="Missed">Missed Only</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="card">
+        <div
+          id="history-active-date"
+          style="
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+          "
+        >
+          Wednesday, Jun 10, 2026
+        </div>
+
+        <div id="weekly-compliance-tracker" class="weekly-compliance">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div id="history-log-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+  </body>
+</html>

@@ -10,29 +10,34 @@ export interface GoalSlice {
   getGoalProgress: (goal: Goal, checkins: Checkin[]) => GoalProgress
 }
 
-const calculateConsecutiveStreak = (habitId: string, checkins: Checkin[]): number => {
+const calculateConsecutiveStreak = (habitId: number, checkins: Checkin[]): number => {
   if (checkins.length === 0) return 0
 
   const filteredCheckins = checkins
-    .filter((c) => String(c.habitId) === String(habitId) && c.status === 'Completed')
+    .filter((c) => c.habitId === habitId && c.status === 'Completed')
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   if (filteredCheckins.length === 0) return 0
 
   let streak = 0
-  const currentDate = new Date()
-  currentDate.setHours(0, 0, 0, 0)
+  let expectedDate = new Date()
+  expectedDate.setHours(0, 0, 0, 0)
 
   for (const checkin of filteredCheckins) {
     const checkinDate = new Date(checkin.date)
     checkinDate.setHours(0, 0, 0, 0)
 
-    const diffTime = currentDate.getTime() - checkinDate.getTime()
-    const diffDays = diffTime / (1000 * 60 * 60 * 24)
+    const diffDays =
+      (expectedDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
 
-    if (diffDays === streak) {
+    if (streak === 0 && diffDays <= 1) {
+      // Chấp nhận hôm nay hoặc hôm qua là ngày bắt đầu
       streak++
-      currentDate.setDate(currentDate.getDate() - 1)
+      expectedDate = new Date(checkinDate)
+      expectedDate.setDate(expectedDate.getDate() - 1)
+    } else if (streak > 0 && diffDays === 0) {
+      streak++
+      expectedDate.setDate(expectedDate.getDate() - 1)
     } else {
       break
     }
@@ -41,9 +46,9 @@ const calculateConsecutiveStreak = (habitId: string, checkins: Checkin[]): numbe
   return streak
 }
 
-const calculateTotalCompletions = (habitId: string, checkins: Checkin[]): number => {
+const calculateTotalCompletions = (habitId: number, checkins: Checkin[]): number => {
   return checkins
-    .filter((c) => String(c.habitId) === String(habitId) && c.status === 'Completed')
+    .filter((c) => c.habitId === habitId && c.status === 'Completed')
     .reduce((sum, c) => sum + c.completedCount, 0)
 }
 

@@ -25,7 +25,7 @@ interface GoalFormProps {
 
 export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) => {
   const { habits, addGoal, updateGoal } = useBoundStore()
-  const [habitId, setHabitId] = useState(existingGoal?.habitId || '')
+  const [habitId, setHabitId] = useState<number | ''>(existingGoal?.habitId ?? '')
   const [targetType, setTargetType] = useState<GoalTargetType>(existingGoal?.targetType || 'streak')
   const [targetValue, setTargetValue] = useState(existingGoal?.targetValue?.toString() || '')
   const [errors, setErrors] = useState<{
@@ -53,7 +53,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
     if (!validateForm()) return
 
     const goalData = {
-      habitId,
+      habitId: habitId as number,
       targetType,
       targetValue: Number(targetValue),
       status: 'active' as const,
@@ -89,7 +89,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
           <Select
             value={habitId}
             onChange={(e) => {
-              setHabitId(e.target.value)
+              setHabitId(Number(e.target.value))
               if (e.target.value) {
                 setErrors((prev) => ({ ...prev, habitId: '' }))
               }

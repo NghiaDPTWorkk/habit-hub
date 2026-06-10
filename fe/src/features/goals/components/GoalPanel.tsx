@@ -1,13 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react'
-import {
-  Box,
-  Card,
-  IconButton,
-  Stack,
-  Typography,
-  Snackbar,
-  Alert,
-} from '@/components/ui'
+import React, { useEffect } from 'react'
+import { Box, Card, IconButton, Stack, Typography } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
@@ -22,52 +14,54 @@ interface GoalPanelProps {
 const EMPTY_STATE_ICON = '🎯'
 const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ':'
+const NOTIFIED_GOALS_KEY = 'habit-hub-notified-goals'
+
+const getNotifiedGoals = (): Set<string> => {
+  try {
+    const raw = localStorage.getItem(NOTIFIED_GOALS_KEY)
+    return new Set(raw ? (JSON.parse(raw) as string[]) : [])
+  } catch {
+    return new Set()
+  }
+}
+
+const saveNotifiedGoal = (key: string): void => {
+  try {
+    const current = getNotifiedGoals()
+    current.add(key)
+    localStorage.setItem(NOTIFIED_GOALS_KEY, JSON.stringify([...current]))
+  } catch {
+    // ignore
+  }
+}
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
-  const notifiedGoalsRef = useRef<Set<string>>(new Set())
-  const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [currentNotification, setCurrentNotification] = useState<{
-    message: string
-    type: 'success' | 'info'
-  } | null>(null)
+  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
 
   useEffect(() => {
+    const notified = getNotifiedGoals()
+
     goals.forEach((goal) => {
       const progress = getGoalProgress(goal, checkins)
-      const notificationKey = `${goal.id}`
+      const completedKey = `${goal.id}-completed`
+      const at80Key = `${goal.id}-80percent`
 
-      if (progress.isCompleted && !notifiedGoalsRef.current.has(`${notificationKey}-completed`)) {
-        notifiedGoalsRef.current.add(`${notificationKey}-completed`)
-        setCurrentNotification({
-          message: SHARED_MESSAGES.GOALS.COMPLETED,
-          type: 'success',
-        })
-        setOpenSnackbar(true)
-      } else if (
-        progress.isAt80Percent &&
-        !notifiedGoalsRef.current.has(`${notificationKey}-80percent`)
-      ) {
-        notifiedGoalsRef.current.add(`${notificationKey}-80percent`)
-        setCurrentNotification({
-          message: SHARED_MESSAGES.GOALS.AT_80_PERCENT,
-          type: 'info',
-        })
-        setOpenSnackbar(true)
+      if (progress.isCompleted && !notified.has(completedKey)) {
+        saveNotifiedGoal(completedKey)
+        showToast(SHARED_MESSAGES.GOALS.COMPLETED, 'success')
+      } else if (progress.isAt80Percent && !notified.has(at80Key)) {
+        saveNotifiedGoal(at80Key)
+        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT, 'info')
       }
     })
-  }, [goals, checkins, getGoalProgress])
-
-  const handleCloseSnackbar = (): void => {
-    setOpenSnackbar(false)
-  }
+  }, [goals, checkins, getGoalProgress, showToast])
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)
   }
 
-  const getHabitName = (habitId: string): string => {
-    return habits.find((h) => String(h.id) === habitId)?.name || 'Unknown Habit'
+  const getHabitName = (habitId: number): string => {
+    return habits.find((h) => h.id === habitId)?.name || 'Unknown Habit'
   }
 
   const getTargetLabel = (goal: Goal): string => {
@@ -89,75 +83,71 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   }
 
   return (
-    <>
-      <Stack spacing={2}>
-        {goals.map((goal) => {
-          const progress = getGoalProgress(goal, checkins)
-          const progressStatus =
-            progress.isCompleted ? 'completed' : progress.isAt80Percent ? 'warning' : 'normal'
-          const habitName = getHabitName(goal.habitId)
-          const targetLabel = getTargetLabel(goal)
+    <Stack spacing={2}>
+      {goals.map((goal) => {
+        const progress = getGoalProgress(goal, checkins)
+        const progressStatus =
+          progress.isCompleted ? 'completed' : progress.isAt80Percent ? 'warning' : 'normal'
+        const habitName = getHabitName(goal.habitId)
+        const targetLabel = getTargetLabel(goal)
 
-          return (
-            <Card key={goal.id} sx={{ p: 3, borderRadius: 2 }}>
-              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Stack spacing={2}>
-                    <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                        {habitName}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {targetLabel}
-                        {COLON_SEPARATOR}
-                        {goal.targetValue}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <ProgressBar value={progress.percentage} status={progressStatus} />
-                      <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
-                        {progress.currentValue}
-                        {DATE_SEPARATOR}
-                        {goal.targetValue}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
-                  <IconButton
-                    size="small"
-                    onClick={() => onEditGoal?.(goal)}
-                    sx={{ color: 'primary.main' }}
-                  >
-                    <Icons.Edit fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteGoal(goal.id)}
-                    sx={{ color: 'error.main' }}
-                  >
-                    <Icons.Delete fontSize="small" />
-                  </IconButton>
-                </Box>
+        return (
+          <Card key={goal.id} sx={{ p: 3, borderRadius: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: 2,
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                      {habitName}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {targetLabel}
+                      {COLON_SEPARATOR}
+                      {goal.targetValue}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <ProgressBar value={progress.percentage} status={progressStatus} />
+                    <Typography
+                      variant="caption"
+                      sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
+                    >
+                      {progress.currentValue}
+                      {DATE_SEPARATOR}
+                      {goal.targetValue}
+                    </Typography>
+                  </Box>
+                </Stack>
               </Box>
-            </Card>
-          )
-        })}
-      </Stack>
-
-      {currentNotification && (
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        >
-          <Alert onClose={handleCloseSnackbar} severity={currentNotification.type} sx={{ width: '100%' }}>
-            {currentNotification.message}
-          </Alert>
-        </Snackbar>
-      )}
-    </>
+              <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
+                <IconButton
+                  size="small"
+                  onClick={() => onEditGoal?.(goal)}
+                  sx={{ color: 'primary.main' }}
+                >
+                  <Icons.Edit fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => handleDeleteGoal(goal.id)}
+                  sx={{ color: 'error.main' }}
+                >
+                  <Icons.Delete fontSize="small" />
+                </IconButton>
+              </Box>
+            </Box>
+          </Card>
+        )
+      })}
+    </Stack>
   )
 }
 

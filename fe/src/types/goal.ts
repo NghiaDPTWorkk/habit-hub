@@ -3,7 +3,7 @@ export type GoalStatus = 'active' | 'completed' | 'paused'
 
 export interface Goal {
   id: string
-  habitId: string
+  habitId: number
   targetType: GoalTargetType
   targetValue: number
   status: GoalStatus

@@ -52,7 +52,7 @@ export const HabitsPage: React.FC = () => {
 
   const todayCheckinByHabit = useMemo(
     () =>
-      checkins.reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
+      Object.values(checkins).reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
         if (checkin.date === todayString) {
           acc[checkin.habitId] = { completedCount: checkin.completedCount }
         }

@@ -16,6 +16,7 @@ const VARIANT_BODY1 = 'body1'
 const COLOR_TEXT_SECONDARY = 'text.secondary'
 const PICKER_LABEL = 'Select date'
 const STATUS_ACTIVE = 'Active'
+const FREQUENCY_DAILY = 'Daily'
 
 export const CheckinsPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
@@ -25,7 +26,15 @@ export const CheckinsPage: React.FC = () => {
 
   const dateStr = selectedDate.format('YYYY-MM-DD')
 
-  const activeHabits = useMemo(() => habits.filter((h) => h.status === STATUS_ACTIVE), [habits])
+  // dayjs .day(): 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const activeHabits = useMemo(() => {
+    const dayOfWeek = selectedDate.day()
+    return habits.filter((h) => {
+      if (h.status !== STATUS_ACTIVE) return false
+      if (h.frequency === FREQUENCY_DAILY) return true
+      return h.specificDays?.includes(dayOfWeek) ?? false
+    })
+  }, [habits, selectedDate])
 
   return (
     <Box sx={{ p: 3 }}>

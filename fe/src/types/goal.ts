@@ -1,4 +1,4 @@
-export type TargetType = 'Streak' | 'Total'
+export type TargetType = 'streak' | 'total_completions'
 
 export interface Goal {
   id: number

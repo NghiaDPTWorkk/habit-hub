@@ -5,20 +5,25 @@ import { isScheduledForDate } from '@/features/habits/services/ScheduleService'
 const CATEGORIES: Category[] = ['Health', 'Study', 'Work', 'Mindfulness', 'Other']
 const MAX_STREAK_DAYS = 365
 
+// Returns YYYY-MM-DD in the browser's local timezone.
+function localDateStr(d: Date): string {
+  return d.toLocaleDateString('en-CA') // en-CA locale always formats as YYYY-MM-DD
+}
+
 export function todayStr(): string {
-  return new Date().toISOString().split('T')[0]
+  return localDateStr(new Date())
 }
 
 export function subDays(dateStr: string, n: number): string {
-  const d = new Date(dateStr + 'T12:00:00')
+  const d = new Date(dateStr + 'T12:00:00') // local noon avoids DST edge cases
   d.setDate(d.getDate() - n)
-  return d.toISOString().split('T')[0]
+  return localDateStr(d)
 }
 
 export function addDays(dateStr: string, n: number): string {
   const d = new Date(dateStr + 'T12:00:00')
   d.setDate(d.getDate() + n)
-  return d.toISOString().split('T')[0]
+  return localDateStr(d)
 }
 
 function isCompleted(habitId: number, checkins: Checkin[], date: string): boolean {
@@ -92,7 +97,7 @@ export function isAtRisk(habit: Habit, checkins: Checkin[]): boolean {
 
 export function goalProgress(goal: Goal, habit: Habit, checkins: Checkin[]): number {
   const value =
-    goal.targetType === 'Streak'
+    goal.targetType === 'streak'
       ? currentStreak(habit, checkins)
       : totalCompletions(habit, checkins)
   return Math.min(100, Math.round((value / goal.targetValue) * 100))

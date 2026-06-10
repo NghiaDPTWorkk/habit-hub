@@ -118,7 +118,7 @@ export const SEED_GOALS: Goal[] = [
   {
     id: 3001,
     habitId: H1,
-    targetType: 'Streak',
+    targetType: 'streak',
     targetValue: 21,
   },
 ]

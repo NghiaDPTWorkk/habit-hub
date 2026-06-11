@@ -23,6 +23,7 @@ const SECTION_DROPDOWN = 'Dropdown Menu (Export):'
 const SECTION_STATCARDS = 'Stat Cards:'
 const SECTION_SHARE = 'Share Dialog:'
 const SECTION_MINICHART = 'Weekly Progress Chart:'
+const SECTION_CATEGORY_CHART = 'Category Distribution Chart:'
 const SECTION_HEATMAP = 'Check-in Activity Grid:'
 const SECTION_TOAST = 'Toast Notifications:'
 const BTN_TRIGGER_DIALOG = 'Open Confirm Dialog'
@@ -161,12 +162,9 @@ export const DashboardPage: React.FC = () => {
   }, [])
 
   return (
-    <div>
-      <h2>{PAGE_TITLE}</h2>
-      <p>{PAGE_DESC}</p>
-
-      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-        {SECTION_BUTTONS}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        {PAGE_TITLE}
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <Button variant="contained" color="primary">
@@ -246,6 +244,13 @@ export const DashboardPage: React.FC = () => {
       </Box>
 
       <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_CATEGORY_CHART}
+      </Typography>
+      <Box sx={{ maxWidth: 400, mb: 3 }}>
+        <CategoryDistributionChart />
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
         {SECTION_HEATMAP}
       </Typography>
       <Box sx={{ mb: 3, overflowX: 'auto', maxWidth: '100%' }}>
@@ -260,13 +265,9 @@ export const DashboardPage: React.FC = () => {
           <Typography variant="h6" sx={{ mb: 1 }}>
             {CARD_TITLE_1}
           </Typography>
-          <Typography variant="body2">{CARD_DESC_1}</Typography>
-        </Card>
-        <Card variant={CARD_VARIANT_OUTLINED} sx={{ flex: 1, minWidth: 250 }}>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            {CARD_TITLE_2}
+          <Typography variant="body2" color="text.secondary">
+            {EMPTY_DESC}
           </Typography>
-          <Typography variant="body2">{CARD_DESC_2}</Typography>
         </Card>
       </Box>
 

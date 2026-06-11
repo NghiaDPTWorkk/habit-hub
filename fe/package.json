@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . && node scripts/check-index.cjs",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepare": "cd .. && husky fe/.husky"
   },
   "dependencies": {
@@ -15,9 +17,12 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
+    "@mui/x-date-pickers": "^9.4.0",
+    "dayjs": "^1.11.21",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.17.0",
+    "recharts": "^3.8.1",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },

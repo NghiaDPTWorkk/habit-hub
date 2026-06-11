@@ -1,7 +1,8 @@
 import React from 'react'
-import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import { useTheme, alpha } from '@mui/material/styles'
+import { Box, IconButton } from '@/components/ui'
+import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import type { Habit } from '@/types'
@@ -163,7 +164,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({
           )}
         </Box>
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, flexWrap: 'wrap', gap: 1 }}>
           <Button variant="outlined" onClick={() => onEdit(habit)}>
             {CARD_TEXTS.edit}
           </Button>
@@ -177,6 +178,22 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             <Button variant="outlined" onClick={() => onArchive(habit)}>
               {CARD_TEXTS.archive}
             </Button>
+          )}
+        </Box>
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
+          <IconButton onClick={() => onEdit(habit)}>
+            <Icons.Edit />
+          </IconButton>
+          <IconButton color="error" onClick={() => onDelete(habit.id)}>
+            <Icons.Delete />
+          </IconButton>
+          <IconButton onClick={() => onPauseResume(habit)}>
+            {habit.status === 'Active' ? <Icons.Pause /> : <Icons.Play />}
+          </IconButton>
+          {habit.status !== 'Archived' && (
+            <IconButton onClick={() => onArchive(habit)}>
+              <Icons.Archive />
+            </IconButton>
           )}
         </Box>
       </Box>

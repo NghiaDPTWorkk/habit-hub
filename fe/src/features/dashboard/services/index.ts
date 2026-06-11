@@ -1,6 +1,8 @@
 import type { Habit, Checkin, Goal, Category } from '@/types'
 import type { HabitSummary, DashboardDto } from '@/types'
 import { isScheduledForDate } from '@/features/habits/services/ScheduleService'
+import type { HeatmapDay } from '@/components/ui/CalendarHeatmap'
+import type { MiniChartItem } from '@/components/ui/MiniChart'
 
 const CATEGORIES: Category[] = ['Health', 'Study', 'Work', 'Mindfulness', 'Other']
 const MAX_STREAK_DAYS = 365
@@ -149,4 +151,28 @@ export function getDashboard(habits: Habit[], checkins: Checkin[], goals: Goal[]
     },
     habitsByCategory,
   }
+}
+
+export function getDailyIntensity(days: number, checkins: Checkin[]): HeatmapDay[] {
+  const today = todayStr()
+  return Array.from({ length: days }, (_, i) => {
+    const date = subDays(today, days - 1 - i)
+    const count = checkins.filter((c) => c.date === date && c.status === 'Completed').length
+    return { date, count }
+  })
+}
+
+export function getWeeklyCategoryRates(habits: Habit[], checkins: Checkin[]): MiniChartItem[] {
+  const activeHabits = habits.filter((h) => h.status === 'Active')
+  return CATEGORIES.flatMap((category) => {
+    const categoryHabits = activeHabits.filter((h) => h.category === category)
+    if (categoryHabits.length === 0) return []
+    const avg =
+      categoryHabits.reduce((sum, h) => sum + weeklyCompletionRate(h, checkins), 0) /
+      categoryHabits.length
+    const value = Math.round(avg * 100)
+    const color: MiniChartItem['color'] =
+      value >= 70 ? 'success' : value >= 40 ? 'warning' : 'error'
+    return [{ label: category as string, value, color }]
+  })
 }

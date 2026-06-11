@@ -147,5 +147,4 @@ export const DashboardPage: React.FC = () => {
     </Box>
   )
 }
-
 export default DashboardPage

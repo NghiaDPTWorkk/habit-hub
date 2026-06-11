@@ -1,16 +1,34 @@
 import type { StateCreator } from 'zustand'
-import type { Goal } from '@/types'
+import type { Goal, GoalProgress } from '@/types'
 import type { BoundStore } from './types'
 
 export interface GoalSlice {
   goals: Goal[]
+  reachedMilestones: Record<string, boolean>
   addGoal: (goal: Omit<Goal, 'id'>) => void
   updateGoal: (id: number, updates: Partial<Omit<Goal, 'id'>>) => void
   deleteGoal: (id: number) => void
+  getGoalProgress: (goal: Goal, currentValue: number) => GoalProgress
+  markMilestoneReached: (key: string) => void
 }
 
 export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set) => ({
   goals: [],
+  reachedMilestones: {},
+
+  getGoalProgress: (goal, currentValue) => {
+    const percentage = Math.min(100, Math.round((currentValue / goal.targetValue) * 100))
+    return {
+      percentage,
+      isEightyPercentReached: percentage >= 80,
+      isCompleted: percentage >= 100,
+    }
+  },
+
+  markMilestoneReached: (key) =>
+    set((state) => ({
+      reachedMilestones: { ...state.reachedMilestones, [key]: true },
+    })),
 
   addGoal: (goal) =>
     set((state) => ({

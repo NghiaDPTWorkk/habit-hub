@@ -6,3 +6,9 @@ export interface Goal {
   targetType: TargetType
   targetValue: number
 }
+
+export interface GoalProgress {
+  percentage: number
+  isEightyPercentReached: boolean
+  isCompleted: boolean
+}

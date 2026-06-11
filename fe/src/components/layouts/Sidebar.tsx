@@ -28,7 +28,7 @@ const NAV_OVERVIEW = 'Overview'
 const NAV_HABITS = 'Habits'
 const NAV_PROGRESS = 'Progress'
 const NAV_GOALS = 'Goals'
-const FOOTER_TEXT = 'Habit Hub © '
+const FOOTER_TEXT = 'ByteBuilders © '
 
 export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, currentYear }) => {
   const isDashboardActive = pathname === '/dashboard' || pathname === '/'
@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
           {BRAND_FIRST}
           <Box
             component="span"
-            style={{ color: '#00FF66' }}
+            style={{ color: '#238636' }}
             sx={{
               fontWeight: 900,
             }}

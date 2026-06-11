@@ -27,7 +27,7 @@ const MOCK_TITLE_GOALS = 'Goals & Milestones'
 const MOCK_TITLE_CHECKINS = 'Progress'
 
 const COPYRIGHT_LINE = '© '
-const COPYRIGHT_TEXT = ' Habit Hub. Built with React & Material UI.'
+const COPYRIGHT_TEXT = ' ByteBuilders. Built with React & Material UI.'
 
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -150,7 +150,7 @@ export const MainLayout: React.FC = () => {
             }}
           >
             {BRAND_FIRST}
-            <Box component="span" style={{ color: '#00FF66' }} sx={{ fontWeight: 900 }}>
+            <Box component="span" style={{ color: '#238636' }} sx={{ fontWeight: 900 }}>
               {BRAND_SECOND}
             </Box>
           </Box>

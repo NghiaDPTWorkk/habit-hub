@@ -118,6 +118,30 @@ function buildHabitSummary(habit: Habit, checkins: Checkin[]): HabitSummary {
   }
 }
 
+export function getDailyIntensity(days: number, checkins: Checkin[]): HeatmapDay[] {
+  const today = todayStr()
+  return Array.from({ length: days }, (_, i) => {
+    const date = subDays(today, days - 1 - i)
+    const count = checkins.filter((c) => c.date === date && c.status === 'Completed').length
+    return { date, count }
+  })
+}
+
+export function getWeeklyCategoryRates(habits: Habit[], checkins: Checkin[]): MiniChartItem[] {
+  const activeHabits = habits.filter((h) => h.status === 'Active')
+  return CATEGORIES.flatMap((category) => {
+    const categoryHabits = activeHabits.filter((h) => h.category === category)
+    if (categoryHabits.length === 0) return []
+    const avg =
+      categoryHabits.reduce((sum, h) => sum + weeklyCompletionRate(h, checkins), 0) /
+      categoryHabits.length
+    const value = Math.round(avg * 100)
+    const color: MiniChartItem['color'] =
+      value >= 70 ? 'success' : value >= 40 ? 'warning' : 'error'
+    return [{ label: category as string, value, color }]
+  })
+}
+
 export function getDashboard(habits: Habit[], checkins: Checkin[], goals: Goal[]): DashboardDto {
   const today = todayStr()
   const activeHabits = habits.filter((h) => h.status === 'Active')
@@ -153,26 +177,31 @@ export function getDashboard(habits: Habit[], checkins: Checkin[], goals: Goal[]
   }
 }
 
-export function getDailyIntensity(days: number, checkins: Checkin[]): HeatmapDay[] {
+export function getWeeklyCategoryStats(
+  habits: Habit[],
+  checkins: Checkin[]
+): { name: string; value: number; percentage: number }[] {
   const today = todayStr()
-  return Array.from({ length: days }, (_, i) => {
-    const date = subDays(today, days - 1 - i)
-    const count = checkins.filter((c) => c.date === date && c.status === 'Completed').length
-    return { date, count }
-  })
-}
-
-export function getWeeklyCategoryRates(habits: Habit[], checkins: Checkin[]): MiniChartItem[] {
+  const weekStart = subDays(today, 6)
+  const weekCheckins = checkins.filter(
+    (c) => c.date >= weekStart && c.date <= today && c.status === 'Completed'
+  )
   const activeHabits = habits.filter((h) => h.status === 'Active')
-  return CATEGORIES.flatMap((category) => {
-    const categoryHabits = activeHabits.filter((h) => h.category === category)
-    if (categoryHabits.length === 0) return []
-    const avg =
-      categoryHabits.reduce((sum, h) => sum + weeklyCompletionRate(h, checkins), 0) /
-      categoryHabits.length
-    const value = Math.round(avg * 100)
-    const color: MiniChartItem['color'] =
-      value >= 70 ? 'success' : value >= 40 ? 'warning' : 'error'
-    return [{ label: category as string, value, color }]
-  })
+  const countByCategory = CATEGORIES.reduce(
+    (acc, cat) => {
+      const count = weekCheckins.filter((c) => {
+        const habit = activeHabits.find((h) => h.id === c.habitId)
+        return habit?.category === cat
+      }).length
+      return { ...acc, [cat]: count }
+    },
+    {} as Record<string, number>
+  )
+  const total = Object.values(countByCategory).reduce((a, b) => a + b, 0)
+  if (total === 0) return []
+  return CATEGORIES.filter((cat) => countByCategory[cat] > 0).map((cat) => ({
+    name: cat as string,
+    value: countByCategory[cat],
+    percentage: Math.round((countByCategory[cat] / total) * 100),
+  }))
 }

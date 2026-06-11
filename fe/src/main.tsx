@@ -8,7 +8,6 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './routes'
 import { getTheme } from '@/theme'
 import { useBoundStore } from '@/store'
-import { theme } from '@/theme'
 import { initStore } from '@/storage/initStore'
 
 initStore()

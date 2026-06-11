@@ -83,105 +83,13 @@ const CHART_LABEL_MIND = 'Mindset & Reading'
 const CHART_COLOR_PRIMARY = 'primary'
 
 export const DashboardPage: React.FC = () => {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-  const [isDialogLoading, setIsDialogLoading] = React.useState(false)
-  const [isShareOpen, setIsShareOpen] = React.useState(false)
-  const [inputValue, setInputValue] = React.useState('')
-  const [textValue, setTextValue] = React.useState('')
-
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true)
-  }
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false)
-    setIsDialogLoading(false)
-  }
-
-  const handleConfirmDialog = () => {
-    setIsDialogLoading(true)
-    setTimeout(() => {
-      setIsDialogOpen(false)
-      setIsDialogLoading(false)
-    }, 1500)
-  }
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value)
-  }
-
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTextValue(event.target.value)
-  }
-
-  const handleExportJSON = () => {
-    alert(EXPORT_JSON_LABEL)
-  }
-
-  const handleExportCSV = () => {
-    alert(EXPORT_CSV_LABEL)
-  }
-
-  const handleOpenShare = () => {
-    setIsShareOpen(true)
-  }
-
-  const handleCloseShare = () => {
-    setIsShareOpen(false)
-  }
-
-  const exportMenuItems = [
-    { label: EXPORT_JSON_LABEL, onClick: handleExportJSON },
-    { label: EXPORT_CSV_LABEL, onClick: handleExportCSV },
-  ]
-
-  const chartData = [
-    { label: CHART_LABEL_HEALTH, value: 90, color: COLOR_SUCCESS as 'success' },
-    { label: CHART_LABEL_WORK, value: 65, color: CHART_COLOR_PRIMARY as 'primary' },
-    { label: CHART_LABEL_MIND, value: 40, color: COLOR_WARNING as 'warning' },
-  ]
-
-  const heatmapData = React.useMemo(() => {
-    const dataList = []
-    const today = new Date()
-    for (let i = 0; i < 90; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() - i)
-      const dateStr = date.toISOString().split('T')[0]
-      const count = i % 3 === 0 ? 2 : i % 5 === 0 ? 1 : i % 7 === 0 ? 3 : 0
-      dataList.push({ date: dateStr, count })
-    }
-    return dataList
-  }, [])
+  const { summary, habitsByCategory } = useDashboard()
 
   return (
-    <div>
-      <h2>{PAGE_TITLE}</h2>
-      <p>{PAGE_DESC}</p>
-
-      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-        {SECTION_BUTTONS}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        {PAGE_TITLE}
       </Typography>
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-        <Button variant="contained" color="primary">
-          {BTN_PRIMARY}
-        </Button>
-
-        <Button variant="contained" color="secondary">
-          {BTN_SECONDARY}
-        </Button>
-
-        <Button variant="contained" color="error">
-          {BTN_ERROR}
-        </Button>
-
-        <Button variant="contained" color="warning">
-          {BTN_WARNING}
-        </Button>
-
-        <Button variant="contained" color="success">
-          {BTN_SUCCESS}
-        </Button>
 
         <Button variant="contained" color="primary" loading>
           {BTN_LOADING}
@@ -266,70 +174,24 @@ export const DashboardPage: React.FC = () => {
           <Typography variant="h6" sx={{ mb: 1 }}>
             {CARD_TITLE_1}
           </Typography>
-          <Typography variant="body2">{CARD_DESC_1}</Typography>
-        </Card>
-        <Card variant={CARD_VARIANT_OUTLINED} sx={{ flex: 1, minWidth: 250 }}>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            {CARD_TITLE_2}
+          <Typography variant="body2" color="text.secondary">
+            {EMPTY_DESC}
           </Typography>
-          <Typography variant="body2">{CARD_DESC_2}</Typography>
         </Card>
-      </Box>
-
-      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-        {SECTION_INPUTS}
-      </Typography>
-      <Box sx={{ maxWidth: 400 }}>
-        <TextField
-          label={INPUT_LABEL}
-          placeholder={INPUT_PLACEHOLDER}
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-      </Box>
-
-      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-        {SECTION_TEXTAREA}
-      </Typography>
-      <Box sx={{ maxWidth: 400 }}>
-        <TextArea
-          label={TEXTAREA_LABEL}
-          placeholder={TEXTAREA_PLACEHOLDER}
-          value={textValue}
-          onChange={handleTextChange}
-        />
-      </Box>
-
-      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-        {SECTION_DROPDOWN}
-      </Typography>
-      <Box>
-        <DropdownMenu label={BTN_EXPORT_DATA} items={exportMenuItems} />
-      </Box>
-
-      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-        {SECTION_SHARE}
-      </Typography>
-      <Box>
-        <Button variant="outlined" color="primary" onClick={handleOpenShare}>
-          {BTN_OPEN_SHARE}
-        </Button>
-      </Box>
-
-      <ConfirmDialog
-        open={isDialogOpen}
-        title={DIALOG_TITLE}
-        content={DIALOG_CONTENT}
-        confirmText={DIALOG_CONFIRM}
-        cancelText={DIALOG_CANCEL}
-        onConfirm={handleConfirmDialog}
-        onClose={handleCloseDialog}
-        severity={DIALOG_SEVERITY}
-        loading={isDialogLoading}
-      />
-
-      <ShareDialog open={isShareOpen} onClose={handleCloseShare} shareUrl={SHARE_URL} />
-    </div>
+      ) : (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          {habitsByCategory.map((group, idx) => (
+            <CategorySection
+              key={group.category}
+              category={group.category}
+              habits={group.habits}
+              defaultExpanded={idx === 0}
+            />
+          ))}
+        </Box>
+      )}
+    </Box>
   )
 }
+
 export default DashboardPage

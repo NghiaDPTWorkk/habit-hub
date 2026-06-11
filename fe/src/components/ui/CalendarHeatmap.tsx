@@ -65,10 +65,11 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
     <Box
       sx={{
         display: 'grid',
-        gridAutoFlow: 'column',
+        gridTemplateColumns: `repeat(${weeks}, 1fr)`,
         gridTemplateRows: 'repeat(7, auto)',
+        gridAutoFlow: 'column',
         gap: 0.5,
-        width: 'max-content',
+        width: '100%',
       }}
     >
       {gridDays.map((day, index) => {
@@ -81,8 +82,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
           <Tooltip key={dateStr || index} title={tooltipText} arrow>
             <Box
               sx={{
-                width: 14,
-                height: 14,
+                aspectRatio: '1',
                 borderRadius: 0.5,
                 backgroundColor: cellColor,
                 transition: 'background-color 0.2s',

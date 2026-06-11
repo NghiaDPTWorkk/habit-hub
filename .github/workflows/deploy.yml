@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: fe/package-lock.json
       
       - name: Install Dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Build Project
         run: npm run build

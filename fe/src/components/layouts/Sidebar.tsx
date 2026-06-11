@@ -82,18 +82,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
         }}
       >
         <Box
-          sx={(theme) => ({
+          sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             height: 44,
             width: 44,
             borderRadius: 1.5,
-            bgcolor: theme.palette.mode === 'light' ? 'grey.100' : 'grey.900',
+            bgcolor: 'grey.900',
             border: '1px solid',
             borderColor: 'divider',
             p: 0.5,
-          })}
+          }}
         >
           <Box
             component="img"

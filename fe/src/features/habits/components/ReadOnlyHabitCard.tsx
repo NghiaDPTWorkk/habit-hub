@@ -24,6 +24,7 @@ export interface ReadOnlyHabitCardProps {
   habit: Habit
   todayCheckin?: { completedCount: number }
   isMissed: boolean
+  currentDayOfWeek: number
 }
 
 const weekDays = [
@@ -40,10 +41,11 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
   habit,
   todayCheckin,
   isMissed,
+  currentDayOfWeek,
 }) => {
   const theme = useTheme()
   const dueToday =
-    habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
+    habit.frequency === 'Daily' || (habit.specificDays?.includes(currentDayOfWeek) ?? false)
 
   return (
     <Card
@@ -85,8 +87,8 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
               sx={{
                 ...theme.typography.body2,
                 color: theme.palette.text.secondary,
-                mb: 1,
                 margin: 0,
+                mb: 1,
               }}
             >
               {CARD_TEXTS.scheduled}{' '}
@@ -103,8 +105,8 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
               sx={{
                 ...theme.typography.body2,
                 color: theme.palette.text.secondary,
-                mb: 0.5,
                 margin: 0,
+                mb: 0.5,
               }}
             >
               {CARD_TEXTS.dueToday}
@@ -117,8 +119,8 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
                 ...theme.typography.body2,
                 color: theme.palette.error.main,
                 fontWeight: 600,
-                mb: 0.5,
                 margin: 0,
+                mb: 0.5,
               }}
             >
               {CARD_TEXTS.missed}
@@ -130,8 +132,8 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
               sx={{
                 ...theme.typography.body2,
                 color: theme.palette.success.main,
-                mb: 0.5,
                 margin: 0,
+                mb: 0.5,
               }}
             >
               {CARD_TEXTS.completed} {todayCheckin.completedCount} {CARD_TEXTS.slash}{' '}

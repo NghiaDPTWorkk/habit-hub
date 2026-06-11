@@ -11,15 +11,21 @@ export interface ReadOnlyHabitListProps {
   habits: Habit[]
   todayCheckinByHabit: Record<number, { completedCount: number }>
   isHabitMissed: (habit: Habit) => boolean
+  currentDayOfWeek: number
 }
 
 export const ReadOnlyHabitList: React.FC<ReadOnlyHabitListProps> = ({
   habits,
   todayCheckinByHabit,
   isHabitMissed,
+  currentDayOfWeek,
 }) => {
   if (habits.length === 0) {
-    return <Typography color="text.secondary">{READ_ONLY_LIST_TEXTS.emptyMessage}</Typography>
+    return (
+      <Box sx={{ p: 4, textAlign: 'center' }}>
+        <Typography color="text.secondary">{READ_ONLY_LIST_TEXTS.emptyMessage}</Typography>
+      </Box>
+    )
   }
 
   return (
@@ -30,6 +36,7 @@ export const ReadOnlyHabitList: React.FC<ReadOnlyHabitListProps> = ({
           habit={habit}
           todayCheckin={todayCheckinByHabit[habit.id]}
           isMissed={isHabitMissed(habit)}
+          currentDayOfWeek={currentDayOfWeek}
         />
       ))}
     </Box>

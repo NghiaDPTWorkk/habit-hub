@@ -6,13 +6,10 @@ import { Icons } from '@/components/ui/icons'
 const READ_ONLY_LAYOUT_CONTENT = {
   TITLE: 'Habit Hub',
   BANNER_TEXT: 'Read-only View — You are viewing shared data. No changes can be made.',
-  FOOTER_COPY: '© ',
-  FOOTER_TEXT: ' Habit Hub. Built with React & Material UI.',
+  FOOTER_TEXT: `© ${new Date().getFullYear()} Habit Hub. Built with React & Material UI.`,
 }
 
 export const ReadOnlyLayout: React.FC = () => {
-  const currentYear = new Date().getFullYear()
-
   return (
     <Box
       sx={{
@@ -60,8 +57,6 @@ export const ReadOnlyLayout: React.FC = () => {
       >
         <Container maxWidth="sm">
           <Typography variant="body2" align="center" sx={{ color: 'primary.contrastText' }}>
-            {READ_ONLY_LAYOUT_CONTENT.FOOTER_COPY}
-            {currentYear}
             {READ_ONLY_LAYOUT_CONTENT.FOOTER_TEXT}
           </Typography>
         </Container>

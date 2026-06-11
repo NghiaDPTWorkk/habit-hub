@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import { Box, Typography, Drawer, IconButton } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
-import { useBoundStore } from '@/store/useBoundStore'
 import { useHabitStore } from '@/features/habits/hooks'
+import { useCheckinStore } from '@/features/checkins/hooks'
 import { ReadOnlyHabitList } from './ReadOnlyHabitList'
 import { FilterSideBar } from './FilterSideBar'
 import type { HabitFilters } from './FilterSideBar'
@@ -21,32 +21,31 @@ const DEFAULT_FILTERS: HabitFilters = {
   status: 'All',
 }
 
-const todayString = new Date().toISOString().split('T')[0]
-const todayWeekDay = new Date().getDay()
-
-const isDueToday = (habit: Habit) => {
+const isDueToday = (habit: Habit, currentDayOfWeek: number) => {
   if (habit.frequency === 'Daily') {
     return true
   }
-  return Array.isArray(habit.specificDays) && habit.specificDays.includes(todayWeekDay)
+  return Array.isArray(habit.specificDays) && habit.specificDays.includes(currentDayOfWeek)
 }
 
 export const ReadOnlyHabitsPage: React.FC = () => {
   const { habits } = useHabitStore()
-  const checkins = useBoundStore((state) => state.checkins)
+  const { today, checkinsByDate } = useCheckinStore()
+  const todayWeekDay = new Date(today + 'T00:00:00').getDay()
 
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
   const todayCheckinByHabit = useMemo(
     () =>
-      checkins.reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
-        if (checkin.date === todayString) {
+      (checkinsByDate[today] ?? []).reduce<Record<number, { completedCount: number }>>(
+        (acc, checkin) => {
           acc[checkin.habitId] = { completedCount: checkin.completedCount }
-        }
-        return acc
-      }, {}),
-    [checkins]
+          return acc
+        },
+        {}
+      ),
+    [checkinsByDate, today]
   )
 
   const filteredHabits = useMemo(
@@ -73,7 +72,7 @@ export const ReadOnlyHabitsPage: React.FC = () => {
     if (habit.status !== 'Active') {
       return false
     }
-    if (!isDueToday(habit)) {
+    if (!isDueToday(habit, todayWeekDay)) {
       return false
     }
     const todayCheckin = todayCheckinByHabit[habit.id]
@@ -120,6 +119,7 @@ export const ReadOnlyHabitsPage: React.FC = () => {
               habits={filteredHabits}
               todayCheckinByHabit={todayCheckinByHabit}
               isHabitMissed={isHabitMissed}
+              currentDayOfWeek={todayWeekDay}
             />
           </Card>
         </Box>

@@ -16,7 +16,12 @@ export const useBoundStore = create<BoundStore>()(
     }),
     {
       name: 'habit-hub-storage',
-      partialize: ({ toastQueue, showToast, dismissToast, ...rest }) => rest,
+      partialize: (state) => ({
+        habits: state.habits,
+        checkins: state.checkins,
+        goals: state.goals,
+        reachedMilestones: state.reachedMilestones,
+      }),
     }
   )
 )

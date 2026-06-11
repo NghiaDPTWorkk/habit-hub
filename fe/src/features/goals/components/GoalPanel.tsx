@@ -16,11 +16,21 @@ const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast, notifiedGoals, markGoalNotified } = useBoundStore()
+  const {
+    goals,
+    checkins,
+    deleteGoal,
+    getGoalProgress,
+    habits,
+    showToast,
+    notifiedGoals,
+    markGoalNotified,
+  } = useBoundStore()
 
   useEffect(() => {
+    const checkinList = Object.values(checkins)
     goals.forEach((goal) => {
-      const progress = getGoalProgress(goal, checkins)
+      const progress = getGoalProgress(goal, checkinList)
       const completedKey = `${goal.id}-completed`
       const at80Key = `${goal.id}-80percent`
 
@@ -63,7 +73,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   return (
     <Stack spacing={2}>
       {goals.map((goal) => {
-        const progress = getGoalProgress(goal, checkins)
+        const progress = getGoalProgress(goal, Object.values(checkins))
         const habitName = getHabitName(goal.habitId)
         const targetLabel = getTargetLabel(goal)
 

@@ -176,3 +176,32 @@ export function getDashboard(habits: Habit[], checkins: Checkin[], goals: Goal[]
     habitsByCategory,
   }
 }
+
+export function getWeeklyCategoryStats(
+  habits: Habit[],
+  checkins: Checkin[]
+): { name: string; value: number; percentage: number }[] {
+  const today = todayStr()
+  const weekStart = subDays(today, 6)
+  const weekCheckins = checkins.filter(
+    (c) => c.date >= weekStart && c.date <= today && c.status === 'Completed'
+  )
+  const activeHabits = habits.filter((h) => h.status === 'Active')
+  const countByCategory = CATEGORIES.reduce(
+    (acc, cat) => {
+      const count = weekCheckins.filter((c) => {
+        const habit = activeHabits.find((h) => h.id === c.habitId)
+        return habit?.category === cat
+      }).length
+      return { ...acc, [cat]: count }
+    },
+    {} as Record<string, number>
+  )
+  const total = Object.values(countByCategory).reduce((a, b) => a + b, 0)
+  if (total === 0) return []
+  return CATEGORIES.filter((cat) => countByCategory[cat] > 0).map((cat) => ({
+    name: cat as string,
+    value: countByCategory[cat],
+    percentage: Math.round((countByCategory[cat] / total) * 100),
+  }))
+}

@@ -20,9 +20,8 @@ export const useBoundStore = create<BoundStore>()(
       name: 'habit-hub-storage',
 
       partialize: (state) => {
-        // tạo bản copy sạch
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { toast, showToast, hideToast, ...rest } = state
-
         return rest
       },
     }

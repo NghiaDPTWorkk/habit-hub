@@ -34,8 +34,6 @@ const DOT_BASE_STYLE: React.CSSProperties = {
   flexShrink: 0,
 }
 
-const tooltipFormatter = (value: number): [number, string] => [value, TOOLTIP_LABEL]
-
 export const CategoryDistributionChart: React.FC = () => {
   const data = useWeeklyCategoryStats()
 
@@ -74,7 +72,7 @@ export const CategoryDistributionChart: React.FC = () => {
               return <Cell key={entry.name} fill={fill} />
             })}
           </Pie>
-          <Tooltip formatter={tooltipFormatter} />
+          <Tooltip formatter={(value) => [`${value as number}`, TOOLTIP_LABEL]} />
         </PieChart>
       </ResponsiveContainer>
 

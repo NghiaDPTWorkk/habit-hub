@@ -30,26 +30,20 @@ export function useCheckinStore() {
   )
 
   const todayCheckins = useMemo(
-    () => Object.values(checkins).filter((c) => c.date === today),
-    [checkins, today]
-  )
-
-  const checkinsByDate = useMemo(
     () =>
-      Object.values(checkins).reduce<Record<string, Checkin[]>>((acc, c) => {
-        ;(acc[c.date] ??= []).push(c)
-        return acc
-      }, {}),
-    [checkins]
+      habits
+        .filter((h) => h.status === 'Active')
+        .flatMap((h) => {
+          const c = checkins[makeCheckinKey(h.id, today)]
+          return c ? [c] : []
+        }),
+    [habits, checkins, today]
   )
 
   const todayProgress = useMemo(() => {
     const activeHabits = habits.filter((h) => h.status === 'Active')
     if (activeHabits.length === 0) return 0
-    const activeHabitIds = new Set(activeHabits.map((h) => h.id))
-    const completedCount = todayCheckins.filter(
-      (c) => c.status === 'Completed' && activeHabitIds.has(c.habitId)
-    ).length
+    const completedCount = todayCheckins.filter((c) => c.status === 'Completed').length
     return Math.min(Math.round((completedCount / activeHabits.length) * 100), 100)
   }, [habits, todayCheckins])
 
@@ -70,14 +64,14 @@ export function useCheckinStore() {
         }
       }
 
-      const existing = getCheckinByHabitAndDate(habitId, date)
+      const existing = useBoundStore.getState().checkins[makeCheckinKey(habitId, date)]
       if (existing) {
         updateCheckin(habitId, date, safeUpdates)
       } else {
         addCheckin({ habitId, date, completedCount: 0, status: 'Not Started', ...safeUpdates })
       }
     },
-    [habits, getCheckinByHabitAndDate, addCheckin, updateCheckin]
+    [habits, addCheckin, updateCheckin]
   )
 
   const markComplete = useCallback(
@@ -93,35 +87,34 @@ export function useCheckinStore() {
     (habitId: number, date: string) => {
       const habit = habits.find((h) => h.id === habitId)
       if (!habit) return
-      const existing = getCheckinByHabitAndDate(habitId, date)
+      const existing = useBoundStore.getState().checkins[makeCheckinKey(habitId, date)]
       const newCount = Math.min((existing?.completedCount ?? 0) + 1, habit.targetPerDay)
       upsertCheckin(habitId, date, {
         completedCount: newCount,
         status: computeStatus(newCount, habit.targetPerDay),
       })
     },
-    [habits, getCheckinByHabitAndDate, upsertCheckin]
+    [habits, upsertCheckin]
   )
 
   const decrementCount = useCallback(
     (habitId: number, date: string) => {
       const habit = habits.find((h) => h.id === habitId)
       if (!habit) return
-      const existing = getCheckinByHabitAndDate(habitId, date)
+      const existing = useBoundStore.getState().checkins[makeCheckinKey(habitId, date)]
       const newCount = Math.max((existing?.completedCount ?? 0) - 1, 0)
       upsertCheckin(habitId, date, {
         completedCount: newCount,
         status: computeStatus(newCount, habit.targetPerDay),
       })
     },
-    [habits, getCheckinByHabitAndDate, upsertCheckin]
+    [habits, upsertCheckin]
   )
 
   return {
     today,
     checkins,
     todayCheckins,
-    checkinsByDate,
     todayProgress,
     getCheckinByHabitAndDate,
     upsertCheckin,

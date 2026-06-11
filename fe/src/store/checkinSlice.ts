@@ -2,34 +2,43 @@ import type { StateCreator } from 'zustand'
 import type { Checkin } from '@/types'
 import type { BoundStore } from './types'
 
+export const makeCheckinKey = (habitId: number, date: string) => `${date}_${habitId}`
+
 export interface CheckinSlice {
-  checkins: Checkin[]
-  addCheckin: (checkin: Omit<Checkin, 'id'>) => void
-  updateCheckin: (id: number, updates: Partial<Omit<Checkin, 'id'>>) => void
-  deleteCheckin: (id: number) => void
+  checkins: Record<string, Checkin>
+  addCheckin: (checkin: Checkin) => void
+  updateCheckin: (
+    habitId: number,
+    date: string,
+    updates: Partial<Omit<Checkin, 'habitId' | 'date'>>
+  ) => void
+  deleteCheckin: (habitId: number, date: string) => void
 }
 
 export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> = (set) => ({
-  checkins: [],
+  checkins: {},
 
   addCheckin: (checkin) =>
     set((state) => ({
-      checkins: [
+      checkins: {
         ...state.checkins,
-        {
-          ...checkin,
-          id: Date.now(),
-        },
-      ],
+        [makeCheckinKey(checkin.habitId, checkin.date)]: checkin,
+      },
     })),
 
-  updateCheckin: (id, updates) =>
-    set((state) => ({
-      checkins: state.checkins.map((c) => (c.id === id ? { ...c, ...updates } : c)),
-    })),
+  updateCheckin: (habitId, date, updates) =>
+    set((state) => {
+      const key = makeCheckinKey(habitId, date)
+      const existing = state.checkins[key]
+      if (!existing) return state
+      return { checkins: { ...state.checkins, [key]: { ...existing, ...updates } } }
+    }),
 
-  deleteCheckin: (id) =>
-    set((state) => ({
-      checkins: state.checkins.filter((c) => c.id !== id),
-    })),
+  deleteCheckin: (habitId, date) =>
+    set((state) => {
+      const key = makeCheckinKey(habitId, date)
+      const next = { ...state.checkins }
+      delete next[key]
+      return { checkins: next }
+    }),
 })

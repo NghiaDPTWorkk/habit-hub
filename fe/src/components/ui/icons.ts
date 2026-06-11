@@ -13,6 +13,12 @@ import PersonIcon from '@mui/icons-material/Person'
 import LockIcon from '@mui/icons-material/Lock'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
+import RemoveIcon from '@mui/icons-material/Remove'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import WhatshotIcon from '@mui/icons-material/Whatshot'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 export const Icons = {
   Add: AddIcon,
@@ -30,4 +36,10 @@ export const Icons = {
   Lock: LockIcon,
   LightMode: LightModeIcon,
   DarkMode: DarkModeIcon,
+  Remove: RemoveIcon,
+  TrendingUp: TrendingUpIcon,
+  WarningAmber: WarningAmberIcon,
+  EmojiEvents: EmojiEventsIcon,
+  Whatshot: WhatshotIcon,
+  ExpandMore: ExpandMoreIcon,
 }

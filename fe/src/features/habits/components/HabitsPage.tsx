@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import { Box, Typography, Drawer, IconButton } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
+import { Icons } from '@/components/ui/icons'
 import { useBoundStore } from '@/store/useBoundStore'
-import { HabitForm, type HabitFormState } from './HabitForm'
+import { useHabitStore } from '@/features/habits/hooks'
+import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
 import { FilterSideBar } from './FilterSideBar'
 import type { HabitFilters } from './FilterSideBar'
@@ -11,15 +13,14 @@ import type { Habit } from '@/types'
 
 const PAGE_TITLE = 'Habits'
 const PAGE_DESC = 'Build and manage all the habits you want to track.'
+const ADD_HABIT_LABEL = 'Add Habit'
+const FILTER_BUTTON_LABEL = 'Filters'
 
-const initialFormState: HabitFormState = {
-  name: '',
-  category: 'Health',
-  frequency: 'Daily',
-  specificDays: null,
-  targetPerDay: 1,
-  priority: 'Medium',
-  status: 'Active',
+const DEFAULT_FILTERS: HabitFilters = {
+  category: 'All',
+  frequency: 'All',
+  priority: 'All',
+  status: 'All',
 }
 
 const todayString = new Date().toISOString().split('T')[0]
@@ -33,26 +34,17 @@ const isDueToday = (habit: Habit) => {
 }
 
 export const HabitsPage: React.FC = () => {
-  const habits = useBoundStore((state) => state.habits)
+  const { habits, deleteHabit, pauseHabit, resumeHabit, archiveHabit } = useHabitStore()
   const checkins = useBoundStore((state) => state.checkins)
-  const addHabit = useBoundStore((state) => state.addHabit)
-  const updateHabit = useBoundStore((state) => state.updateHabit)
-  const deleteHabit = useBoundStore((state) => state.deleteHabit)
-
-  const DEFAULT_FILTERS: HabitFilters = {
-    category: 'All',
-    frequency: 'All',
-    priority: 'All',
-    status: 'All',
-  }
 
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
-  const [formState, setFormState] = useState<HabitFormState>(initialFormState)
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined)
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
   const todayCheckinByHabit = useMemo(
     () =>
-      checkins.reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
+      Object.values(checkins).reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
         if (checkin.date === todayString) {
           acc[checkin.habitId] = { completedCount: checkin.completedCount }
         }
@@ -81,62 +73,21 @@ export const HabitsPage: React.FC = () => {
     [habits, filters]
   )
 
-  const clearForm = () => {
-    setFormState(initialFormState)
-    setEditingId(null)
-  }
-
-  const handleSubmit = () => {
-    const payload = {
-      name: formState.name.trim(),
-      category: formState.category,
-      frequency: formState.frequency,
-      specificDays: formState.frequency === 'Daily' ? null : formState.specificDays || [],
-      targetPerDay: Number(formState.targetPerDay) || 1,
-      priority: formState.priority,
-      status: formState.status,
-    }
-
-    if (!payload.name) {
-      return
-    }
-
-    if (editingId !== null) {
-      updateHabit(editingId, payload)
-    } else {
-      addHabit(payload)
-    }
-
-    clearForm()
-  }
-
   const handleEdit = (habit: Habit) => {
-    setEditingId(habit.id)
-    setFormState({
-      name: habit.name,
-      category: habit.category,
-      frequency: habit.frequency,
-      specificDays: habit.specificDays ?? null,
-      targetPerDay: habit.targetPerDay,
-      priority: habit.priority,
-      status: habit.status,
-    })
+    setHabitToEdit(habit)
+    setModalOpen(true)
   }
 
   const handlePauseResume = (habit: Habit) => {
     if (habit.status === 'Active') {
-      updateHabit(habit.id, { status: 'Paused' })
+      pauseHabit(habit.id)
       return
     }
-    if (habit.status === 'Paused') {
-      updateHabit(habit.id, { status: 'Active' })
-      return
-    }
-    updateHabit(habit.id, { status: 'Active' })
+    resumeHabit(habit.id)
   }
 
   const handleArchive = (habit: Habit) => {
-    updateHabit(habit.id, { status: 'Archived' })
+    archiveHabit(habit.id)
   }
 
   const isHabitMissed = (habit: Habit) => {
@@ -151,31 +102,51 @@ export const HabitsPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, maxWidth: '100vw' }}>
       <Typography variant="h4" gutterBottom>
         {PAGE_TITLE}
       </Typography>
       <Typography variant="body1" sx={{ mb: 3 }}>
         {PAGE_DESC}
       </Typography>
-      <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '320px 1fr' } }}>
-        <Card sx={{ p: 2 }}>
-          <FilterSideBar
-            filters={filters}
-            onChange={setFilters}
-            onClear={() => setFilters(DEFAULT_FILTERS)}
-          />
-        </Card>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 3,
+          gridTemplateColumns: { xs: '1fr', md: '320px 1fr' },
+          maxWidth: '100vw',
+        }}
+      >
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Card sx={{ p: 2 }}>
+            <FilterSideBar
+              filters={filters}
+              onChange={setFilters}
+              onClear={() => setFilters(DEFAULT_FILTERS)}
+            />
+          </Card>
+        </Box>
 
         <Box sx={{ display: 'grid', gap: 3 }}>
           <Card sx={{ p: 2 }}>
-            <HabitForm
-              formState={formState}
-              setFormState={setFormState}
-              editingId={editingId}
-              onSubmit={handleSubmit}
-              onReset={clearForm}
-            />
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                startIcon={<Icons.Add />}
+                onClick={() => {
+                  setHabitToEdit(undefined)
+                  setModalOpen(true)
+                }}
+              >
+                {ADD_HABIT_LABEL}
+              </Button>
+              <IconButton
+                sx={{ display: { xs: 'flex', md: 'none' } }}
+                onClick={() => setFilterDrawerOpen(true)}
+              >
+                <Typography variant="button">{FILTER_BUTTON_LABEL}</Typography>
+              </IconButton>
+            </Box>
           </Card>
 
           <Card sx={{ p: 2 }}>
@@ -191,6 +162,25 @@ export const HabitsPage: React.FC = () => {
           </Card>
         </Box>
       </Box>
+
+      <Drawer anchor="left" open={filterDrawerOpen} onClose={() => setFilterDrawerOpen(false)}>
+        <Box sx={{ maxWidth: 280, p: 2 }}>
+          <FilterSideBar
+            filters={filters}
+            onChange={setFilters}
+            onClear={() => {
+              setFilters(DEFAULT_FILTERS)
+              setFilterDrawerOpen(false)
+            }}
+          />
+        </Box>
+      </Drawer>
+
+      <HabitFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        habitToEdit={habitToEdit}
+      />
     </Box>
   )
 }

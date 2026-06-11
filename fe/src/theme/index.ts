@@ -55,7 +55,7 @@ export const getTheme = (mode: 'light' | 'dark') =>
         primary: mode === 'light' ? '#1f2328' : '#e6edf3',
         secondary: mode === 'light' ? '#656d76' : '#7d8590',
       },
-      divider: mode === 'light' ? '#d0d7de' : '#30363d',
+      divider: mode === 'light' ? 'rgba(31, 35, 40, 0.08)' : 'rgba(240, 246, 252, 0.08)',
     },
     typography: {
       fontFamily: [
@@ -82,6 +82,18 @@ export const getTheme = (mode: 'light' | 'dark') =>
       borderRadius: 8,
     },
     components: {
+      MuiPaper: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundImage: 'none',
+            boxShadow: 'none',
+            border:
+              theme.palette.mode === 'light'
+                ? '1px solid rgba(31, 35, 40, 0.08)'
+                : '1px solid rgba(240, 246, 252, 0.08)',
+          }),
+        },
+      },
       MuiButton: {
         styleOverrides: {
           root: {

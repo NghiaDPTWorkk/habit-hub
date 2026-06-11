@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { alpha } from '@mui/material/styles'
 import { Box, Typography, Avatar, Button } from '@/components/ui'
 import { pxToRem } from '@/utils'
 
@@ -90,9 +89,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
             height: 44,
             width: 44,
             borderRadius: 1.5,
-            bgcolor: theme.palette.grey[900],
+            bgcolor: theme.palette.mode === 'light' ? 'grey.100' : 'grey.900',
             border: '1px solid',
-            borderColor: alpha(theme.palette.primary.main, 0.35),
+            borderColor: 'divider',
             p: 0.5,
           })}
         >
@@ -130,8 +129,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
       {/* User Profile Card */}
       <Box
         sx={{
-          border: '1px solid',
-          borderColor: 'divider',
           borderRadius: 2,
           p: 1.5,
           mx: 2.5,
@@ -139,7 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
-          bgcolor: 'background.paper',
+          bgcolor: 'action.hover',
         }}
       >
         <Avatar
@@ -203,21 +200,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
             sx={{
               justifyContent: 'flex-start',
               px: 2,
-              py: 1,
+              py: 1.25,
               borderRadius: 2,
               fontWeight: item.active ? 600 : 500,
-              color: item.active ? 'primary.main' : 'text.secondary',
-              bgcolor: item.active ? 'primary.light' : 'transparent',
+              fontSize: pxToRem(14.5),
+              color: item.active ? 'primary.contrastText' : 'text.secondary',
+              bgcolor: item.active ? 'primary.main' : 'transparent',
               '&:hover': {
-                bgcolor: item.active
-                  ? 'primary.light'
-                  : (theme) => alpha(theme.palette.primary.main, 0.05),
-                color: 'primary.main',
+                bgcolor: item.active ? 'primary.dark' : 'action.hover',
+                color: item.active ? 'primary.contrastText' : 'text.primary',
+                '& .MuiButton-startIcon': {
+                  color: item.active ? 'primary.contrastText' : 'text.primary',
+                },
               },
               '& .MuiButton-startIcon': {
-                color: item.active ? 'primary.main' : 'text.secondary',
+                color: item.active ? 'primary.contrastText' : 'text.secondary',
                 mr: 1.5,
+                transition: 'color 0.2s ease-in-out',
               },
+              transition: 'all 0.2s ease-in-out',
             }}
           >
             {item.label}
@@ -228,16 +229,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
       {/* Footer Inside Sidebar */}
       <Box
         sx={{
-          p: 2,
-          borderTop: '1px solid',
-          borderColor: 'divider',
+          p: 2.5,
           mt: 'auto',
         }}
       >
         <Typography
           variant="caption"
           align="center"
-          sx={{ color: 'text.secondary', display: 'block' }}
+          sx={{
+            color: 'text.secondary',
+            display: 'block',
+            opacity: 0.7,
+            fontSize: pxToRem(12),
+          }}
         >
           {FOOTER_TEXT}
           {currentYear}

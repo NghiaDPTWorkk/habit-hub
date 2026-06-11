@@ -34,7 +34,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         justifyContent: 'space-between',
         gap: 2,
         px: { xs: 2, md: 4 },
-        py: 3,
+        py: 2,
         borderBottom: '1px solid',
         borderColor: 'divider',
         bgcolor: 'background.paper',

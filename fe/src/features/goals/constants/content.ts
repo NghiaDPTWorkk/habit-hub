@@ -1,0 +1,30 @@
+export const GOALS_CONTENT = {
+  PAGE_TITLE: 'Goals',
+  PAGE_DESC: 'Set and track your long-term habit goals.',
+  PANEL_TITLE: 'Your Goals',
+  FORM_TITLE_ADD: 'Add New Goal',
+  FORM_TITLE_EDIT: 'Edit Goal',
+  FORM_SUBMIT_ADD: 'Create Goal',
+  FORM_SUBMIT_EDIT: 'Update Goal',
+  FORM_CANCEL: 'Cancel',
+  EMPTY_TITLE: 'No goals yet',
+  EMPTY_DESC: 'Create your first goal to start tracking your progress.',
+  FORM_LABELS: {
+    HABIT: 'Habit',
+    TARGET_TYPE: 'Target Type',
+    TARGET_VALUE: 'Target Value',
+  },
+  TARGET_TYPES: {
+    STREAK: 'Consecutive Days (Streak)',
+    TOTAL: 'Total Completions',
+  },
+  PROGRESS_LABEL: 'Progress',
+  PERCENTAGE_SUFFIX: '%',
+  UNKNOWN_HABIT: 'Unknown Habit',
+  CURRENT_OF_TARGET: (current: number, target: number) => `${current} / ${target}`,
+  GOAL_META: (typeLabel: string, value: number) => `${typeLabel}: ${value}`,
+  VALIDATION: {
+    HABIT_REQUIRED: 'Please select a habit',
+    TARGET_INTEGER: 'Target must be a positive whole number',
+  },
+}

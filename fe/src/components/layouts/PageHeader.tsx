@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
+import { pxToRem } from '@/utils'
 import { Box, Typography, Button, IconButton } from '@/components/ui'
 
 // MUI Icons
@@ -96,9 +97,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           to="/habits"
           sx={{
             borderRadius: 2,
-            px: 2,
-            py: 0.75,
+            px: 3,
+            py: 1.25,
             fontWeight: 600,
+            fontSize: pxToRem(15),
             bgcolor: 'primary.main',
             '&:hover': {
               bgcolor: 'primary.dark',

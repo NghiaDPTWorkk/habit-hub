@@ -11,7 +11,7 @@ const H5 = 1005
 function daysAgo(n: number): string {
   const d = new Date()
   d.setDate(d.getDate() - n)
-  return d.toISOString().split('T')[0]
+  return d.toLocaleDateString('en-CA')
 }
 
 export const SEED_HABITS: Habit[] = [

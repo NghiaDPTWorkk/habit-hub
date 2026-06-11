@@ -1,2 +1,3 @@
 export * from './DashboardPage'
-export * from './CategoryDistributionChart'
+export * from './KpiCard'
+export * from './CategorySection'

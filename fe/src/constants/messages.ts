@@ -13,4 +13,10 @@ export const SHARED_MESSAGES = {
     FUTURE_DATE: 'Cannot check-in for a future date!',
     TARGET_EXCEEDED: 'Completed count cannot exceed the daily target!',
   },
+  GOALS: {
+    COMPLETED: (goalName: string) =>
+      `Congratulations! You completed your goal: ${goalName}!`,
+    AT_80_PERCENT: (goalName: string) =>
+      `Great progress! You are 80% toward your goal: ${goalName}!`,
+  },
 }

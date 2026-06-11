@@ -144,13 +144,13 @@ export const MainLayout: React.FC = () => {
           <Box
             sx={{
               fontWeight: 700,
-              fontSize: pxToRem(18),
+              fontSize: pxToRem(22),
               display: 'flex',
               alignItems: 'center',
             }}
           >
             {BRAND_FIRST}
-            <Box component="span" style={{ color: '#10B981' }} sx={{ fontWeight: 900 }}>
+            <Box component="span" style={{ color: '#00FF66' }} sx={{ fontWeight: 900 }}>
               {BRAND_SECOND}
             </Box>
           </Box>

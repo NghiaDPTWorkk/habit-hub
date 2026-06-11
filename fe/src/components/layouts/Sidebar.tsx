@@ -22,7 +22,7 @@ const BRAND_FIRST = 'Trace'
 const BRAND_SECOND = 'X'
 
 const USER_INITIALS = 'TN'
-const USER_NAME = 'Trần Nghĩa'
+const USER_NAME = 'Dương Nghĩa'
 const USER_PLAN = 'Premium Plan'
 const NAV_OVERVIEW = 'Overview'
 const NAV_HABITS = 'Habits'
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1,
+          gap: 1.5,
           px: 3,
           py: 3,
         }}
@@ -87,9 +87,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: 38,
-            width: 38,
-            borderRadius: 1,
+            height: 44,
+            width: 44,
+            borderRadius: 1.5,
             bgcolor: theme.palette.grey[900],
             border: '1px solid',
             borderColor: alpha(theme.palette.primary.main, 0.35),
@@ -107,7 +107,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
           variant="h6"
           sx={{
             fontWeight: 700,
-            fontSize: pxToRem(20),
+            fontSize: pxToRem(24),
             letterSpacing: pxToRem(-0.48),
             color: 'text.primary',
             display: 'flex',
@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
           {BRAND_FIRST}
           <Box
             component="span"
-            style={{ color: '#10B981' }}
+            style={{ color: '#00FF66' }}
             sx={{
               fontWeight: 900,
             }}

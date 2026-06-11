@@ -20,7 +20,6 @@ export const useBoundStore = create<BoundStore>()(
         habits: state.habits,
         checkins: state.checkins,
         goals: state.goals,
-        reachedMilestones: state.reachedMilestones,
       }),
     }
   )

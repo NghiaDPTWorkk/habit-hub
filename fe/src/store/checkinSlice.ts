@@ -18,7 +18,7 @@ export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> 
         ...state.checkins,
         {
           ...checkin,
-          id: Date.now(),
+          id: state.checkins.length > 0 ? Math.max(...state.checkins.map((c) => c.id)) + 1 : 1,
         },
       ],
     })),

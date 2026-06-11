@@ -18,7 +18,7 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
         ...state.habits,
         {
           ...habit,
-          id: Date.now(),
+          id: state.habits.length > 0 ? Math.max(...state.habits.map((h) => h.id)) + 1 : 1,
           createdAt: new Date().toISOString().split('T')[0],
         },
       ],
@@ -30,7 +30,13 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
     })),
 
   deleteHabit: (id) =>
-    set((state) => ({
-      habits: state.habits.filter((h) => h.id !== id),
-    })),
+    set((state) => {
+      const exists = state.habits.some((h) => h.id === id)
+      if (!exists) return state
+      return {
+        habits: state.habits.filter((h) => h.id !== id),
+        checkins: state.checkins.filter((c) => c.habitId !== id),
+        goals: state.goals.filter((g) => g.habitId !== id),
+      }
+    }),
 })

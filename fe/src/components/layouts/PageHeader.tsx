@@ -38,6 +38,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         borderBottom: '1px solid',
         borderColor: 'divider',
         bgcolor: 'background.paper',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
       }}
     >
       <Box>

@@ -26,9 +26,6 @@ const MOCK_TITLE_HABITS = 'Habits'
 const MOCK_TITLE_GOALS = 'Goals & Milestones'
 const MOCK_TITLE_CHECKINS = 'Progress'
 
-const COPYRIGHT_LINE = '© '
-const COPYRIGHT_TEXT = ' ByteBuilders. Built with React & Material UI.'
-
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
   const location = useLocation()
@@ -177,31 +174,6 @@ export const MainLayout: React.FC = () => {
           }}
         >
           <Outlet />
-        </Box>
-
-        {/* Footer */}
-        <Box
-          component="footer"
-          sx={{
-            py: 3,
-            px: 2,
-            backgroundColor: 'background.paper',
-            borderTop: '1px solid',
-            borderColor: 'divider',
-            mt: 'auto',
-          }}
-        >
-          <Box
-            sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              fontSize: pxToRem(14),
-            }}
-          >
-            {COPYRIGHT_LINE}
-            {currentYear}
-            {COPYRIGHT_TEXT}
-          </Box>
         </Box>
       </Box>
 

@@ -1,27 +1,33 @@
-import React from 'react'
-import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom'
-import { alpha } from '@mui/material/styles'
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Container,
-  Box,
-  IconButton,
-  Avatar,
-} from '@/components/ui'
-import { APP_CONSTANTS } from '@/constants'
+import React, { useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import { Box, IconButton, Drawer } from '@/components/ui'
 import { useBoundStore } from '@/store'
-import { Icons } from '@/components/ui/icons'
-import logo3Img from '@/assets/logo3.png'
+import { pxToRem } from '@/utils'
 
-const USER_INITIAL = 'U'
-const BRAND_FIRST_PART = 'Trace'
-const BRAND_SECOND_PART = 'X'
-const BRAND_FONT_SIZE = '1.35rem'
-const BRAND_LETTER_SPACING = '-0.03em'
-const BRAND_X_COLOR = '#10B981'
+// Sub-layouts
+import { Sidebar } from './Sidebar'
+import { PageHeader } from './PageHeader'
+
+// MUI Icons
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import InfoIcon from '@mui/icons-material/Info'
+import MenuIcon from '@mui/icons-material/Menu'
+
+const BRAND_FIRST = 'Trace'
+const BRAND_SECOND = 'X'
+const MOCK_SUBTITLE_DASHBOARD = 'System overview dashboard.'
+const MOCK_SUBTITLE_HABITS = 'Build and manage all the habits you want to track.'
+const MOCK_SUBTITLE_GOALS = 'Define targets and track progress achievements'
+const MOCK_SUBTITLE_CHECKINS = 'Track your progress and check-in history.'
+
+const MOCK_TITLE_DASHBOARD = 'Overview'
+const MOCK_TITLE_HABITS = 'Habits'
+const MOCK_TITLE_GOALS = 'Goals & Milestones'
+const MOCK_TITLE_CHECKINS = 'Progress'
+
+const COPYRIGHT_LINE = '© '
+const COPYRIGHT_TEXT = ' Habit Hub. Built with React & Material UI.'
 
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -29,182 +35,190 @@ export const MainLayout: React.FC = () => {
   const themeMode = useBoundStore((state) => state.themeMode) || 'light'
   const toggleThemeMode = useBoundStore((state) => state.toggleThemeMode)
 
-  const isDashboardActive = location.pathname === '/dashboard' || location.pathname === '/'
-  const isHabitsActive = location.pathname.startsWith('/habits')
-  const isGoalsActive = location.pathname.startsWith('/goals')
-  const isCheckinsActive = location.pathname.startsWith('/checkins')
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
+  }
+
+  const getPageHeaderInfo = (pathname: string) => {
+    if (pathname.startsWith('/habits')) {
+      return {
+        title: MOCK_TITLE_HABITS,
+        subtitle: MOCK_SUBTITLE_HABITS,
+      }
+    }
+    if (pathname.startsWith('/goals')) {
+      return {
+        title: MOCK_TITLE_GOALS,
+        subtitle: MOCK_SUBTITLE_GOALS,
+      }
+    }
+    if (pathname.startsWith('/checkins')) {
+      return {
+        title: MOCK_TITLE_CHECKINS,
+        subtitle: MOCK_SUBTITLE_CHECKINS,
+      }
+    }
+    return {
+      title: MOCK_TITLE_DASHBOARD,
+      subtitle: MOCK_SUBTITLE_DASHBOARD,
+    }
+  }
+
+  const { title, subtitle } = getPageHeaderInfo(location.pathname)
 
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column',
         minHeight: '100vh',
         bgcolor: 'background.default',
       }}
     >
-      <AppBar
-        position="static"
-        elevation={0}
+      {/* Sidebar for Desktop */}
+      <Box
+        component="nav"
         sx={{
-          bgcolor: 'background.paper',
-          color: 'text.primary',
-          borderBottom: '1px solid',
+          width: pxToRem(260),
+          flexShrink: 0,
+          display: { xs: 'none', md: 'block' },
+          borderRight: '1px solid',
           borderColor: 'divider',
+          bgcolor: 'background.paper',
         }}
       >
-        <Toolbar>
+        <Sidebar pathname={location.pathname} currentYear={currentYear} />
+      </Box>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: pxToRem(260),
+          },
+        }}
+      >
+        <Sidebar
+          pathname={location.pathname}
+          onCloseMobile={handleDrawerToggle}
+          currentYear={currentYear}
+        />
+      </Drawer>
+
+      {/* Main Content Pane */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          overflowY: 'auto',
+          minWidth: 0,
+        }}
+      >
+        {/* Mobile Header Bar */}
+        <Box
+          sx={{
+            display: { xs: 'flex', md: 'none' },
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            px: 2,
+            py: 1.5,
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+          }}
+        >
+          <IconButton color="inherit" edge="start" onClick={handleDrawerToggle}>
+            <MenuIcon />
+          </IconButton>
           <Box
-            component={RouterLink}
-            to="/dashboard"
             sx={{
+              fontWeight: 700,
+              fontSize: pxToRem(18),
               display: 'flex',
               alignItems: 'center',
-              flexGrow: 1,
-              gap: 0.75,
-              textDecoration: 'none',
             }}
           >
-            <Box
-              sx={(theme) => ({
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 36,
-                width: 36,
-                borderRadius: 1.25,
-                bgcolor: theme.palette.grey[900],
-                border: '1px solid',
-                borderColor: alpha(theme.palette.primary.main, 0.35),
-                boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.15)}`,
-                p: 0.75,
-              })}
-            >
-              <Box
-                component="img"
-                src={logo3Img}
-                alt="Logo"
-                sx={{ height: '100%', width: '100%', objectFit: 'contain' }}
-              />
+            {BRAND_FIRST}
+            <Box component="span" sx={{ color: 'primary.main', fontWeight: 900 }}>
+              {BRAND_SECOND}
             </Box>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-                fontSize: BRAND_FONT_SIZE,
-                letterSpacing: BRAND_LETTER_SPACING,
-                color: 'text.primary',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {BRAND_FIRST_PART}
-              <Box
-                component="span"
-                sx={{
-                  color: BRAND_X_COLOR,
-                  fontWeight: 900,
-                }}
-              >
-                {BRAND_SECOND_PART}
-              </Box>
-            </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Button
-              component={RouterLink}
-              to="/dashboard"
-              sx={{
-                color: isDashboardActive ? 'primary.main' : 'text.secondary',
-                fontWeight: isDashboardActive ? 700 : 500,
-                '&:hover': { color: 'primary.main' },
-              }}
-            >
-              {APP_CONSTANTS.NAVIGATION.DASHBOARD}
-            </Button>
-            <Button
-              component={RouterLink}
-              to="/habits"
-              sx={{
-                color: isHabitsActive ? 'primary.main' : 'text.secondary',
-                fontWeight: isHabitsActive ? 700 : 500,
-                '&:hover': { color: 'primary.main' },
-              }}
-            >
-              {APP_CONSTANTS.NAVIGATION.HABITS}
-            </Button>
-            <Button
-              component={RouterLink}
-              to="/goals"
-              sx={{
-                color: isGoalsActive ? 'primary.main' : 'text.secondary',
-                fontWeight: isGoalsActive ? 700 : 500,
-                '&:hover': { color: 'primary.main' },
-              }}
-            >
-              {APP_CONSTANTS.NAVIGATION.GOALS}
-            </Button>
-            <Button
-              component={RouterLink}
-              to="/checkins"
-              sx={{
-                color: isCheckinsActive ? 'primary.main' : 'text.secondary',
-                fontWeight: isCheckinsActive ? 700 : 500,
-                '&:hover': { color: 'primary.main' },
-              }}
-            >
-              {APP_CONSTANTS.NAVIGATION.CHECKINS}
-            </Button>
-            <IconButton color="inherit" onClick={toggleThemeMode} sx={{ ml: 1 }}>
-              {themeMode === 'light' ? <Icons.DarkMode /> : <Icons.LightMode />}
-            </IconButton>
-            <IconButton color="inherit" sx={{ ml: 1 }}>
-              <Avatar
-                sx={{
-                  width: 32,
-                  height: 32,
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  fontWeight: 'bold',
-                }}
-              >
-                {USER_INITIAL}
-              </Avatar>
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          <IconButton color="inherit" onClick={toggleThemeMode}>
+            {themeMode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+          </IconButton>
+        </Box>
 
-      <Container component="main" sx={{ flexGrow: 1, py: 4 }}>
-        <Outlet />
-      </Container>
+        {/* Global Page Header */}
+        <PageHeader
+          title={title}
+          subtitle={subtitle}
+          themeMode={themeMode}
+          toggleThemeMode={toggleThemeMode}
+        />
 
-      <Box
-        component="footer"
-        sx={{
-          py: 3,
-          px: 2,
-          mt: 'auto',
-          backgroundColor: 'background.paper',
-          borderTop: '1px solid',
-          borderColor: 'divider',
-        }}
-      >
-        <Container maxWidth="sm">
-          <Typography
-            variant="body2"
-            align="center"
+        {/* Page Body Wrapper */}
+        <Box sx={{ flexGrow: 1, p: { xs: 2, md: 4 } }}>
+          <Outlet />
+        </Box>
+
+        {/* Footer */}
+        <Box
+          component="footer"
+          sx={{
+            py: 3,
+            px: 2,
+            backgroundColor: 'background.paper',
+            borderTop: '1px solid',
+            borderColor: 'divider',
+            mt: 'auto',
+          }}
+        >
+          <Box
             sx={{
+              textAlign: 'center',
               color: 'text.secondary',
+              fontSize: pxToRem(14),
             }}
           >
-            {APP_CONSTANTS.FOOTER.COPY}
+            {COPYRIGHT_LINE}
             {currentYear}
-            {APP_CONSTANTS.FOOTER.TEXT}
-          </Typography>
-        </Container>
+            {COPYRIGHT_TEXT}
+          </Box>
+        </Box>
       </Box>
+
+      {/* Floating Help Button */}
+      <IconButton
+        sx={(theme) => ({
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          width: 48,
+          height: 48,
+          bgcolor: 'info.main',
+          color: 'info.contrastText',
+          boxShadow: theme.shadows[3],
+          '&:hover': {
+            bgcolor: 'info.dark',
+          },
+          zIndex: 1000,
+        })}
+      >
+        <InfoIcon />
+      </IconButton>
     </Box>
   )
 }
+
 export default MainLayout

@@ -168,7 +168,14 @@ export const MainLayout: React.FC = () => {
         />
 
         {/* Page Body Wrapper */}
-        <Box sx={{ flexGrow: 1, p: { xs: 2, md: 4 } }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            px: { xs: 2, md: 4 },
+            pt: 2,
+            pb: { xs: 2, md: 4 },
+          }}
+        >
           <Outlet />
         </Box>
 

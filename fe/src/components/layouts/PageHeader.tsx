@@ -61,22 +61,32 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           sx={{
             border: '1px solid',
             borderColor: 'divider',
-            borderRadius: 2,
-            p: 1,
+            borderRadius: '50%',
+            p: 0.75,
             display: { xs: 'none', md: 'inline-flex' },
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
           }}
         >
-          {themeMode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+          {themeMode === 'light' ? (
+            <DarkModeIcon fontSize="small" />
+          ) : (
+            <LightModeIcon fontSize="small" />
+          )}
         </IconButton>
         <IconButton
           sx={{
             border: '1px solid',
             borderColor: 'divider',
-            borderRadius: 2,
-            p: 1,
+            borderRadius: '50%',
+            p: 0.75,
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
           }}
         >
-          <SettingsIcon />
+          <SettingsIcon fontSize="small" />
         </IconButton>
         <Button
           variant="contained"
@@ -86,6 +96,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           to="/habits"
           sx={{
             borderRadius: 2,
+            px: 2.5,
+            py: 1,
+            fontWeight: 600,
             bgcolor: 'primary.main',
             '&:hover': {
               bgcolor: 'primary.dark',

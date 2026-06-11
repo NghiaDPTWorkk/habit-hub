@@ -17,6 +17,9 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
   reachedMilestones: {},
 
   getGoalProgress: (goal, currentValue) => {
+    if (goal.targetValue <= 0) {
+      return { percentage: 0, isEightyPercentReached: false, isCompleted: false }
+    }
     const percentage = Math.min(100, Math.round((currentValue / goal.targetValue) * 100))
     return {
       percentage,

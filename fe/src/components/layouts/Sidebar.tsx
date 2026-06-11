@@ -87,8 +87,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: 32,
-            width: 32,
+            height: 38,
+            width: 38,
             borderRadius: 1,
             bgcolor: theme.palette.grey[900],
             border: '1px solid',
@@ -117,8 +117,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
           {BRAND_FIRST}
           <Box
             component="span"
+            style={{ color: '#10B981' }}
             sx={{
-              color: 'primary.main',
               fontWeight: 900,
             }}
           >

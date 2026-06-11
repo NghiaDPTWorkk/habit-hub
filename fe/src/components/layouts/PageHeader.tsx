@@ -96,8 +96,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           to="/habits"
           sx={{
             borderRadius: 2,
-            px: 2.5,
-            py: 1,
+            px: 2,
+            py: 0.75,
             fontWeight: 600,
             bgcolor: 'primary.main',
             '&:hover': {

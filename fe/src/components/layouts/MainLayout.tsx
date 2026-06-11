@@ -150,7 +150,7 @@ export const MainLayout: React.FC = () => {
             }}
           >
             {BRAND_FIRST}
-            <Box component="span" sx={{ color: 'primary.main', fontWeight: 900 }}>
+            <Box component="span" style={{ color: '#10B981' }} sx={{ fontWeight: 900 }}>
               {BRAND_SECOND}
             </Box>
           </Box>

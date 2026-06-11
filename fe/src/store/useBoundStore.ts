@@ -1,20 +1,30 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+
 import { createHabitSlice } from '@/store/habitSlice'
 import { createCheckinSlice } from '@/store/checkinSlice'
 import { createGoalSlice } from '@/store/goalSlice'
+import { createToastSlice } from '@/store/toastSlice'
+
 import type { BoundStore } from './types'
 
 export const useBoundStore = create<BoundStore>()(
-  // selector pattern zustands
   persist(
     (...a) => ({
       ...createHabitSlice(...a),
       ...createCheckinSlice(...a),
       ...createGoalSlice(...a),
+      ...createToastSlice(...a),
     }),
     {
       name: 'habit-hub-storage',
+
+      partialize: (state) => {
+        // tạo bản copy sạch
+        const { toast, showToast, hideToast, ...rest } = state
+
+        return rest
+      },
     }
   )
 )

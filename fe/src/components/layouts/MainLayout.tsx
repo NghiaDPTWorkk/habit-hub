@@ -9,6 +9,7 @@ import {
   Box,
   IconButton,
   Avatar,
+  Toast,
 } from '@/components/ui'
 import { APP_CONSTANTS } from '@/constants'
 
@@ -82,6 +83,8 @@ export const MainLayout: React.FC = () => {
           </Typography>
         </Container>
       </Box>
+
+      <Toast />
     </Box>
   )
 }

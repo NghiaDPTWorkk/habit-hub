@@ -1,22 +1,8 @@
 import React from 'react'
-import {
-  Button,
-  Box,
-  StatusPill,
-  Typography,
-  ConfirmDialog,
-  ProgressBar,
-  Card,
-  TextField,
-  TextArea,
-  DropdownMenu,
-  StatCard,
-  ShareDialog,
-  MiniChart,
-  CalendarHeatmap,
-} from '@/components/ui'
-import { CategoryDistributionChart } from './CategoryDistributionChart'
+import { Button, StatusPill, ConfirmDialog, ProgressBar, Card, TextField, TextArea, DropdownMenu, StatCard, ShareDialog, MiniChart, CalendarHeatmap } from '@/components/ui'
+import { Typography, Box } from '@mui/material'
 import { Icons } from '@/components/ui/icons'
+import { useBoundStore } from '@/store'
 
 const PAGE_TITLE = 'Dashboard Page'
 const PAGE_DESC = 'System overview dashboard.'
@@ -39,6 +25,7 @@ const SECTION_SHARE = 'Share Dialog:'
 const SECTION_MINICHART = 'Weekly Progress Chart:'
 const SECTION_CATEGORY_CHART = 'Category Distribution Chart:'
 const SECTION_HEATMAP = 'Check-in Activity Grid:'
+const SECTION_TOAST = 'Toast Notifications:'
 const BTN_TRIGGER_DIALOG = 'Open Confirm Dialog'
 const DIALOG_TITLE = 'Delete Habit'
 const DIALOG_CONTENT = 'Are you sure you want to delete this habit? This action cannot be undone.'
@@ -82,15 +69,119 @@ const CHART_LABEL_WORK = 'Work & Study'
 const CHART_LABEL_MIND = 'Mindset & Reading'
 const CHART_COLOR_PRIMARY = 'primary'
 
+const BTN_TOAST_SUCCESS = 'Success Toast'
+const BTN_TOAST_ERROR = 'Error Toast'
+const BTN_TOAST_WARNING = 'Warning Toast'
+const BTN_TOAST_INFO = 'Info Toast'
+const TOAST_MSG_SUCCESS = 'goal created successfully!'
+const TOAST_MSG_ERROR = 'something went wrong!'
+const TOAST_MSG_WARNING = 'you are almost at the limit!'
+const TOAST_MSG_INFO = 'new update available.'
+
 export const DashboardPage: React.FC = () => {
-  const { summary, habitsByCategory } = useDashboard()
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
+  const [isDialogLoading, setIsDialogLoading] = React.useState(false)
+  const [isShareOpen, setIsShareOpen] = React.useState(false)
+  const [inputValue, setInputValue] = React.useState('')
+  const [textValue, setTextValue] = React.useState('')
+  const showToast = useBoundStore((s) => s.showToast)
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true)
+  }
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false)
+    setIsDialogLoading(false)
+  }
+
+  const handleConfirmDialog = () => {
+    setIsDialogLoading(true)
+    timeoutRef.current = setTimeout(() => {
+      setIsDialogOpen(false)
+      setIsDialogLoading(false)
+    }, 1500)
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value)
+  }
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTextValue(event.target.value)
+  }
+
+  const handleExportJSON = () => {
+    alert(EXPORT_JSON_LABEL)
+  }
+
+  const handleExportCSV = () => {
+    alert(EXPORT_CSV_LABEL)
+  }
+
+  const handleOpenShare = () => {
+    setIsShareOpen(true)
+  }
+
+  const handleCloseShare = () => {
+    setIsShareOpen(false)
+  }
+
+  const exportMenuItems = [
+    { label: EXPORT_JSON_LABEL, onClick: handleExportJSON },
+    { label: EXPORT_CSV_LABEL, onClick: handleExportCSV },
+  ]
+
+  const chartData = [
+    { label: CHART_LABEL_HEALTH, value: 90, color: COLOR_SUCCESS as 'success' },
+    { label: CHART_LABEL_WORK, value: 65, color: CHART_COLOR_PRIMARY as 'primary' },
+    { label: CHART_LABEL_MIND, value: 40, color: COLOR_WARNING as 'warning' },
+  ]
+
+  const heatmapData = React.useMemo(() => {
+    const dataList = []
+    const today = new Date()
+    for (let i = 0; i < 90; i++) {
+      const date = new Date(today)
+      date.setDate(today.getDate() - i)
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
+      const count = i % 3 === 0 ? 2 : i % 5 === 0 ? 1 : i % 7 === 0 ? 3 : 0
+      dataList.push({ date: dateStr, count })
+    }
+    return dataList
+  }, [])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Typography variant="h5" sx={{ fontWeight: 700 }}>
         {PAGE_TITLE}
       </Typography>
-
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+        <Button variant="contained" color="primary">
+          {BTN_PRIMARY}
+        </Button>
+        <Button variant="contained" color="secondary">
+          {BTN_SECONDARY}
+        </Button>
+        <Button variant="contained" color="error">
+          {BTN_ERROR}
+        </Button>
+        <Button variant="contained" color="warning">
+          {BTN_WARNING}
+        </Button>
+        <Button variant="contained" color="success">
+          {BTN_SUCCESS}
+        </Button>
         <Button variant="contained" color="primary" loading>
           {BTN_LOADING}
         </Button>
@@ -178,20 +269,80 @@ export const DashboardPage: React.FC = () => {
             {EMPTY_DESC}
           </Typography>
         </Card>
-      ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {habitsByCategory.map((group, idx) => (
-            <CategorySection
-              key={group.category}
-              category={group.category}
-              habits={group.habits}
-              defaultExpanded={idx === 0}
-            />
-          ))}
-        </Box>
-      )}
-    </Box>
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_INPUTS}
+      </Typography>
+      <Box sx={{ maxWidth: 400 }}>
+        <TextField
+          label={INPUT_LABEL}
+          placeholder={INPUT_PLACEHOLDER}
+          value={inputValue}
+          onChange={handleInputChange}
+        />
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_TEXTAREA}
+      </Typography>
+      <Box sx={{ maxWidth: 400 }}>
+        <TextArea
+          label={TEXTAREA_LABEL}
+          placeholder={TEXTAREA_PLACEHOLDER}
+          value={textValue}
+          onChange={handleTextChange}
+        />
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_DROPDOWN}
+      </Typography>
+      <Box>
+        <DropdownMenu label={BTN_EXPORT_DATA} items={exportMenuItems} />
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_SHARE}
+      </Typography>
+      <Box>
+        <Button variant="outlined" color="primary" onClick={handleOpenShare}>
+          {BTN_OPEN_SHARE}
+        </Button>
+      </Box>
+
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {SECTION_TOAST}
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Button variant="contained" color="success" onClick={() => showToast(TOAST_MSG_SUCCESS, 'success')}>
+          {BTN_TOAST_SUCCESS}
+        </Button>
+        <Button variant="contained" color="error" onClick={() => showToast(TOAST_MSG_ERROR, 'error')}>
+          {BTN_TOAST_ERROR}
+        </Button>
+        <Button variant="contained" color="warning" onClick={() => showToast(TOAST_MSG_WARNING, 'warning')}>
+          {BTN_TOAST_WARNING}
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => showToast(TOAST_MSG_INFO, 'info')}>
+          {BTN_TOAST_INFO}
+        </Button>
+      </Box>
+
+      <ConfirmDialog
+        open={isDialogOpen}
+        title={DIALOG_TITLE}
+        content={DIALOG_CONTENT}
+        confirmText={DIALOG_CONFIRM}
+        cancelText={DIALOG_CANCEL}
+        onConfirm={handleConfirmDialog}
+        onClose={handleCloseDialog}
+        severity={DIALOG_SEVERITY}
+        loading={isDialogLoading}
+      />
+
+      <ShareDialog open={isShareOpen} onClose={handleCloseShare} shareUrl={SHARE_URL} />
+    </div>
   )
 }
-
 export default DashboardPage

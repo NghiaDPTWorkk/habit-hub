@@ -24,9 +24,8 @@ const BASE_HABIT: Habit = {
   createdAt: '2026-01-01',
 }
 
-let checkinId = 1
 function makeCheckin(date: string, status: 'Completed' | 'Not Started' = 'Completed'): Checkin {
-  return { id: checkinId++, habitId: 1, date, completedCount: 1, status }
+  return { habitId: 1, date, completedCount: 1, status }
 }
 
 describe('todayStr', () => {
@@ -192,17 +191,21 @@ describe('goalProgress', () => {
   })
 
   const streakGoal: Goal = {
-    id: 1,
+    id: 'goal-1',
     habitId: 1,
     targetType: 'streak',
     targetValue: 5,
+    status: 'active',
+    createdAt: '2026-01-01',
   }
 
   const completionsGoal: Goal = {
-    id: 2,
+    id: 'goal-2',
     habitId: 1,
     targetType: 'total_completions',
     targetValue: 10,
+    status: 'active',
+    createdAt: '2026-01-01',
   }
 
   it('calculates streak goal progress', () => {

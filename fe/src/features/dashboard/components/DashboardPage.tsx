@@ -1,24 +1,22 @@
 import React from 'react'
 import Grid from '@mui/material/Grid'
-import { Box, Typography } from '@/components/ui'
-import { Card } from '@/components/ui'
-import { CalendarHeatmap } from '@/components/ui'
-import { MiniChart } from '@/components/ui'
+import { Box, Typography, Card, CalendarHeatmap, MiniChart } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useDashboard, useDailyIntensity, useWeeklyRates } from '../hooks'
 import { KpiCard } from './KpiCard'
 import { CategorySection } from './CategorySection'
+import { AtRiskBanner } from './AtRiskBanner'
 
 const PAGE_TITLE = 'Dashboard'
 const KPI_DONE_TITLE = '% Done Today'
 const KPI_ACTIVE_TITLE = 'Active Habits'
 const KPI_RISK_TITLE = 'At Risk'
 const KPI_GOALS_TITLE = 'Goals Achieved'
-const SECTION_WEEKLY = 'Weekly by Category'
-const SECTION_ACTIVITY = 'Activity — last 16 weeks'
 const EMPTY_TITLE = 'No habits yet'
 const EMPTY_DESC = 'Go to Habits and create your first habit to see stats here.'
-const ICON_SIZE = { fontSize: 40 }
+const SECTION_ACTIVITY = 'Activity'
+const SECTION_WEEKLY = 'Weekly by Category'
+const ICON_SIZE = { fontSize: 28 }
 const HEATMAP_WEEKS = 16
 
 const CARD_DONE = { iconColor: 'success.main', iconBg: 'rgba(16,185,129,0.12)' }
@@ -45,6 +43,11 @@ export const DashboardPage: React.FC = () => {
   const weeklyRates = useWeeklyRates()
   const dateLabel = getDateLabel()
 
+  const atRiskNames = habitsByCategory
+    .flatMap((g) => g.habits)
+    .filter((h) => summary.atRiskHabitIds.includes(h.habitId))
+    .map((h) => h.habitName)
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -62,7 +65,8 @@ export const DashboardPage: React.FC = () => {
             title={KPI_DONE_TITLE}
             value={formatPercent(summary.percentCompletedToday)}
             icon={<Icons.Check sx={ICON_SIZE} />}
-            {...CARD_DONE}
+            iconColor={CARD_DONE.iconColor}
+            iconBg={CARD_DONE.iconBg}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -70,7 +74,8 @@ export const DashboardPage: React.FC = () => {
             title={KPI_ACTIVE_TITLE}
             value={summary.activeHabits}
             icon={<Icons.TrendingUp sx={ICON_SIZE} />}
-            {...CARD_ACTIVE}
+            iconColor={CARD_ACTIVE.iconColor}
+            iconBg={CARD_ACTIVE.iconBg}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -78,7 +83,8 @@ export const DashboardPage: React.FC = () => {
             title={KPI_RISK_TITLE}
             value={summary.atRiskHabits}
             icon={<Icons.WarningAmber sx={ICON_SIZE} />}
-            {...CARD_RISK}
+            iconColor={CARD_RISK.iconColor}
+            iconBg={CARD_RISK.iconBg}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -86,10 +92,13 @@ export const DashboardPage: React.FC = () => {
             title={KPI_GOALS_TITLE}
             value={summary.achievedGoals}
             icon={<Icons.EmojiEvents sx={ICON_SIZE} />}
-            {...CARD_GOALS}
+            iconColor={CARD_GOALS.iconColor}
+            iconBg={CARD_GOALS.iconBg}
           />
         </Grid>
       </Grid>
+
+      <AtRiskBanner count={summary.atRiskHabits} habitNames={atRiskNames} />
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 5 }}>

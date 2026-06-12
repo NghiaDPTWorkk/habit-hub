@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Box, Card, IconButton, Stack, Typography } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
-import { SHARED_MESSAGES } from '@/constants/messages'
 import { GOALS_CONTENT } from '../constants/content'
+import { useGoalMilestoneNotifications } from '../hooks'
 import type { Goal } from '@/types'
 
 interface GoalPanelProps {
@@ -16,33 +16,26 @@ const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const {
-    goals,
-    checkins,
-    deleteGoal,
-    getGoalProgress,
-    habits,
-    showToast,
-    notifiedGoals,
-    markGoalNotified,
-  } = useBoundStore()
+  const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
 
   useEffect(() => {
     const checkinList = Object.values(checkins)
     goals.forEach((goal) => {
       const progress = getGoalProgress(goal, checkinList)
+      const habitName = habits.find((h) => h.id === goal.habitId)?.name ?? 'Unknown Habit'
       const completedKey = `${goal.id}-completed`
       const at80Key = `${goal.id}-80percent`
 
       if (progress.isCompleted && !notifiedGoals[completedKey]) {
         markGoalNotified(completedKey)
-        showToast(SHARED_MESSAGES.GOALS.COMPLETED, 'success')
+        markGoalNotified(at80Key)
+        showToast(SHARED_MESSAGES.GOALS.COMPLETED(habitName), 'success')
       } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
         markGoalNotified(at80Key)
-        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT, 'info')
+        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT(habitName), 'info')
       }
     })
-  }, [goals, checkins, getGoalProgress, showToast, notifiedGoals, markGoalNotified])
+  }, [goals, checkins, habits, getGoalProgress, showToast, notifiedGoals, markGoalNotified])
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)

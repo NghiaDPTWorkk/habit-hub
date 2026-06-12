@@ -11,7 +11,6 @@ import { PageHeader } from './PageHeader'
 // MUI Icons
 import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
-import InfoIcon from '@mui/icons-material/Info'
 import MenuIcon from '@mui/icons-material/Menu'
 
 const BRAND_FIRST = 'Trace'
@@ -184,26 +183,6 @@ export const MainLayout: React.FC = () => {
           <Outlet />
         </Box>
       </Box>
-
-      {/* Floating Help Button */}
-      <IconButton
-        sx={(theme) => ({
-          position: 'fixed',
-          bottom: 24,
-          right: 24,
-          width: 48,
-          height: 48,
-          bgcolor: 'info.main',
-          color: 'info.contrastText',
-          boxShadow: theme.shadows[3],
-          '&:hover': {
-            bgcolor: 'info.dark',
-          },
-          zIndex: 1000,
-        })}
-      >
-        <InfoIcon />
-      </IconButton>
     </Box>
   )
 }

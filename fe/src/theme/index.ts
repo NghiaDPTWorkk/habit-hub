@@ -11,9 +11,9 @@ export const getTheme = (mode: 'light' | 'dark') =>
     palette: {
       mode,
       primary: {
-        main: mode === 'light' ? '#1f883d' : '#238636',
-        light: mode === 'light' ? '#dafbe1' : 'rgba(35, 134, 54, 0.15)',
-        dark: mode === 'light' ? '#1a7f37' : '#2ea44f',
+        main: mode === 'light' ? '#27ae60' : '#34d399',
+        light: mode === 'light' ? '#e6f4ea' : 'rgba(46, 125, 50, 0.15)',
+        dark: mode === 'light' ? '#219653' : '#059669',
         contrastText: '#ffffff',
       },
       secondary: {
@@ -35,9 +35,9 @@ export const getTheme = (mode: 'light' | 'dark') =>
         contrastText: '#ffffff',
       },
       success: {
-        main: mode === 'light' ? '#1f883d' : '#238636',
-        light: mode === 'light' ? '#dafbe1' : 'rgba(35, 134, 54, 0.15)',
-        dark: mode === 'light' ? '#1a7f37' : '#2ea44f',
+        main: mode === 'light' ? '#27ae60' : '#34d399',
+        light: mode === 'light' ? '#e6f4ea' : 'rgba(46, 125, 50, 0.15)',
+        dark: mode === 'light' ? '#219653' : '#059669',
         contrastText: '#ffffff',
       },
       info: {

@@ -90,7 +90,7 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
     padL = 28,
     padR = 8,
     padT = 18,
-    padB = 22
+    padB = 26
   const chartW = svgW - padL - padR,
     chartH = svgH - padT - padB,
     baseY = padT + chartH
@@ -196,7 +196,7 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
         </Grid>
       </Grid>
 
-      <Box sx={{ position: 'relative', width: '100%', maxWidth: 500, mx: 'auto' }}>
+      <Box sx={{ position: 'relative', width: '100%', maxWidth: 400, mx: 'auto' }}>
         <svg
           viewBox={`0 0 ${svgW} ${svgH}`}
           width="100%"
@@ -277,7 +277,7 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
                   )}
                   <text
                     x={bx + barWidth / 2}
-                    y={baseY + 14}
+                    y={baseY + 12}
                     fontSize="9px"
                     textAnchor="middle"
                     fill={isToday ? theme.palette.primary.main : theme.palette.text.secondary}
@@ -288,7 +288,7 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
                   {isToday && (
                     <circle
                       cx={bx + barWidth / 2}
-                      cy={baseY + 6}
+                      cy={baseY + 22}
                       r={2.5}
                       fill={theme.palette.primary.main}
                     />

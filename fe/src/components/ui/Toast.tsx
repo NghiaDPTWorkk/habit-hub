@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Snackbar } from './Snackbar'
-import { Alert } from './Alert'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 import { useBoundStore } from '@/store/useBoundStore'
 
 const TOAST_DURATION_MS = 4000

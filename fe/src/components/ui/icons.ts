@@ -19,6 +19,11 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import WhatshotIcon from '@mui/icons-material/Whatshot'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import DownloadIcon from '@mui/icons-material/Download'
+import UploadIcon from '@mui/icons-material/Upload'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 
 export const Icons = {
   Add: AddIcon,
@@ -42,4 +47,9 @@ export const Icons = {
   EmojiEvents: EmojiEventsIcon,
   Whatshot: WhatshotIcon,
   ExpandMore: ExpandMoreIcon,
+  Download: DownloadIcon,
+  Upload: UploadIcon,
+  SettingsOutlined: SettingsOutlinedIcon,
+  LightModeOutlined: LightModeOutlinedIcon,
+  DarkModeOutlined: DarkModeOutlinedIcon,
 }

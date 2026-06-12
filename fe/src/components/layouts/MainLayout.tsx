@@ -11,7 +11,6 @@ import { PageHeader } from './PageHeader'
 // MUI Icons
 import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
-import InfoIcon from '@mui/icons-material/Info'
 import MenuIcon from '@mui/icons-material/Menu'
 
 const BRAND_FIRST = 'Trace'
@@ -20,11 +19,13 @@ const MOCK_SUBTITLE_DASHBOARD = 'System overview dashboard.'
 const MOCK_SUBTITLE_HABITS = 'Build and manage all the habits you want to track.'
 const MOCK_SUBTITLE_GOALS = 'Define targets and track progress achievements'
 const MOCK_SUBTITLE_CHECKINS = 'Track your progress and check-in history.'
+const MOCK_SUBTITLE_SETTINGS = 'Export data records and administrative tools'
 
 const MOCK_TITLE_DASHBOARD = 'Overview'
 const MOCK_TITLE_HABITS = 'Habits'
 const MOCK_TITLE_GOALS = 'Goals & Milestones'
 const MOCK_TITLE_CHECKINS = 'Progress'
+const MOCK_TITLE_SETTINGS = 'Settings & Backups'
 
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -55,6 +56,12 @@ export const MainLayout: React.FC = () => {
       return {
         title: MOCK_TITLE_CHECKINS,
         subtitle: MOCK_SUBTITLE_CHECKINS,
+      }
+    }
+    if (pathname.startsWith('/settings')) {
+      return {
+        title: MOCK_TITLE_SETTINGS,
+        subtitle: MOCK_SUBTITLE_SETTINGS,
       }
     }
     return {
@@ -176,28 +183,7 @@ export const MainLayout: React.FC = () => {
           <Outlet />
         </Box>
       </Box>
-
-      {/* Floating Help Button */}
-      <IconButton
-        sx={(theme) => ({
-          position: 'fixed',
-          bottom: 24,
-          right: 24,
-          width: 48,
-          height: 48,
-          bgcolor: 'info.main',
-          color: 'info.contrastText',
-          boxShadow: theme.shadows[3],
-          '&:hover': {
-            bgcolor: 'info.dark',
-          },
-          zIndex: 1000,
-        })}
-      >
-        <InfoIcon />
-      </IconButton>
     </Box>
   )
 }
-
 export default MainLayout

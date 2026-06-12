@@ -50,7 +50,11 @@ function streakUpToDate(habit: Habit, checkins: Checkin[], endDate: string): num
 }
 
 export function currentStreak(habit: Habit, checkins: Checkin[]): number {
-  return streakUpToDate(habit, checkins, todayStr())
+  const today = todayStr()
+  if (isCompleted(habit.id, checkins, today)) {
+    return streakUpToDate(habit, checkins, today)
+  }
+  return streakUpToDate(habit, checkins, subDays(today, 1))
 }
 
 export function longestStreak(habit: Habit, checkins: Checkin[]): number {

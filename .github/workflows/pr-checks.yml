@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: fe/package-lock.json
 
       - name: Cài đặt thư viện
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Kiểm tra Code style (ESLint)
         run: npm run lint

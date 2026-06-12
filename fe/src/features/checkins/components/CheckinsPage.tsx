@@ -32,6 +32,29 @@ export const CheckinsPage: React.FC = () => {
   const { getCheckinByHabitAndDate } = useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
 
+  const getDayStatus = (day: Dayjs) => {
+    const dayOfWeek = day.day()
+    const dStr = day.format('YYYY-MM-DD')
+    const todayStr = dayjs().format('YYYY-MM-DD')
+
+    const dayHabits = habits.filter((h) => {
+      if (h.status !== STATUS_ACTIVE) return false
+      if (h.frequency === FREQUENCY_DAILY) return true
+      return h.specificDays?.includes(dayOfWeek) ?? false
+    })
+
+    if (dayHabits.length === 0) return 'none'
+
+    const allCompleted = dayHabits.every((h) => {
+      const c = getCheckinByHabitAndDate(h.id, dStr)
+      return c && c.completedCount >= h.targetPerDay
+    })
+
+    if (allCompleted) return 'completed'
+    if (dStr < todayStr) return 'overdue'
+    return 'none'
+  }
+
   const selectedDate = useMemo(() => {
     const dateParam = searchParams.get('date')
     return dateParam ? dayjs(dateParam) : dayjs()
@@ -120,6 +143,7 @@ export const CheckinsPage: React.FC = () => {
             const isSelected = !isFuture && day.isSame(selectedDate, 'day')
             const dateNum = day.date()
             const label = WEEK_DAY_LABELS[idx]
+            const status = getDayStatus(day)
 
             return (
               <Box
@@ -134,7 +158,8 @@ export const CheckinsPage: React.FC = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  py: 1.5,
+                  pt: 1.5,
+                  pb: 1.25,
                   borderRadius: 1.5,
                   border: '1px solid',
                   borderColor: isSelected ? 'success.main' : 'transparent',
@@ -160,7 +185,7 @@ export const CheckinsPage: React.FC = () => {
                   sx={{
                     fontWeight: 600,
                     color: isSelected ? 'success.main' : 'text.secondary',
-                    mb: 0.5,
+                    mb: 0.25,
                   }}
                 >
                   {label}
@@ -174,10 +199,24 @@ export const CheckinsPage: React.FC = () => {
                       : isFuture
                         ? 'text.secondary'
                         : 'text.primary',
+                    mb: 0.5,
                   }}
                 >
                   {dateNum}
                 </Typography>
+                <Box
+                  sx={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    backgroundColor:
+                      status === 'completed'
+                        ? 'success.main'
+                        : status === 'overdue'
+                          ? 'error.main'
+                          : 'transparent',
+                  }}
+                />
               </Box>
             )
           })}

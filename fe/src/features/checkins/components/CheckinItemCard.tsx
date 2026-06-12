@@ -1,18 +1,21 @@
 import React from 'react'
-import { Box, Typography, Card } from '@/components/ui'
-import { Button } from '@/components/ui'
-import { ProgressBar } from '@/components/ui'
+import { Box, Typography, Card, IconButton, Tooltip, Checkbox } from '@/components/ui'
+import { Icons } from '@/components/ui/icons'
+import { useCheckinStore } from '../hooks'
 import type { Habit, Checkin } from '@/types'
-import { QuickToggle } from './QuickToggle'
 
-const LABEL_UPDATE_PROGRESS = 'Update Progress'
-const VARIANT_H6 = 'h6'
-const VARIANT_BODY2 = 'body2'
-const VARIANT_CAPTION = 'caption'
-const VARIANT_CONTAINED = 'contained'
-const COLOR_TEXT_SECONDARY = 'text.secondary'
-const COLOR_SUCCESS = 'success'
-const TARGET_PER_DAY_YESNO = 1
+const LABEL_CATEGORY = 'Category: '
+const LABEL_PRIORITY = ' | Priority: '
+const LABEL_EDIT = 'Edit Progress'
+const LABEL_CHECKIN = 'Check-in'
+
+const CATEGORY_THEME_COLORS: Record<string, string> = {
+  Health: 'success.main',
+  Study: 'info.main',
+  Work: 'primary.main',
+  Mindfulness: 'secondary.main',
+  Other: 'warning.main',
+}
 
 export interface CheckinItemCardProps {
   habit: Habit
@@ -27,43 +30,71 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
   today,
   onOpenModal,
 }) => {
+  const { markComplete, upsertCheckin } = useCheckinStore()
   const completedCount = checkin?.completedCount ?? 0
-  const isYesNo = habit.targetPerDay === TARGET_PER_DAY_YESNO
   const isChecked = checkin?.status === 'Completed'
-  const progressValue = Math.round((completedCount / habit.targetPerDay) * 100)
-  const countLabel = `${completedCount} / ${habit.targetPerDay}`
+
+  const handleToggle = () => {
+    if (isChecked) {
+      upsertCheckin(habit.id, today, { completedCount: 0, status: 'Not Started' })
+    } else {
+      markComplete(habit.id, today)
+    }
+  }
+
+  const categoryColor = CATEGORY_THEME_COLORS[habit.category] || 'text.secondary'
+  const progressText =
+    habit.targetPerDay > 1 ? ` | Progress: ${completedCount}/${habit.targetPerDay}` : ''
+  const subtitleText = `${LABEL_CATEGORY}${habit.category}${LABEL_PRIORITY}${habit.priority}${progressText}`
 
   return (
     <Card sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant={VARIANT_H6}>{habit.name}</Typography>
-          <Typography variant={VARIANT_BODY2} color={COLOR_TEXT_SECONDARY}>
-            {habit.category}
-          </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* Left Part: Dot and Title/Subtitle */}
+        <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: 1, pr: 2 }}>
+          <Box
+            sx={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              bgcolor: categoryColor,
+              mr: 1.5,
+              flexShrink: 0,
+            }}
+          />
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+              {habit.name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {subtitleText}
+            </Typography>
+          </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {isYesNo ? (
-            <QuickToggle habitId={habit.id} date={today} checked={isChecked} />
-          ) : (
-            <>
-              <Typography variant={VARIANT_CAPTION} color={COLOR_TEXT_SECONDARY}>
-                {countLabel}
-              </Typography>
-              <Button variant={VARIANT_CONTAINED} color={COLOR_SUCCESS} onClick={onOpenModal}>
-                {LABEL_UPDATE_PROGRESS}
-              </Button>
-            </>
-          )}
+        {/* Right Part: Edit and Checkin Toggle */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
+          <Tooltip title={LABEL_EDIT}>
+            <IconButton size="small" onClick={onOpenModal}>
+              <Icons.Edit fontSize="small" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={LABEL_CHECKIN}>
+            <Checkbox
+              checked={isChecked}
+              onChange={handleToggle}
+              sx={{
+                color: 'action.disabled',
+                p: 0.5,
+                '&.Mui-checked': {
+                  color: 'success.main',
+                },
+              }}
+            />
+          </Tooltip>
         </Box>
       </Box>
-
-      {!isYesNo && (
-        <Box sx={{ mt: 2 }}>
-          <ProgressBar value={progressValue} color={COLOR_SUCCESS} />
-        </Box>
-      )}
     </Card>
   )
 }

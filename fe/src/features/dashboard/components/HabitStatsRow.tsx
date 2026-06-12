@@ -3,7 +3,10 @@ import { Box, Typography, Tooltip, ProgressBar } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary } from '@/types'
 
-export const HABIT_STATS_GRID_COLS = 'minmax(120px, 2fr) 80px 80px 80px 140px'
+const HABIT_STATS_GRID_COLS = {
+  xs: '1fr 70px 100px',
+  sm: 'minmax(120px, 2fr) 80px 80px 80px 140px',
+}
 
 const STREAK_SUFFIX = 'd'
 const AT_RISK_LABEL = 'At risk'
@@ -26,7 +29,6 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
         borderBottom: 1,
         borderColor: 'divider',
         '&:last-child': { borderBottom: 0 },
-        minWidth: 500,
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
@@ -60,12 +62,20 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
         </Typography>
       </Box>
 
-      <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ textAlign: 'center', display: { xs: 'none', sm: 'block' } }}
+      >
         {summary.longestStreak}
         {STREAK_SUFFIX}
       </Typography>
 
-      <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ textAlign: 'center', display: { xs: 'none', sm: 'block' } }}
+      >
         {summary.totalCompletions}
       </Typography>
 

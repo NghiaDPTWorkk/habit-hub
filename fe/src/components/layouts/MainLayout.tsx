@@ -186,5 +186,4 @@ export const MainLayout: React.FC = () => {
     </Box>
   )
 }
-
 export default MainLayout

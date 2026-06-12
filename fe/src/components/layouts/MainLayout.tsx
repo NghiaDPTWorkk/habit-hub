@@ -7,7 +7,7 @@ import { pxToRem } from '@/utils'
 // Sub-layouts
 import { Sidebar } from './Sidebar'
 import { PageHeader } from './PageHeader'
-import { AttentionBanner } from './AttentionBanner'
+import { AtRiskBanner } from './AtRiskBanner'
 
 // MUI Icons
 import LightModeIcon from '@mui/icons-material/LightMode'
@@ -181,7 +181,7 @@ export const MainLayout: React.FC = () => {
             pb: { xs: 2, md: 4 },
           }}
         >
-          <AttentionBanner />
+          <AtRiskBanner />
           <Outlet />
         </Box>
       </Box>

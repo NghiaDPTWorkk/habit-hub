@@ -2,67 +2,51 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Typography, Button, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
+import { useDashboard } from '@/features/dashboard/hooks'
 import { useBoundStore } from '@/store'
-import { isScheduledForDate } from '@/features/habits/services/ScheduleService'
 import { pxToRem } from '@/utils'
 
-const BANNER_TITLE = 'Habits need your attention'
+const BANNER_TITLE_SINGLE = 'Habit at risk today'
+const BANNER_TITLE_PLURAL = 'Habits at risk today'
 const BTN_GO_TO_CHECKIN = 'Go to Check-in →'
 const CHECKINS_ROUTE = '/checkins'
-const STATUS_ACTIVE = 'Active'
 const BTN_SHADOW = '0 4px 12px rgba(242, 153, 74, 0.15)'
 const BTN_HOVER_SHADOW = '0 6px 16px rgba(242, 153, 74, 0.25)'
 const CLOSE_BTN_HOVER_BG = 'rgba(242, 153, 74, 0.08)'
 
-export const AttentionBanner: React.FC = () => {
+export const AtRiskBanner: React.FC = () => {
   const navigate = useNavigate()
+  const { summary } = useDashboard()
   const habits = useBoundStore((state) => state.habits)
-  const checkins = useBoundStore((state) => state.checkins)
-  const [dismissedHabitKey, setDismissedHabitKey] = React.useState<string | null>(null)
+  const [dismissedKey, setDismissedKey] = React.useState<string | null>(null)
 
-  const neglectedHabitInfo = (() => {
-    const today = new Date()
-    for (let d = 1; d <= 7; d++) {
-      const checkDate = new Date()
-      checkDate.setDate(today.getDate() - d)
-      const offset = checkDate.getTimezoneOffset()
-      const localDate = new Date(checkDate.getTime() - offset * 60 * 1000)
-      const checkDateStr = localDate.toISOString().split('T')[0]
+  const atRiskList = React.useMemo(() => {
+    return habits.filter((h) => summary.atRiskHabitIds?.includes(h.id))
+  }, [habits, summary.atRiskHabitIds])
 
-      for (const h of habits) {
-        if (h.status !== STATUS_ACTIVE) continue
-        if (isScheduledForDate(h, checkDateStr)) {
-          const key = `${checkDateStr}_${h.id}`
-          const checkin = checkins[key]
-          const isCompleted = checkin && checkin.completedCount >= h.targetPerDay
-          if (!isCompleted) {
-            return {
-              habit: h,
-              daysAgo: d,
-              dateStr: checkDateStr,
-            }
-          }
-        }
-      }
-    }
+  const currentKey = React.useMemo(() => {
+    if (atRiskList.length === 0) return null
+    // Key combines today's date and the list of at-risk habit IDs
+    const todayStr = new Date().toLocaleDateString('en-CA')
+    const ids = atRiskList.map((h) => h.id).join('_')
+    return `${todayStr}_${ids}`
+  }, [atRiskList])
+
+  if (atRiskList.length === 0 || (currentKey && dismissedKey === currentKey)) {
     return null
-  })()
+  }
 
-  const currentKey = neglectedHabitInfo
-    ? `${neglectedHabitInfo.dateStr}_${neglectedHabitInfo.habit.id}`
-    : null
-
-  if (!neglectedHabitInfo || (currentKey && dismissedHabitKey === currentKey)) return null
-
-  const daysAgoText = ` ${neglectedHabitInfo.daysAgo} days ago`
+  const title = atRiskList.length === 1 ? BANNER_TITLE_SINGLE : BANNER_TITLE_PLURAL
+  const habitNamesText = atRiskList.map((h) => h.name).join(', ')
 
   const handleGoToCheckin = () => {
-    navigate(`${CHECKINS_ROUTE}?date=${neglectedHabitInfo.dateStr}`)
+    const todayStr = new Date().toLocaleDateString('en-CA')
+    navigate(`${CHECKINS_ROUTE}?date=${todayStr}`)
   }
 
   const handleDismiss = () => {
     if (currentKey) {
-      setDismissedHabitKey(currentKey)
+      setDismissedKey(currentKey)
     }
   }
 
@@ -102,30 +86,17 @@ export const AttentionBanner: React.FC = () => {
               mb: 0.5,
             }}
           >
-            {BANNER_TITLE}
+            {title}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap' }}>
-            <Typography
-              sx={{
-                fontWeight: 700,
-                color: 'text.primary',
-                fontSize: pxToRem(14.5),
-                textDecoration: 'underline',
-                textDecorationColor: 'text.primary',
-                textUnderlineOffset: 3,
-              }}
-            >
-              {neglectedHabitInfo.habit.name}
-            </Typography>
-            <Typography
-              sx={{
-                color: 'text.secondary',
-                fontSize: pxToRem(14.5),
-              }}
-            >
-              {daysAgoText}
-            </Typography>
-          </Box>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              color: 'text.primary',
+              fontSize: pxToRem(14.5),
+            }}
+          >
+            {habitNamesText}
+          </Typography>
         </Box>
       </Box>
       <Button
@@ -171,4 +142,4 @@ export const AttentionBanner: React.FC = () => {
   )
 }
 
-export default AttentionBanner
+export default AtRiskBanner

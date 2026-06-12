@@ -10,6 +10,7 @@ import { WeeklyHabitsStats } from './WeeklyHabitsStats'
 import { useBoundStore } from '@/store'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { ActivityDetails } from './ActivityDetails'
+import { isScheduledForDate } from '@/features/habits/services/ScheduleService'
 
 const PAGE_TITLE = 'Dashboard'
 const KPI_DONE_TITLE = '% Done Today'
@@ -81,6 +82,38 @@ export const DashboardPage: React.FC = () => {
       tasks: completedTasks,
     }
   }, [selectedDate, checkins, habits])
+
+  const overdueDates = React.useMemo(() => {
+    const dates: string[] = []
+    const today = new Date()
+    const todayStr = today.toLocaleDateString('en-CA') // YYYY-MM-DD format
+
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - HEATMAP_WEEKS * 7)
+
+    for (let i = 0; i < HEATMAP_WEEKS * 7; i++) {
+      const current = new Date(startDate)
+      current.setDate(startDate.getDate() + i)
+      const dateStr = current.toLocaleDateString('en-CA')
+
+      if (dateStr >= todayStr) continue
+
+      const isOverdue = habits.some((h) => {
+        if (h.status !== 'Active') return false
+        if (!isScheduledForDate(h, dateStr)) return false
+
+        const key = `${dateStr}_${h.id}`
+        const checkin = checkins[key]
+        const isCompleted = checkin && checkin.completedCount >= h.targetPerDay
+        return !isCompleted
+      })
+
+      if (isOverdue) {
+        dates.push(dateStr)
+      }
+    }
+    return dates
+  }, [habits, checkins])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -206,6 +239,7 @@ export const DashboardPage: React.FC = () => {
                   weeks={HEATMAP_WEEKS}
                   onCellClick={setSelectedDate}
                   activeDate={selectedDate}
+                  overdueDates={overdueDates}
                 />
               </Box>
             </Box>

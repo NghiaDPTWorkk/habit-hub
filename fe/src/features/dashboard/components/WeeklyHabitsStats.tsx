@@ -11,11 +11,9 @@ import {
 } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useDashboard } from '../hooks'
-import { useBoundStore } from '@/store'
 import { pxToRem } from '@/utils'
 
 const TITLE_WEEKLY_STATS = 'Weekly Habits Statistics'
-const TITLE_SORTED_PRIORITY = 'Sorted by Priority'
 const HEADER_NAME = 'Habit Name'
 const HEADER_STREAK = 'Current'
 const HEADER_LONGEST_STREAK = 'Longest'
@@ -31,11 +29,8 @@ const CATE_MINDFULNESS = 'Mindfulness'
 const CATE_OTHER = 'Other'
 const BTN_RESET = 'Reset'
 
-const PRIORITY_ORDER = { High: 3, Medium: 2, Low: 1 }
-
 export const WeeklyHabitsStats: React.FC = () => {
   const { habitsByCategory } = useDashboard()
-  const habits = useBoundStore((s) => s.habits)
 
   const [filterCategory, setFilterCategory] = React.useState<string>('All')
 
@@ -46,21 +41,14 @@ export const WeeklyHabitsStats: React.FC = () => {
         ? flatSummaries
         : flatSummaries.filter((h) => h.category === filterCategory)
 
-    return filtered.sort((a, b) => {
-      const pA = habits.find((h) => h.id === a.habitId)?.priority || 'Medium'
-      const pB = habits.find((h) => h.id === b.habitId)?.priority || 'Medium'
-      return PRIORITY_ORDER[pB] - PRIORITY_ORDER[pA]
-    })
-  }, [habitsByCategory, habits, filterCategory])
+    return filtered.sort((a, b) => b.habitId - a.habitId).slice(0, 4)
+  }, [habitsByCategory, filterCategory])
 
   return (
-    <Card sx={{ p: { xs: 2, sm: 3 } }}>
+    <Card sx={{ p: { xs: 2, sm: 3 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', mb: 3 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           {TITLE_WEEKLY_STATS}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {TITLE_SORTED_PRIORITY}
         </Typography>
       </Box>
 
@@ -162,7 +150,7 @@ export const WeeklyHabitsStats: React.FC = () => {
                   gap: 0.5,
                 }}
               >
-                <Box sx={{ color: 'warning.main', display: 'flex' }}>
+                <Box sx={{ color: 'success.main', display: 'flex' }}>
                   <Icons.TrendingUp fontSize="small" />
                 </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>

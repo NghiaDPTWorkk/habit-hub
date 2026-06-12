@@ -136,7 +136,16 @@ export const DashboardPage: React.FC = () => {
         {/* Left column: Weekly Habits Statistics list */}
         <Grid size={{ xs: 12, md: 7 }}>
           {habitsByCategory.length === 0 ? (
-            <Card sx={{ textAlign: 'center', py: 6 }}>
+            <Card
+              sx={{
+                textAlign: 'center',
+                py: 6,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
               <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
                 {EMPTY_TITLE}
               </Typography>
@@ -151,14 +160,14 @@ export const DashboardPage: React.FC = () => {
 
         {/* Right column: Charts */}
         <Grid size={{ xs: 12, md: 5 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, height: '100%' }}>
             <CategoryDistributionChart />
           </Box>
         </Grid>
       </Grid>
 
       {/* Activity History block at the bottom */}
-      <Card sx={{ p: 3 }}>
+      <Card sx={{ p: { xs: 2, sm: 3 } }}>
         <Box
           sx={{
             display: 'flex',
@@ -186,6 +195,8 @@ export const DashboardPage: React.FC = () => {
             flexDirection: { xs: 'column', md: 'row' },
             gap: 4,
             alignItems: 'flex-start',
+            width: '100%',
+            minWidth: 0,
           }}
         >
           {/* Heatmap Section */}
@@ -195,11 +206,13 @@ export const DashboardPage: React.FC = () => {
               flexDirection: 'column',
               gap: 1.5,
               width: { xs: '100%', md: 'auto' },
+              maxWidth: '100%',
+              minWidth: 0,
               flexShrink: 0,
             }}
           >
             {/* Scrollable wrapper for heatmap grid */}
-            <Box sx={{ overflowX: 'auto', pb: 1, width: '100%' }}>
+            <Box sx={{ overflowX: 'auto', pb: 1, width: '100%', maxWidth: '100%' }}>
               <Box sx={{ width: 'fit-content' }}>
                 <CalendarHeatmap
                   data={heatmapData}

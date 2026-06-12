@@ -6,6 +6,7 @@ import { useDashboard, useDailyIntensity, useWeeklyRates } from '../hooks'
 import { KpiCard } from './KpiCard'
 import { CategorySection } from './CategorySection'
 import { AtRiskBanner } from './AtRiskBanner'
+import { CategoryDistributionChart } from './CategoryDistributionChart'
 
 const PAGE_TITLE = 'Dashboard'
 const KPI_DONE_TITLE = '% Done Today'
@@ -117,6 +118,7 @@ export const DashboardPage: React.FC = () => {
               </Typography>
               <CalendarHeatmap data={heatmapData} weeks={HEATMAP_WEEKS} />
             </Card>
+            <CategoryDistributionChart />
           </Box>
         </Grid>
 

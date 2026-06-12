@@ -20,10 +20,7 @@ export const createToastSlice: StateCreator<BoundStore, [], [], ToastSlice> = (s
 
   showToast: (message, severity) =>
     set((state) => ({
-      toastQueue: [
-        ...state.toastQueue,
-        { id: crypto.randomUUID(), message, severity },
-      ],
+      toastQueue: [...state.toastQueue, { id: crypto.randomUUID(), message, severity }],
     })),
 
   dismissToast: () =>

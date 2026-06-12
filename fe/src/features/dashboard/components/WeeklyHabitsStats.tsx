@@ -17,9 +17,9 @@ import { pxToRem } from '@/utils'
 const TITLE_WEEKLY_STATS = 'Weekly Habits Statistics'
 const TITLE_SORTED_PRIORITY = 'Sorted by Priority'
 const HEADER_NAME = 'Habit Name'
-const HEADER_PRIORITY = 'Priority'
 const HEADER_STREAK = 'Current'
 const HEADER_LONGEST_STREAK = 'Longest'
+const HEADER_TOTAL = 'Total'
 
 const LABEL_FILTER_CATE = 'Category'
 
@@ -107,13 +107,6 @@ export const WeeklyHabitsStats: React.FC = () => {
           <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
             {HEADER_NAME}
           </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ fontWeight: 600, display: { xs: 'none', sm: 'block' } }}
-          >
-            {HEADER_PRIORITY}
-          </Typography>
           <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
             {HEADER_STREAK}
           </Typography>
@@ -124,12 +117,17 @@ export const WeeklyHabitsStats: React.FC = () => {
           >
             {HEADER_LONGEST_STREAK}
           </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ fontWeight: 600, display: { xs: 'none', sm: 'block' } }}
+          >
+            {HEADER_TOTAL}
+          </Typography>
         </Box>
 
         {/* Table Body */}
         {sortedHabits.map((item) => {
-          const detail = habits.find((h) => h.id === item.habitId)
-          const priority = detail ? detail.priority : 'Medium'
           const streakText = `${item.currentStreak}d`
           const longestStreakText = `${item.longestStreak}d`
 
@@ -154,25 +152,7 @@ export const WeeklyHabitsStats: React.FC = () => {
                 {item.habitName}
               </Typography>
 
-              {/* Priority Column */}
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Box
-                  sx={{
-                    display: 'inline-block',
-                    px: 1.25,
-                    py: 0.5,
-                    borderRadius: 0.5,
-                    bgcolor: 'action.hover',
-                    color: 'text.secondary',
-                    fontSize: pxToRem(12),
-                    fontWeight: 600,
-                  }}
-                >
-                  {priority}
-                </Box>
-              </Box>
-
-              {/* Streak Column */}
+              {/* Current Streak Column */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Box sx={{ color: 'warning.main', display: 'flex' }}>
                   <Icons.Whatshot fontSize="small" />
@@ -183,12 +163,28 @@ export const WeeklyHabitsStats: React.FC = () => {
               </Box>
 
               {/* Longest Streak Column */}
+              <Box
+                sx={{
+                  display: { xs: 'none', sm: 'flex' },
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
+              >
+                <Box sx={{ color: 'warning.main', display: 'flex' }}>
+                  <Icons.TrendingUp fontSize="small" />
+                </Box>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  {longestStreakText}
+                </Typography>
+              </Box>
+
+              {/* Total Completions Column */}
               <Typography
                 variant="body2"
                 color="text.secondary"
                 sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 500 }}
               >
-                {longestStreakText}
+                {item.totalCompletions}
               </Typography>
             </Box>
           )

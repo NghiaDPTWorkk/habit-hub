@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: fe/package-lock.json
       
       - name: Install Dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Build Project
         run: npm run build
@@ -40,3 +40,12 @@ jobs:
         run: |
           aws s3 sync ./dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
           echo "Bắn code lên S3 thành công!"
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id E1EQ58W0N7RFAK \
+            --paths "/*"
+      
+      
+      

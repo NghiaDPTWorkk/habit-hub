@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useBoundStore } from '@/store'
+import { makeCheckinKey } from '@/store/checkinSlice'
 import type { Checkin, CheckinStatus } from '@/types'
 
 function computeStatus(completedCount: number, targetPerDay: number): CheckinStatus {
@@ -23,11 +24,19 @@ export function useCheckinStore() {
 
   const today = getLocalDateString()
 
-  const todayCheckins = useMemo(() => checkins.filter((c) => c.date === today), [checkins, today])
+  const getCheckinByHabitAndDate = useCallback(
+    (habitId: number, date: string): Checkin | undefined => checkins[makeCheckinKey(habitId, date)],
+    [checkins]
+  )
+
+  const todayCheckins = useMemo(
+    () => Object.values(checkins).filter((c) => c.date === today),
+    [checkins, today]
+  )
 
   const checkinsByDate = useMemo(
     () =>
-      checkins.reduce<Record<string, Checkin[]>>((acc, c) => {
+      Object.values(checkins).reduce<Record<string, Checkin[]>>((acc, c) => {
         ;(acc[c.date] ??= []).push(c)
         return acc
       }, {}),
@@ -44,14 +53,8 @@ export function useCheckinStore() {
     return Math.min(Math.round((completedCount / activeHabits.length) * 100), 100)
   }, [habits, todayCheckins])
 
-  const getCheckinByHabitAndDate = useCallback(
-    (habitId: number, date: string): Checkin | undefined =>
-      checkins.find((c) => c.habitId === habitId && c.date === date),
-    [checkins]
-  )
-
   const upsertCheckin = useCallback(
-    (habitId: number, date: string, updates: Partial<Omit<Checkin, 'id' | 'habitId' | 'date'>>) => {
+    (habitId: number, date: string, updates: Partial<Omit<Checkin, 'habitId' | 'date'>>) => {
       if (date > getLocalDateString()) return
 
       let safeUpdates = updates
@@ -69,7 +72,7 @@ export function useCheckinStore() {
 
       const existing = getCheckinByHabitAndDate(habitId, date)
       if (existing) {
-        updateCheckin(existing.id, safeUpdates)
+        updateCheckin(habitId, date, safeUpdates)
       } else {
         addCheckin({ habitId, date, completedCount: 0, status: 'Not Started', ...safeUpdates })
       }

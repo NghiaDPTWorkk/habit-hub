@@ -1,5 +1,5 @@
 export const APP_CONSTANTS = {
-  TITLE: 'Habit Hub',
+  TITLE: 'ByteBuilders',
   LOADING: 'Processing...',
   NAVIGATION: {
     DASHBOARD: 'Dashboard',
@@ -9,6 +9,6 @@ export const APP_CONSTANTS = {
   },
   FOOTER: {
     COPY: '© ',
-    TEXT: ' Habit Hub. Built with React & Material UI.',
+    TEXT: ' ByteBuilders. Built with React & Material UI.',
   },
 }

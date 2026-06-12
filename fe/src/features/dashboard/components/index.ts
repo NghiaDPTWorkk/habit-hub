@@ -1,3 +1,7 @@
 export * from './DashboardPage'
 export * from './KpiCard'
 export * from './CategorySection'
+export * from './HabitStatsRow'
+export * from './AtRiskBanner'
+export * from './CategoryDistributionChart'
+export * from './WeeklyHabitsStats'

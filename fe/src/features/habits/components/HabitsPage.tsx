@@ -47,7 +47,7 @@ export const HabitsPage: FC = () => {
 
   const todayCheckinByHabit = useMemo(
     () =>
-      checkins.reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
+      Object.values(checkins).reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
         if (checkin.date === todayString) {
           acc[checkin.habitId] = { completedCount: checkin.completedCount }
         }
@@ -210,10 +210,10 @@ export const HabitsPage: FC = () => {
       <ConfirmDialog
         open={deleteDialogOpen}
         onClose={handleCancelDelete}
-        title="Xác nhận xóa"
-        content="Xóa thói quen này sẽ xóa toàn bộ lịch sử tiến độ. Hành động này không thể hoàn tác."
-        confirmText="Xóa vĩnh viễn"
-        cancelText="Hủy"
+        title="Confirm Delete"
+        content="Deleting this habit will remove all progress history. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
         onConfirm={handleConfirmDelete}
         severity="error"
       />

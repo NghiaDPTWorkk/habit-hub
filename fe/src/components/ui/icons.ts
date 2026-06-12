@@ -25,6 +25,8 @@ import UploadIcon from '@mui/icons-material/Upload'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 export const Icons = {
   Add: AddIcon,
@@ -54,4 +56,6 @@ export const Icons = {
   SettingsOutlined: SettingsOutlinedIcon,
   LightModeOutlined: LightModeOutlinedIcon,
   DarkModeOutlined: DarkModeOutlinedIcon,
+  ChevronLeft: ChevronLeftIcon,
+  ChevronRight: ChevronRightIcon,
 }

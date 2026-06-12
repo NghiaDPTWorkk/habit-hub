@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs, { type Dayjs } from 'dayjs'
-import { Box, Typography, DatePicker, Button, Card, ProgressBar } from '@/components/ui'
-import { alpha } from '@mui/material/styles'
+import { Box, Typography, Button, Card, ProgressBar, alpha } from '@/components/ui'
 import { pxToRem } from '@/utils'
 import { useBoundStore } from '@/store'
 import { useCheckinStore } from '../hooks'
@@ -10,15 +9,14 @@ import { CHECKIN_CONTENT } from '../constants'
 import type { Habit } from '@/types'
 import { CheckinItemCard } from './CheckinItemCard'
 import { MultiCountModal } from './MultiCountModal'
+import { getDayStatus, getActiveHabitsForDay } from '../utils'
+import { MonthlyCalendar } from './MonthlyCalendar'
 
 const VARIANT_BODY1 = 'body1'
 const COLOR_TEXT_SECONDARY = 'text.secondary'
-const PICKER_LABEL = 'Select date'
-const STATUS_ACTIVE = 'Active'
-const FREQUENCY_DAILY = 'Daily'
 const LOGS_HEADER = 'Check-in Logs'
-const BTN_SHOW_PICKER = 'Show Monthly Calendar Picker'
-const BTN_HIDE_PICKER = 'Hide Monthly Calendar Picker'
+const BTN_SHOW_PICKER = 'Show Monthly Calendar'
+const BTN_HIDE_PICKER = 'Hide Monthly Calendar'
 const DAILY_PROGRESS_LABEL = 'Daily Progress'
 const PROGRESS_FOR_LABEL = 'Progress for '
 const PROGRESS_SUBTITLE =
@@ -31,29 +29,6 @@ export const CheckinsPage: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false)
   const { getCheckinByHabitAndDate } = useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
-
-  const getDayStatus = (day: Dayjs) => {
-    const dayOfWeek = day.day()
-    const dStr = day.format('YYYY-MM-DD')
-    const todayStr = dayjs().format('YYYY-MM-DD')
-
-    const dayHabits = habits.filter((h) => {
-      if (h.status !== STATUS_ACTIVE) return false
-      if (h.frequency === FREQUENCY_DAILY) return true
-      return h.specificDays?.includes(dayOfWeek) ?? false
-    })
-
-    if (dayHabits.length === 0) return 'none'
-
-    const allCompleted = dayHabits.every((h) => {
-      const c = getCheckinByHabitAndDate(h.id, dStr)
-      return c && c.completedCount >= h.targetPerDay
-    })
-
-    if (allCompleted) return 'completed'
-    if (dStr < todayStr) return 'overdue'
-    return 'none'
-  }
 
   const selectedDate = useMemo(() => {
     const dateParam = searchParams.get('date')
@@ -73,14 +48,8 @@ export const CheckinsPage: React.FC = () => {
     )
   }
 
-  // dayjs .day(): 0 = Sunday, 1 = Monday, ..., 6 = Saturday
   const activeHabits = useMemo(() => {
-    const dayOfWeek = selectedDate.day()
-    return habits.filter((h) => {
-      if (h.status !== STATUS_ACTIVE) return false
-      if (h.frequency === FREQUENCY_DAILY) return true
-      return h.specificDays?.includes(dayOfWeek) ?? false
-    })
+    return getActiveHabitsForDay(habits, selectedDate)
   }, [habits, selectedDate])
 
   const weekDays = useMemo(() => {
@@ -110,8 +79,7 @@ export const CheckinsPage: React.FC = () => {
   const progressPercentText = `${progressPercent}%`
 
   return (
-    <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
-      {/* Check-in Logs Header Row */}
+    <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           {LOGS_HEADER}
@@ -121,29 +89,27 @@ export const CheckinsPage: React.FC = () => {
         </Button>
       </Box>
 
-      {/* Conditionally rendered DatePicker */}
       {showDatePicker && (
-        <Box sx={{ maxWidth: pxToRem(256) }}>
-          <DatePicker
-            value={selectedDate}
-            onChange={(v) => {
-              if (v) setSelectedDate(v)
-            }}
-            label={PICKER_LABEL}
-            disableFuture
+        <Card sx={{ p: 2 }}>
+          <MonthlyCalendar
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            habits={habits}
+            getCheckinByHabitAndDate={getCheckinByHabitAndDate}
           />
-        </Box>
+        </Card>
       )}
 
-      {/* Weekly Date Selector */}
-      <Card sx={{ p: 2 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+      <Card sx={{ p: { xs: 1, sm: 2 } }}>
+        <Box
+          sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: { xs: 0.5, sm: 1 } }}
+        >
           {weekDays.map((day, idx) => {
             const isFuture = day.isAfter(dayjs(), 'day')
             const isSelected = !isFuture && day.isSame(selectedDate, 'day')
             const dateNum = day.date()
             const label = WEEK_DAY_LABELS[idx]
-            const status = getDayStatus(day)
+            const status = getDayStatus(day, habits, getCheckinByHabitAndDate)
 
             return (
               <Box
@@ -158,8 +124,8 @@ export const CheckinsPage: React.FC = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  pt: 1.5,
-                  pb: 1.25,
+                  pt: { xs: 1, sm: 1.5 },
+                  pb: { xs: 0.75, sm: 1.25 },
                   borderRadius: 1.5,
                   border: '1px solid',
                   borderColor: isSelected ? 'success.main' : 'transparent',
@@ -185,6 +151,7 @@ export const CheckinsPage: React.FC = () => {
                   sx={{
                     fontWeight: 600,
                     color: isSelected ? 'success.main' : 'text.secondary',
+                    fontSize: { xs: pxToRem(10), sm: pxToRem(12) },
                     mb: 0.25,
                   }}
                 >
@@ -199,6 +166,7 @@ export const CheckinsPage: React.FC = () => {
                       : isFuture
                         ? 'text.secondary'
                         : 'text.primary',
+                    fontSize: { xs: pxToRem(14), sm: pxToRem(16) },
                     mb: 0.5,
                   }}
                 >
@@ -206,8 +174,8 @@ export const CheckinsPage: React.FC = () => {
                 </Typography>
                 <Box
                   sx={{
-                    width: 6,
-                    height: 6,
+                    width: { xs: 5, sm: 6 },
+                    height: { xs: 5, sm: 6 },
                     borderRadius: '50%',
                     backgroundColor:
                       status === 'completed'
@@ -223,7 +191,6 @@ export const CheckinsPage: React.FC = () => {
         </Box>
       </Card>
 
-      {/* Daily Progress Card */}
       <Card sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
           <Typography sx={{ fontWeight: 600, color: 'success.main' }}>
@@ -237,7 +204,6 @@ export const CheckinsPage: React.FC = () => {
         </Typography>
       </Card>
 
-      {/* Progress List Card */}
       <Card sx={{ p: 2 }}>
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}

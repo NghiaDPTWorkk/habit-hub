@@ -39,7 +39,7 @@ export const CategoryDistributionChart: React.FC = () => {
 
   if (data.length === 0) {
     return (
-      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Typography variant={VARIANT_H6} sx={{ mb: 2, fontWeight: 600 }}>
           {CHART_TITLE}
         </Typography>
@@ -51,7 +51,7 @@ export const CategoryDistributionChart: React.FC = () => {
   }
 
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
       <Typography variant={VARIANT_H6} sx={{ mb: 2, fontWeight: 600 }}>
         {CHART_TITLE}
       </Typography>

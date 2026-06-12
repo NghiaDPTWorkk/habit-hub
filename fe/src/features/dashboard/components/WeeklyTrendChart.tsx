@@ -9,10 +9,6 @@ import { pxToRem } from '@/utils'
 import { WeeklyTrendTooltip } from './WeeklyTrendTooltip'
 import type { DayTrendData } from './WeeklyTrendTooltip'
 
-interface WeeklyTrendChartProps {
-  filterCategory: string
-}
-
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const toLocalDateStr = (d: Date) => d.toLocaleDateString('en-CA')
 
@@ -29,7 +25,7 @@ const TXT_AVG = 'Avg '
 const TXT_PCT = '%'
 const TXT_SLASH_7 = '/7'
 
-export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCategory }) => {
+export const WeeklyTrendChart: React.FC = () => {
   const theme = useTheme()
   const habits = useBoundStore((s) => s.habits)
   const checkins = useBoundStore((s) => s.checkins)
@@ -47,11 +43,9 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
 
   const dayData = React.useMemo<DayTrendData[]>(() => {
     const active = habits.filter((h) => h.status === 'Active')
-    const filtered =
-      filterCategory === 'All' ? active : active.filter((h) => h.category === filterCategory)
     return dates.map((date) => {
       const dateStr = toLocalDateStr(date)
-      const scheduled = filtered.filter((h) => isScheduledForDate(h, dateStr))
+      const scheduled = active.filter((h) => isScheduledForDate(h, dateStr))
       const completed = scheduled.filter((h) =>
         Object.values(checkins).some(
           (c) => c.habitId === h.id && c.date === dateStr && c.status === 'Completed'
@@ -67,7 +61,7 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
         rate: scheduled.length === 0 ? 0 : completed.length / scheduled.length,
       }
     })
-  }, [dates, habits, checkins, filterCategory])
+  }, [dates, habits, checkins])
 
   const rates = dayData.map((d) => d.rate)
   const maxRate = Math.max(...rates)

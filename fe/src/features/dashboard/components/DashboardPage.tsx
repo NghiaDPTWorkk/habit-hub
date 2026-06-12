@@ -20,10 +20,10 @@ const SECTION_WEEKLY = 'Weekly by Category'
 const ICON_SIZE = { fontSize: 28 }
 const HEATMAP_WEEKS = 16
 
-const CARD_DONE = { iconColor: 'success.main', iconBg: 'rgba(16,185,129,0.12)' }
-const CARD_ACTIVE = { iconColor: 'primary.main', iconBg: 'rgba(140,122,230,0.12)' }
-const CARD_RISK = { iconColor: 'warning.main', iconBg: 'rgba(245,158,11,0.12)' }
-const CARD_GOALS = { iconColor: 'secondary.main', iconBg: 'rgba(113,128,147,0.12)' }
+const CARD_DONE = { iconColor: 'success.main', iconBg: 'rgba(39, 174, 96, 0.12)' }
+const CARD_ACTIVE = { iconColor: 'info.main', iconBg: 'rgba(9, 105, 218, 0.12)' }
+const CARD_RISK = { iconColor: 'secondary.main', iconBg: 'rgba(130, 80, 223, 0.12)' }
+const CARD_GOALS = { iconColor: 'warning.main', iconBg: 'rgba(154, 103, 0, 0.12)' }
 
 function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`

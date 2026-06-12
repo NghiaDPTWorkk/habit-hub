@@ -6,7 +6,7 @@ import { Box, Typography, Card, CalendarHeatmap } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
-import { CategorySection } from './CategorySection'
+import { WeeklyHabitsStats } from './WeeklyHabitsStats'
 import { useBoundStore } from '@/store'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { ActivityDetails } from './ActivityDetails'
@@ -133,7 +133,7 @@ export const DashboardPage: React.FC = () => {
       </Grid>
 
       <Grid container spacing={3}>
-        {/* Left column: Habit categories list */}
+        {/* Left column: Weekly Habits Statistics list */}
         <Grid size={{ xs: 12, md: 7 }}>
           {habitsByCategory.length === 0 ? (
             <Card sx={{ textAlign: 'center', py: 6 }}>
@@ -145,16 +145,7 @@ export const DashboardPage: React.FC = () => {
               </Typography>
             </Card>
           ) : (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {habitsByCategory.map((group, idx) => (
-                <CategorySection
-                  key={group.category}
-                  category={group.category}
-                  habits={group.habits}
-                  defaultExpanded={idx === 0}
-                />
-              ))}
-            </Box>
+            <WeeklyHabitsStats />
           )}
         </Grid>
 

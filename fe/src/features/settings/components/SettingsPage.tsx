@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   Card,
-  TextField,
   FormControl,
   Select,
   MenuItem,
@@ -19,9 +18,6 @@ import { useSettings } from '../hooks/useSettings'
 
 export const SettingsPage: React.FC = () => {
   const {
-    fullName,
-    email,
-    subTier,
     readOnly,
     timezone,
     fileInputRef,
@@ -29,9 +25,6 @@ export const SettingsPage: React.FC = () => {
     confirmConfig,
     handleConfirmClose,
     handleConfirmAction,
-    handleFullNameChange,
-    handleEmailChange,
-    handleSubTierChange,
     handleReadOnlyChange,
     handleTimezoneChange,
     handleExportData,
@@ -43,53 +36,6 @@ export const SettingsPage: React.FC = () => {
 
   return (
     <Stack spacing={3} sx={{ width: '100%', mt: 1, mb: 4 }}>
-      {/* Account Profile Settings Card */}
-      <Card variant="outlined" sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-          {TEXTS.profileTitle}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
-          {TEXTS.profileSubtitle}
-        </Typography>
-
-        <Stack spacing={2.5}>
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{ fontWeight: 600, color: 'text.secondary', display: 'block', mb: 1 }}
-            >
-              {TEXTS.fullNameLabel}
-            </Typography>
-            <TextField value={fullName} onChange={handleFullNameChange} fullWidth />
-          </Box>
-
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{ fontWeight: 600, color: 'text.secondary', display: 'block', mb: 1 }}
-            >
-              {TEXTS.emailLabel}
-            </Typography>
-            <TextField value={email} onChange={handleEmailChange} fullWidth />
-          </Box>
-
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{ fontWeight: 600, color: 'text.secondary', display: 'block', mb: 1 }}
-            >
-              {TEXTS.subTierLabel}
-            </Typography>
-            <FormControl fullWidth size="small">
-              <Select value={subTier} onChange={handleSubTierChange} displayEmpty>
-                <MenuItem value="Free Tier">{TEXTS.subFree}</MenuItem>
-                <MenuItem value="Premium Plan (Active)">{TEXTS.subPremium}</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </Stack>
-      </Card>
-
       {/* General Settings Card */}
       <Card variant="outlined" sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>

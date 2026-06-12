@@ -5,17 +5,6 @@ import { SEED_HABITS, SEED_CHECKINS, SEED_GOALS } from '@/storage/seedData'
 import { makeCheckinKey } from '@/store/checkinSlice'
 
 export const useSettings = () => {
-  // Account Profile state
-  const [fullName, setFullName] = useState(
-    () => localStorage.getItem('profile_full_name') || 'Dương Nghĩa'
-  )
-  const [email, setEmail] = useState(
-    () => localStorage.getItem('profile_email') || 'trnghia@example.com'
-  )
-  const [subTier, setSubTier] = useState(
-    () => localStorage.getItem('profile_sub_tier') || 'Premium Plan (Active)'
-  )
-
   // General settings state
   const [readOnly, setReadOnly] = useState(
     () => localStorage.getItem('general_read_only') === 'true'
@@ -57,24 +46,6 @@ export const useSettings = () => {
   }
 
   // Handlers for persistence
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    setFullName(val)
-    localStorage.setItem('profile_full_name', val)
-  }
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    setEmail(val)
-    localStorage.setItem('profile_email', val)
-  }
-
-  const handleSubTierChange = (e: { target: { value: string } }) => {
-    const val = e.target.value
-    setSubTier(val)
-    localStorage.setItem('profile_sub_tier', val)
-  }
-
   const handleReadOnlyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.checked
     setReadOnly(val)
@@ -94,9 +65,6 @@ export const useSettings = () => {
       const goals = useBoundStore.getState().goals
 
       const settingsData = {
-        profile_full_name: localStorage.getItem('profile_full_name') || 'Dương Nghĩa',
-        profile_email: localStorage.getItem('profile_email') || 'trnghia@example.com',
-        profile_sub_tier: localStorage.getItem('profile_sub_tier') || 'Premium Plan (Active)',
         general_read_only: localStorage.getItem('general_read_only') || 'false',
         general_timezone: localStorage.getItem('general_timezone') || 'GMT+7 (Default)',
       }
@@ -168,18 +136,6 @@ export const useSettings = () => {
             })
 
             if (importedSettings) {
-              if (importedSettings.profile_full_name !== undefined) {
-                setFullName(importedSettings.profile_full_name)
-                localStorage.setItem('profile_full_name', importedSettings.profile_full_name)
-              }
-              if (importedSettings.profile_email !== undefined) {
-                setEmail(importedSettings.profile_email)
-                localStorage.setItem('profile_email', importedSettings.profile_email)
-              }
-              if (importedSettings.profile_sub_tier !== undefined) {
-                setSubTier(importedSettings.profile_sub_tier)
-                localStorage.setItem('profile_sub_tier', importedSettings.profile_sub_tier)
-              }
               if (importedSettings.general_read_only !== undefined) {
                 setReadOnly(importedSettings.general_read_only === 'true')
                 localStorage.setItem('general_read_only', importedSettings.general_read_only)
@@ -213,15 +169,9 @@ export const useSettings = () => {
           goals: [],
         })
 
-        localStorage.removeItem('profile_full_name')
-        localStorage.removeItem('profile_email')
-        localStorage.removeItem('profile_sub_tier')
         localStorage.removeItem('general_read_only')
         localStorage.removeItem('general_timezone')
 
-        setFullName('Trần Nghĩa')
-        setEmail('trnghia@example.com')
-        setSubTier('Premium Plan (Active)')
         setReadOnly(false)
         setTimezone('GMT+7 (Default)')
 
@@ -246,15 +196,9 @@ export const useSettings = () => {
           goals: SEED_GOALS,
         })
 
-        localStorage.removeItem('profile_full_name')
-        localStorage.removeItem('profile_email')
-        localStorage.removeItem('profile_sub_tier')
         localStorage.removeItem('general_read_only')
         localStorage.removeItem('general_timezone')
 
-        setFullName('Trần Nghĩa')
-        setEmail('trnghia@example.com')
-        setSubTier('Premium Plan (Active)')
         setReadOnly(false)
         setTimezone('GMT+7 (Default)')
 
@@ -265,9 +209,6 @@ export const useSettings = () => {
   }
 
   return {
-    fullName,
-    email,
-    subTier,
     readOnly,
     timezone,
     fileInputRef,
@@ -275,9 +216,6 @@ export const useSettings = () => {
     confirmConfig,
     handleConfirmClose,
     handleConfirmAction,
-    handleFullNameChange,
-    handleEmailChange,
-    handleSubTierChange,
     handleReadOnlyChange,
     handleTimezoneChange,
     handleExportData,

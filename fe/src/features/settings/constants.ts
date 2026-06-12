@@ -1,13 +1,6 @@
 export const TEXTS = {
   title: 'Settings & Backups',
   subtitle: 'Export data records and administrative tools',
-  profileTitle: 'Account Profile Settings',
-  profileSubtitle: 'Manage your personal profile details and subscription plan preferences.',
-  fullNameLabel: 'Full Name',
-  emailLabel: 'Email Address',
-  subTierLabel: 'Subscription Tier',
-  subFree: 'Free Tier',
-  subPremium: 'Premium Plan (Active)',
   generalTitle: 'General Settings',
   readOnlyTitle: 'Read-only Mode',
   readOnlySubtitle:

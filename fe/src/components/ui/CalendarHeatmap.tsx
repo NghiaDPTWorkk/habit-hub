@@ -72,11 +72,12 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${weeks}, 1fr)`,
-        gridTemplateRows: 'repeat(7, auto)',
+        gridTemplateColumns: `repeat(${weeks}, 16px)`,
+        gridTemplateRows: 'repeat(7, 16px)',
         gridAutoFlow: 'column',
         gap: 0.5,
-        width: '100%',
+        width: 'fit-content',
+        p: 0.5,
       }}
     >
       {gridDays.map((day, index) => {
@@ -87,11 +88,28 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
         const isSelected = dateStr === activeDate
 
         return (
-          <Tooltip key={dateStr || index} title={tooltipText} arrow>
+          <Tooltip
+            key={dateStr || index}
+            title={tooltipText}
+            arrow
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: 'preventOverflow',
+                    options: {
+                      boundary: 'window',
+                    },
+                  },
+                ],
+              },
+            }}
+          >
             <Box
               onClick={() => onCellClick?.(dateStr)}
               sx={{
-                aspectRatio: '1',
+                width: 16,
+                height: 16,
                 borderRadius: 0.5,
                 backgroundColor: cellColor,
                 cursor: onCellClick ? 'pointer' : 'default',
@@ -101,7 +119,8 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
                 transition: 'all 0.2s',
                 '&:hover': {
                   opacity: 0.8,
-                  transform: 'scale(1.15)',
+                  transform: 'scale(1.2)',
+                  zIndex: 2,
                 },
               }}
             />

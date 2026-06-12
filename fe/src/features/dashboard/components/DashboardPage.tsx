@@ -1,5 +1,7 @@
 import React from 'react'
 import Grid from '@mui/material/Grid'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import { alpha } from '@mui/material/styles'
 import { Box, Typography, Card, CalendarHeatmap } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useDashboard, useDailyIntensity } from '../hooks'
@@ -8,6 +10,7 @@ import { CategorySection } from './CategorySection'
 import { useBoundStore } from '@/store'
 import { AtRiskBanner } from './AtRiskBanner'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
+import { ActivityDetails } from './ActivityDetails'
 
 const PAGE_TITLE = 'Dashboard'
 const KPI_DONE_TITLE = '% Done Today'
@@ -16,14 +19,14 @@ const KPI_RISK_TITLE = 'At Risk'
 const KPI_GOALS_TITLE = 'Goals Achieved'
 const EMPTY_TITLE = 'No habits yet'
 const EMPTY_DESC = 'Go to Habits and create your first habit to see stats here.'
-const SECTION_ACTIVITY = 'Activity'
+const SECTION_ACTIVITY_TITLE = 'Activity History'
+const SECTION_ACTIVITY_DESC = 'Daily check-in activity map — click any cell to view details.'
 const ICON_SIZE = { fontSize: 28 }
-const HEATMAP_WEEKS = 16
+const HEATMAP_WEEKS = 14
 
-const LABEL_COMPLETED = 'Completed: '
-const LABEL_HABITS = ' habits'
-const LABEL_NO_HABITS = 'No habits completed on this day.'
-const LABEL_CLICK_INSTRUCTION = 'Click any cell to view check-in activity for that date.'
+const LABEL_LESS = 'Less'
+const LABEL_MORE = 'More'
+const LABEL_WEEKS = 'Last 14 weeks'
 
 const CARD_DONE = { iconColor: 'success.main', iconBg: 'rgba(39, 174, 96, 0.12)' }
 const CARD_ACTIVE = { iconColor: 'info.main', iconBg: 'rgba(9, 105, 218, 0.12)' }
@@ -173,109 +176,99 @@ export const DashboardPage: React.FC = () => {
 
       {/* Activity History block at the bottom */}
       <Card sx={{ p: 3 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-          {SECTION_ACTIVITY}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            mb: 0.5,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CalendarMonthIcon sx={{ color: 'success.main' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {SECTION_ACTIVITY_TITLE}
+            </Typography>
+          </Box>
+          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+            {LABEL_WEEKS}
+          </Typography>
+        </Box>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          {SECTION_ACTIVITY_DESC}
         </Typography>
-        <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
-          <Grid size={{ xs: 12, md: 8 }}>
-            <CalendarHeatmap
-              data={heatmapData}
-              weeks={HEATMAP_WEEKS}
-              onCellClick={setSelectedDate}
-              activeDate={selectedDate}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            {selectedDateDetails ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: 4,
+            alignItems: 'flex-start',
+          }}
+        >
+          {/* Heatmap Section */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1.5,
+              width: { xs: '100%', md: 'auto' },
+              flexShrink: 0,
+            }}
+          >
+            {/* Scrollable wrapper for heatmap grid */}
+            <Box sx={{ overflowX: 'auto', pb: 1, width: '100%' }}>
+              <Box sx={{ width: 'fit-content' }}>
+                <CalendarHeatmap
+                  data={heatmapData}
+                  weeks={HEATMAP_WEEKS}
+                  onCellClick={setSelectedDate}
+                  activeDate={selectedDate}
+                />
+              </Box>
+            </Box>
+            {/* Legend - aligned right relative to the heatmap */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                justifyContent: 'flex-end',
+                width: '100%',
+                maxWidth: 276,
+              }}
+            >
+              <Typography variant="caption" color="text.secondary">
+                {LABEL_LESS}
+              </Typography>
+              <Box sx={{ width: 14, height: 14, bgcolor: 'divider', borderRadius: 0.5 }} />
               <Box
                 sx={{
-                  p: 2,
-                  borderRadius: 1,
-                  bgcolor: 'background.default',
-                  border: '1px solid',
-                  borderColor: 'divider',
+                  width: 14,
+                  height: 14,
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.3),
+                  borderRadius: 0.5,
                 }}
-              >
-                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
-                  {selectedDateDetails.date}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  {LABEL_COMPLETED}
-                  <strong>{selectedDateDetails.count}</strong>
-                  {LABEL_HABITS}
-                </Typography>
-                {selectedDateDetails.tasks.length === 0 ? (
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ display: 'block', fontStyle: 'italic' }}
-                  >
-                    {LABEL_NO_HABITS}
-                  </Typography>
-                ) : (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    {selectedDateDetails.tasks.map((task, idx) => {
-                      const ratioText = `${task.completedCount}/${task.targetPerDay}`
-                      return (
-                        <Box
-                          key={idx}
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            bgcolor: 'background.paper',
-                            p: 1.25,
-                            borderRadius: 1,
-                            border: '1px solid',
-                            borderColor: 'divider',
-                          }}
-                        >
-                          <Box sx={{ minWidth: 0 }}>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                fontWeight: 600,
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                              }}
-                            >
-                              {task.name}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {task.category}
-                            </Typography>
-                          </Box>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontWeight: 700, pl: 1, color: 'success.main' }}
-                          >
-                            {ratioText}
-                          </Typography>
-                        </Box>
-                      )
-                    })}
-                  </Box>
-                )}
-              </Box>
-            ) : (
+              />
               <Box
                 sx={{
-                  p: 2,
-                  borderRadius: 1,
-                  bgcolor: 'background.default',
-                  border: '1px dashed',
-                  borderColor: 'divider',
-                  textAlign: 'center',
-                  color: 'text.secondary',
-                  py: 4,
+                  width: 14,
+                  height: 14,
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.6),
+                  borderRadius: 0.5,
                 }}
-              >
-                <Typography variant="body2">{LABEL_CLICK_INSTRUCTION}</Typography>
-              </Box>
-            )}
-          </Grid>
-        </Grid>
+              />
+              <Box sx={{ width: 14, height: 14, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+              <Typography variant="caption" color="text.secondary">
+                {LABEL_MORE}
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Details Section */}
+          <Box sx={{ flexGrow: 1, width: '100%', minWidth: { xs: '100%', md: 320 } }}>
+            <ActivityDetails details={selectedDateDetails} />
+          </Box>
+        </Box>
       </Card>
     </Box>
   )

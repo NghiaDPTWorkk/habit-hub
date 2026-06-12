@@ -64,7 +64,7 @@ export const useSettings = () => {
       const goals = useBoundStore.getState().goals
 
       const settingsData = {
-        profile_full_name: localStorage.getItem('profile_full_name') || 'Trần Nghĩa',
+        profile_full_name: localStorage.getItem('profile_full_name') || 'Dương Nghĩa',
         profile_email: localStorage.getItem('profile_email') || 'trnghia@example.com',
         profile_sub_tier: localStorage.getItem('profile_sub_tier') || 'Premium Plan (Active)',
         general_read_only: localStorage.getItem('general_read_only') || 'false',

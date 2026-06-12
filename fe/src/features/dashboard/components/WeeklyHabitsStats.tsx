@@ -18,8 +18,8 @@ const TITLE_WEEKLY_STATS = 'Weekly Habits Statistics'
 const TITLE_SORTED_PRIORITY = 'Sorted by Priority'
 const HEADER_NAME = 'Habit Name'
 const HEADER_PRIORITY = 'Priority'
-const HEADER_STREAK = 'Streak'
-const HEADER_LONGEST_STREAK = 'Longest Streak'
+const HEADER_STREAK = 'Current'
+const HEADER_LONGEST_STREAK = 'Longest'
 
 const LABEL_FILTER_CATE = 'Category'
 
@@ -130,9 +130,8 @@ export const WeeklyHabitsStats: React.FC = () => {
         {sortedHabits.map((item) => {
           const detail = habits.find((h) => h.id === item.habitId)
           const priority = detail ? detail.priority : 'Medium'
-          const streakText = item.currentStreak === 1 ? '1 day' : `${item.currentStreak} days`
-          const longestStreakText =
-            item.longestStreak === 1 ? '1 day' : `${item.longestStreak} days`
+          const streakText = `${item.currentStreak}d`
+          const longestStreakText = `${item.longestStreak}d`
 
           return (
             <Box
@@ -184,20 +183,13 @@ export const WeeklyHabitsStats: React.FC = () => {
               </Box>
 
               {/* Longest Streak Column */}
-              <Box
-                sx={{
-                  display: { xs: 'none', sm: 'flex' },
-                  alignItems: 'center',
-                  gap: 0.5,
-                }}
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 500 }}
               >
-                <Box sx={{ color: 'warning.main', display: 'flex' }}>
-                  <Icons.TrendingUp fontSize="small" />
-                </Box>
-                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-                  {longestStreakText}
-                </Typography>
-              </Box>
+                {longestStreakText}
+              </Typography>
             </Box>
           )
         })}

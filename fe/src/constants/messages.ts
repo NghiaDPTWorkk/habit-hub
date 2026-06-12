@@ -14,8 +14,9 @@ export const SHARED_MESSAGES = {
     TARGET_EXCEEDED: 'Completed count cannot exceed the daily target!',
   },
   GOALS: {
-    AT_80_PERCENT: 'Great progress! You are 80% toward your goal!',
-    COMPLETED: 'Congratulations! You have completed your goal!',
+    COMPLETED: (goalName: string) => `Congratulations! You completed your goal: ${goalName}!`,
+    AT_80_PERCENT: (goalName: string) =>
+      `Great progress! You are 80% toward your goal: ${goalName}!`,
     VALIDATION_ALL_REQUIRED: 'All fields are required',
     VALIDATION_TARGET_POSITIVE: 'Target value must be greater than 0',
     VALIDATION_INTEGER: 'Target value must be a positive whole number',

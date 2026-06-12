@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+export PATH="/d:$PATH"
 cd fe
 node scripts/check-branch-name.cjs
 npx lint-staged

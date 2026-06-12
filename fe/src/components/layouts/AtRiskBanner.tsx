@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { alpha } from '@mui/material/styles'
 import { Box, Typography, Button, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useDashboard } from '@/features/dashboard/hooks'
@@ -62,10 +63,10 @@ export const AtRiskBanner: React.FC = () => {
         px: 4,
         pr: { xs: 4, sm: 6 }, // Extra right padding for close button
         mb: 3,
-        bgcolor: 'warning.light',
+        bgcolor: (theme) => alpha(theme.palette.warning.main, 0.08),
         borderRadius: 2,
         border: '1px solid',
-        borderColor: 'warning.border',
+        borderColor: (theme) => alpha(theme.palette.warning.main, 0.2),
         gap: 3,
       }}
     >
@@ -79,7 +80,7 @@ export const AtRiskBanner: React.FC = () => {
         <Box>
           <Typography
             sx={{
-              fontWeight: 700,
+              fontWeight: 600,
               color: 'warning.main',
               fontSize: pxToRem(16),
               lineHeight: 1.3,
@@ -90,7 +91,7 @@ export const AtRiskBanner: React.FC = () => {
           </Typography>
           <Typography
             sx={{
-              fontWeight: 700,
+              fontWeight: 500,
               color: 'text.primary',
               fontSize: pxToRem(14.5),
             }}
@@ -105,7 +106,7 @@ export const AtRiskBanner: React.FC = () => {
         sx={{
           bgcolor: 'warning.main',
           color: 'warning.contrastText',
-          fontWeight: 700,
+          fontWeight: 600,
           borderRadius: 1.5,
           px: 3.5,
           py: 1,

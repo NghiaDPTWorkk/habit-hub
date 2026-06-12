@@ -3,7 +3,7 @@ import { Box, Typography, Tooltip, ProgressBar } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary } from '@/types'
 
-export const HABIT_STATS_GRID_COLS = '2fr 80px 80px 80px 140px'
+export const HABIT_STATS_GRID_COLS = 'minmax(120px, 2fr) 80px 80px 80px 140px'
 
 const STREAK_SUFFIX = 'd'
 const AT_RISK_LABEL = 'At risk'
@@ -26,6 +26,7 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
         borderBottom: 1,
         borderColor: 'divider',
         '&:last-child': { borderBottom: 0 },
+        minWidth: 500,
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>

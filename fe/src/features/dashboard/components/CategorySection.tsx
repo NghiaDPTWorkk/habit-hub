@@ -26,6 +26,7 @@ const HeaderRow: React.FC = () => (
       py: 1,
       borderBottom: 1,
       borderColor: 'divider',
+      minWidth: 500,
     }}
   >
     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>

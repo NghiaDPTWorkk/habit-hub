@@ -8,7 +8,6 @@ import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
 import { CategorySection } from './CategorySection'
 import { useBoundStore } from '@/store'
-import { AtRiskBanner } from './AtRiskBanner'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { ActivityDetails } from './ActivityDetails'
 
@@ -50,11 +49,6 @@ export const DashboardPage: React.FC = () => {
   const { summary, habitsByCategory } = useDashboard()
   const heatmapData = useDailyIntensity(HEATMAP_WEEKS * 7)
   const dateLabel = getDateLabel()
-
-  const atRiskNames = habitsByCategory
-    .flatMap((g) => g.habits)
-    .filter((h) => summary.atRiskHabitIds.includes(h.habitId))
-    .map((h) => h.habitName)
 
   const checkins = useBoundStore((s) => s.checkins)
   const habits = useBoundStore((s) => s.habits)
@@ -137,8 +131,6 @@ export const DashboardPage: React.FC = () => {
           />
         </Grid>
       </Grid>
-
-      <AtRiskBanner count={summary.atRiskHabits} habitNames={atRiskNames} />
 
       <Grid container spacing={3}>
         {/* Left column: Habit categories list */}

@@ -18,24 +18,7 @@ const COLON_SEPARATOR = ': '
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
 
-  useEffect(() => {
-    const checkinList = Object.values(checkins)
-    goals.forEach((goal) => {
-      const progress = getGoalProgress(goal, checkinList)
-      const habitName = habits.find((h) => h.id === goal.habitId)?.name ?? 'Unknown Habit'
-      const completedKey = `${goal.id}-completed`
-      const at80Key = `${goal.id}-80percent`
-
-      if (progress.isCompleted && !notifiedGoals[completedKey]) {
-        markGoalNotified(completedKey)
-        markGoalNotified(at80Key)
-        showToast(SHARED_MESSAGES.GOALS.COMPLETED(habitName), 'success')
-      } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
-        markGoalNotified(at80Key)
-        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT(habitName), 'info')
-      }
-    })
-  }, [goals, checkins, habits, getGoalProgress, showToast, notifiedGoals, markGoalNotified])
+  useGoalMilestoneNotifications()
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)

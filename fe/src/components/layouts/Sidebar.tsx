@@ -86,12 +86,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: 44,
-            width: 44,
-            borderRadius: 1.5,
+            height: 32,
+            width: 32,
+            borderRadius: 1,
             bgcolor: 'grey.900',
-            border: '1px solid',
-            borderColor: 'divider',
             p: 0.5,
           }}
         >
@@ -116,9 +114,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
           {BRAND_FIRST}
           <Box
             component="span"
-            style={{ color: '#238636' }}
             sx={{
               fontWeight: 900,
+              color: 'primary.main',
             }}
           >
             {BRAND_SECOND}
@@ -204,24 +202,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
               justifyContent: 'flex-start',
               px: 2,
               py: 1.25,
-              borderRadius: 2,
-              fontWeight: item.active ? 600 : 500,
+              borderRadius: 1,
+              fontWeight: 500,
               fontSize: pxToRem(14.5),
-              color: item.active ? 'primary.contrastText' : 'text.secondary',
-              bgcolor: item.active ? 'primary.main' : 'transparent',
+              color: item.active ? 'primary.main' : 'text.secondary',
+              bgcolor: item.active ? 'primary.light' : 'transparent',
               '&:hover': {
-                bgcolor: item.active ? 'primary.dark' : 'action.hover',
-                color: item.active ? 'primary.contrastText' : 'text.primary',
+                bgcolor: item.active ? 'primary.light' : 'action.hover',
+                color: item.active ? 'primary.main' : 'text.primary',
                 '& .MuiButton-startIcon': {
-                  color: item.active ? 'primary.contrastText' : 'text.primary',
+                  color: item.active ? 'primary.main' : 'text.primary',
                 },
               },
               '& .MuiButton-startIcon': {
-                color: item.active ? 'primary.contrastText' : 'text.secondary',
+                color: item.active ? 'primary.main' : 'text.secondary',
                 mr: 1.5,
-                transition: 'color 0.2s ease-in-out',
+                transition: 'color 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
               },
-              transition: 'all 0.2s ease-in-out',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
             {item.label}
@@ -253,3 +251,5 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
     </Box>
   )
 }
+
+export default Sidebar

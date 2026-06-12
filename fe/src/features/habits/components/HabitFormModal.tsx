@@ -12,11 +12,10 @@ import {
 import { Button } from '@/components/ui'
 import { TextField } from '@/components/ui'
 import { useHabitStore } from '@/features/habits/hooks'
-import {
-  habitFormSchema,
-  defaultHabitFormValues,
-} from '@/features/habits/constants/habitSchema'
+import { habitFormSchema, defaultHabitFormValues } from '@/features/habits/constants/habitSchema'
 import { HABITS_CONTENT } from '@/features/habits/constants/content'
+import { useBoundStore } from '@/store/useBoundStore'
+import { SHARED_MESSAGES } from '@/constants/messages'
 import type { ZodIssue } from 'zod'
 import type { Habit, Category, Frequency, Priority } from '@/types'
 import type { HabitFormValues } from '@/features/habits/constants/habitSchema'
@@ -52,6 +51,7 @@ export interface HabitFormModalProps {
 
 export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, habitToEdit }) => {
   const { addHabit, updateHabit } = useHabitStore()
+  const showToast = useBoundStore((s) => s.showToast)
   const isEditMode = Boolean(habitToEdit)
 
   const [formValues, setFormValues] = useState<HabitFormValues>(() =>
@@ -64,7 +64,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
           targetPerDay: habitToEdit.targetPerDay,
           priority: habitToEdit.priority,
         }
-      : defaultHabitFormValues,
+      : defaultHabitFormValues
   )
   const [errors, setErrors] = useState<Partial<Record<keyof HabitFormValues, string>>>({})
 
@@ -81,7 +81,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
                 targetPerDay: habitToEdit.targetPerDay,
                 priority: habitToEdit.priority,
               }
-            : defaultHabitFormValues,
+            : defaultHabitFormValues
         )
         setErrors({})
       }, 0)
@@ -111,17 +111,17 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
     }
     if (isEditMode && habitToEdit) {
       updateHabit(habitToEdit.id, result.data)
+      showToast(SHARED_MESSAGES.SUCCESS.UPDATE, 'success')
     } else {
       addHabit(result.data)
+      showToast(SHARED_MESSAGES.SUCCESS.CREATE, 'success')
     }
     handleClose()
   }
 
   const toggleDay = (day: number) => {
     const current = formValues.specificDays ?? []
-    const updated = current.includes(day)
-      ? current.filter((d) => d !== day)
-      : [...current, day]
+    const updated = current.includes(day) ? current.filter((d) => d !== day) : [...current, day]
     setFormValues((prev) => ({ ...prev, specificDays: updated }))
   }
 

@@ -5,15 +5,14 @@ import type { HabitSummary, Category } from '@/types'
 import { HabitStatsRow } from './HabitStatsRow'
 
 const HABIT_STATS_GRID_COLS = {
-  xs: '1fr 70px 100px',
-  sm: 'minmax(120px, 2fr) 80px 80px 80px 140px',
+  xs: 'minmax(80px, 2fr) 55px 55px 50px',
+  sm: 'minmax(120px, 2.5fr) 80px 80px 80px',
 }
 
 const COL_HABIT = 'Habit'
 const COL_STREAK = 'Current'
 const COL_LONGEST = 'Longest'
 const COL_TOTAL = 'Total'
-const COL_RATE = '7-day rate'
 
 function getAvgRate(habits: HabitSummary[]): number {
   if (habits.length === 0) return 0
@@ -49,7 +48,6 @@ const HeaderRow: React.FC = () => (
       sx={{
         fontWeight: 600,
         textAlign: 'center',
-        display: { xs: 'none', sm: 'block' },
       }}
     >
       {COL_LONGEST}
@@ -60,13 +58,9 @@ const HeaderRow: React.FC = () => (
       sx={{
         fontWeight: 600,
         textAlign: 'center',
-        display: { xs: 'none', sm: 'block' },
       }}
     >
       {COL_TOTAL}
-    </Typography>
-    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-      {COL_RATE}
     </Typography>
   </Box>
 )

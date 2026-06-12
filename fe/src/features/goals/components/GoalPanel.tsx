@@ -4,7 +4,8 @@ import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
 import { GOALS_CONTENT } from '../constants/content'
-// import { useGoalMilestoneNotifications } from '../hooks'
+import { useGoalMilestoneNotifications } from '../hooks'
+import { SHARED_MESSAGES } from '@/constants/messages'
 import type { Goal } from '@/types'
 
 interface GoalPanelProps {
@@ -16,31 +17,13 @@ const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
+  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
 
-  /*
-  useEffect(() => {
-    const checkinList = Object.values(checkins)
-    goals.forEach((goal) => {
-      const progress = getGoalProgress(goal, checkinList)
-      const habitName = habits.find((h) => h.id === goal.habitId)?.name ?? 'Unknown Habit'
-      const completedKey = `${goal.id}-completed`
-      const at80Key = `${goal.id}-80percent`
-
-      if (progress.isCompleted && !notifiedGoals[completedKey]) {
-        markGoalNotified(completedKey)
-        markGoalNotified(at80Key)
-        showToast(SHARED_MESSAGES.GOALS.COMPLETED(habitName), 'success')
-      } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
-        markGoalNotified(at80Key)
-        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT(habitName), 'info')
-      }
-    })
-  }, [goals, checkins, habits, getGoalProgress, showToast, notifiedGoals, markGoalNotified])
-  */
+  useGoalMilestoneNotifications()
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)
+    showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
   }
 
   const getHabitName = (habitId: number): string => {

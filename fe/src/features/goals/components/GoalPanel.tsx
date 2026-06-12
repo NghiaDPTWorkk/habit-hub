@@ -5,6 +5,7 @@ import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
 import { GOALS_CONTENT } from '../constants/content'
 import { useGoalMilestoneNotifications } from '../hooks'
+import { SHARED_MESSAGES } from '@/constants/messages'
 import type { Goal } from '@/types'
 
 interface GoalPanelProps {
@@ -16,12 +17,13 @@ const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
+  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
 
   useGoalMilestoneNotifications()
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)
+    showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
   }
 
   const getHabitName = (habitId: number): string => {

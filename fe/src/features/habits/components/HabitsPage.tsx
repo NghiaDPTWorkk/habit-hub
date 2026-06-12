@@ -8,6 +8,7 @@ import { useHabitStore } from '@/features/habits/hooks'
 import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
 import { FilterSideBar } from './FilterSideBar'
+import { SHARED_MESSAGES } from '@/constants/messages'
 import type { HabitFilters } from './FilterSideBar'
 import type { Habit } from '@/types'
 
@@ -36,6 +37,7 @@ const isDueToday = (habit: Habit) => {
 export const HabitsPage: React.FC = () => {
   const { habits, deleteHabit, pauseHabit, resumeHabit, archiveHabit } = useHabitStore()
   const checkins = useBoundStore((state) => state.checkins)
+  const showToast = useBoundStore((s) => s.showToast)
 
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
   const [modalOpen, setModalOpen] = useState(false)
@@ -78,16 +80,23 @@ export const HabitsPage: React.FC = () => {
     setModalOpen(true)
   }
 
+  const handleDelete = (id: number) => {
+    deleteHabit(id)
+    showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+  }
+
   const handlePauseResume = (habit: Habit) => {
     if (habit.status === 'Active') {
       pauseHabit(habit.id)
-      return
+    } else {
+      resumeHabit(habit.id)
     }
-    resumeHabit(habit.id)
+    showToast(SHARED_MESSAGES.SUCCESS.STATUS_CHANGE, 'success')
   }
 
   const handleArchive = (habit: Habit) => {
     archiveHabit(habit.id)
+    showToast(SHARED_MESSAGES.SUCCESS.STATUS_CHANGE, 'success')
   }
 
   const isHabitMissed = (habit: Habit) => {
@@ -154,7 +163,7 @@ export const HabitsPage: React.FC = () => {
               habits={filteredHabits}
               todayCheckinByHabit={todayCheckinByHabit}
               onEdit={handleEdit}
-              onDelete={deleteHabit}
+              onDelete={handleDelete}
               onPauseResume={handlePauseResume}
               onArchive={handleArchive}
               isHabitMissed={isHabitMissed}

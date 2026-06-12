@@ -1,68 +1,102 @@
 import React, { useState } from 'react'
 import {
   Box,
-  Stack,
+  Button,
   FormControl,
-  FormLabel,
   FormHelperText,
-  FormControlLabel,
-  InputLabel,
-  Select,
+  FormLabel,
   MenuItem,
   RadioGroup,
+  Stack,
+  FormControlLabel,
   Radio,
-  Button,
+  Select,
   TextField,
 } from '@/components/ui'
 import { useBoundStore } from '@/store/useBoundStore'
-import type { TargetType } from '@/types'
+import type { Goal, GoalTargetType } from '@/types'
+import { SHARED_MESSAGES } from '@/constants/messages'
 import { GOALS_CONTENT } from '../constants/content'
 
-const HABIT_SELECT_ID = 'goal-habit-select'
-const TARGET_VALUE_STREAK = 'streak'
-const TARGET_VALUE_TOTAL = 'total_completions'
+interface GoalFormProps {
+  existingGoal?: Goal
+  onSuccess?: () => void
+}
 
-export const GoalForm: React.FC = () => {
-  const habits = useBoundStore((s) => s.habits)
-  const addGoal = useBoundStore((s) => s.addGoal)
+export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) => {
+  const { habits, addGoal, updateGoal } = useBoundStore()
+  const [habitId, setHabitId] = useState<number | ''>(existingGoal?.habitId ?? '')
+  const [targetType, setTargetType] = useState<GoalTargetType>(existingGoal?.targetType || 'streak')
+  const [targetValue, setTargetValue] = useState(existingGoal?.targetValue?.toString() || '')
+  const [errors, setErrors] = useState<{
+    habitId?: string
+    targetType?: string
+    targetValue?: string
+  }>({})
 
-  const [habitId, setHabitId] = useState<number | ''>('')
-  const [targetType, setTargetType] = useState<TargetType>('streak')
-  const [targetValue, setTargetValue] = useState('')
-  const [errors, setErrors] = useState<{ habitId?: string; targetValue?: string }>({})
+  const validateForm = (): boolean => {
+    const newErrors: typeof errors = {}
 
-  const validate = (): boolean => {
-    const next: typeof errors = {}
-    if (!habitId) next.habitId = GOALS_CONTENT.VALIDATION.HABIT_REQUIRED
-    if (!targetValue || !Number.isInteger(Number(targetValue)) || Number(targetValue) <= 0) {
-      next.targetValue = GOALS_CONTENT.VALIDATION.TARGET_INTEGER
+    if (!habitId) {
+      newErrors.habitId = SHARED_MESSAGES.GOALS.VALIDATION_ALL_REQUIRED
     }
-    setErrors(next)
-    return Object.keys(next).length === 0
+
+    if (!targetValue) {
+      newErrors.targetValue = SHARED_MESSAGES.GOALS.VALIDATION_ALL_REQUIRED
+    } else if (!Number.isInteger(Number(targetValue)) || Number(targetValue) <= 0) {
+      newErrors.targetValue = SHARED_MESSAGES.GOALS.VALIDATION_INTEGER
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = () => {
-    if (!validate()) return
-    addGoal({ habitId: habitId as number, targetType, targetValue: Number(targetValue) })
+  const handleSubmit = (): void => {
+    if (!validateForm()) return
+
+    const goalData = {
+      habitId: habitId as number,
+      targetType,
+      targetValue: Number(targetValue),
+      status: 'active' as const,
+    }
+
+    if (existingGoal) {
+      updateGoal(existingGoal.id, goalData)
+    } else {
+      addGoal(goalData)
+    }
+
     setHabitId('')
     setTargetType('streak')
     setTargetValue('')
     setErrors({})
+    onSuccess?.()
   }
 
+  const isEditing = !!existingGoal
+
   return (
-    <Box sx={{ backgroundColor: 'background.paper', borderRadius: 2, p: 3, boxShadow: 1 }}>
+    <Box
+      sx={{
+        backgroundColor: 'background.paper',
+        borderRadius: 2,
+        p: 3,
+        boxShadow: 1,
+      }}
+    >
       <Stack spacing={2}>
         <FormControl fullWidth error={!!errors.habitId}>
-          <InputLabel id={HABIT_SELECT_ID}>{GOALS_CONTENT.FORM_LABELS.HABIT}</InputLabel>
+          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>{GOALS_CONTENT.FORM_LABELS.HABIT}</FormLabel>
           <Select
-            labelId={HABIT_SELECT_ID}
             value={habitId}
-            label={GOALS_CONTENT.FORM_LABELS.HABIT}
             onChange={(e) => {
               setHabitId(Number(e.target.value))
-              setErrors((prev) => ({ ...prev, habitId: undefined }))
+              if (e.target.value) {
+                setErrors((prev) => ({ ...prev, habitId: '' }))
+              }
             }}
+            disabled={isEditing}
           >
             {habits.map((habit) => (
               <MenuItem key={habit.id} value={habit.id}>
@@ -74,35 +108,43 @@ export const GoalForm: React.FC = () => {
         </FormControl>
 
         <FormControl fullWidth>
-          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>{GOALS_CONTENT.FORM_LABELS.TARGET_TYPE}</FormLabel>
+          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>
+            {GOALS_CONTENT.FORM_LABELS.TARGET_TYPE}
+          </FormLabel>
           <RadioGroup
             value={targetType}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setTargetType(e.target.value as TargetType)
+              setTargetType(e.target.value as GoalTargetType)
             }
           >
             <FormControlLabel
-              value={TARGET_VALUE_STREAK}
+              value="streak"
               control={<Radio />}
               label={GOALS_CONTENT.TARGET_TYPES.STREAK}
             />
             <FormControlLabel
-              value={TARGET_VALUE_TOTAL}
+              value="total_completions"
               control={<Radio />}
-              label={GOALS_CONTENT.TARGET_TYPES.TOTAL}
+              label={GOALS_CONTENT.TARGET_TYPES.TOTAL_COMPLETIONS}
             />
           </RadioGroup>
         </FormControl>
 
         <FormControl fullWidth error={!!errors.targetValue}>
-          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>{GOALS_CONTENT.FORM_LABELS.TARGET_VALUE}</FormLabel>
+          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>
+            {GOALS_CONTENT.FORM_LABELS.TARGET_VALUE}
+          </FormLabel>
           <TextField
             type="number"
             value={targetValue}
             onChange={(e) => {
               setTargetValue(e.target.value)
-              if (Number.isInteger(Number(e.target.value)) && Number(e.target.value) > 0) {
-                setErrors((prev) => ({ ...prev, targetValue: undefined }))
+              if (
+                e.target.value &&
+                Number.isInteger(Number(e.target.value)) &&
+                Number(e.target.value) > 0
+              ) {
+                setErrors((prev) => ({ ...prev, targetValue: '' }))
               }
             }}
             error={!!errors.targetValue}
@@ -117,9 +159,11 @@ export const GoalForm: React.FC = () => {
           onClick={handleSubmit}
           sx={{ alignSelf: 'flex-end' }}
         >
-          {GOALS_CONTENT.FORM_SUBMIT_ADD}
+          {isEditing ? GOALS_CONTENT.FORM_SUBMIT_EDIT : GOALS_CONTENT.FORM_SUBMIT_ADD}
         </Button>
       </Stack>
     </Box>
   )
 }
+
+export default GoalForm

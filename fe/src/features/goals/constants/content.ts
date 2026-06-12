@@ -1,6 +1,8 @@
 export const GOALS_CONTENT = {
   PAGE_TITLE: 'Goals',
-  PAGE_DESC: 'Set and track your long-term habit goals.',
+  PAGE_DESC: 'Set and track your habit goals.',
+  ADD_BUTTON: 'Add Goal',
+  EMPTY_STATE: 'No goals yet. Create your first goal!',
   PANEL_TITLE: 'Your Goals',
   FORM_TITLE_ADD: 'Add New Goal',
   FORM_TITLE_EDIT: 'Edit Goal',
@@ -15,8 +17,13 @@ export const GOALS_CONTENT = {
     TARGET_VALUE: 'Target Value',
   },
   TARGET_TYPES: {
-    STREAK: 'Consecutive Days (Streak)',
+    STREAK: 'Consecutive Days Streak',
+    TOTAL_COMPLETIONS: 'Total Completions',
     TOTAL: 'Total Completions',
+  },
+  ACTIONS: {
+    EDIT: 'Edit',
+    DELETE: 'Delete',
   },
   PROGRESS_LABEL: 'Progress',
   PERCENTAGE_SUFFIX: '%',

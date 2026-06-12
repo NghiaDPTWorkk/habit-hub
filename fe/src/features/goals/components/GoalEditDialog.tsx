@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@/components/ui'
 import { useBoundStore } from '@/store/useBoundStore'
-import type { Goal, TargetType } from '@/types'
+import type { Goal, GoalTargetType } from '@/types'
 import { GOALS_CONTENT } from '../constants/content'
 
 const TARGET_VALUE_STREAK = 'streak'
@@ -33,12 +33,11 @@ export const GoalEditDialog: React.FC<GoalEditDialogProps> = ({ goal, open, onCl
   const habits = useBoundStore((s) => s.habits)
   const updateGoal = useBoundStore((s) => s.updateGoal)
 
-  const [targetType, setTargetType] = useState<TargetType>(goal?.targetType ?? 'streak')
+  const [targetType, setGoalTargetType] = useState<GoalTargetType>(goal?.targetType ?? 'streak')
   const [targetValue, setTargetValue] = useState(goal?.targetValue?.toString() ?? '')
   const [errors, setErrors] = useState<{ targetValue?: string }>({})
 
-  const habitName =
-    habits.find((h) => h.id === goal?.habitId)?.name ?? GOALS_CONTENT.UNKNOWN_HABIT
+  const habitName = habits.find((h) => h.id === goal?.habitId)?.name ?? GOALS_CONTENT.UNKNOWN_HABIT
 
   const validate = (): boolean => {
     const next: typeof errors = {}
@@ -77,7 +76,7 @@ export const GoalEditDialog: React.FC<GoalEditDialogProps> = ({ goal, open, onCl
             <RadioGroup
               value={targetType}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setTargetType(e.target.value as TargetType)
+                setGoalTargetType(e.target.value as GoalTargetType)
               }
             >
               <FormControlLabel

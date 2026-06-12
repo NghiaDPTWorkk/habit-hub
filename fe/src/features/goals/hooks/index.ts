@@ -2,38 +2,34 @@ import { useEffect } from 'react'
 import { useBoundStore } from '@/store/useBoundStore'
 import { SHARED_MESSAGES } from '@/constants/messages'
 import { GOALS_CONTENT } from '../constants/content'
-import { computeCurrentValue } from '../services'
 
 export const useGoalMilestoneNotifications = (): void => {
   const goals = useBoundStore((s) => s.goals)
   const checkins = useBoundStore((s) => s.checkins)
   const habits = useBoundStore((s) => s.habits)
   const getGoalProgress = useBoundStore((s) => s.getGoalProgress)
-  const reachedMilestones = useBoundStore((s) => s.reachedMilestones)
-  const markMilestoneReached = useBoundStore((s) => s.markMilestoneReached)
+  const notifiedGoals = useBoundStore((s) => s.notifiedGoals)
+  const markGoalNotified = useBoundStore((s) => s.markGoalNotified)
   const showToast = useBoundStore((s) => s.showToast)
 
   useEffect(() => {
+    const checkinList = Object.values(checkins)
     goals.forEach((goal) => {
-      const currentValue = computeCurrentValue(goal, checkins)
-      const progress = getGoalProgress(goal, currentValue)
+      const progress = getGoalProgress(goal, checkinList)
       const habitName =
         habits.find((h) => h.id === goal.habitId)?.name ?? GOALS_CONTENT.UNKNOWN_HABIT
+      const completedKey = `${goal.id}-completed`
+      const at80Key = `${goal.id}-80percent`
 
-      const key100 = `${goal.id}-100`
-      const key80 = `${goal.id}-80`
-
-      if (progress.isCompleted && !reachedMilestones[key100]) {
-        markMilestoneReached(key100)
+      if (progress.isCompleted && !notifiedGoals[completedKey]) {
+        markGoalNotified(completedKey)
         // AC1: also mark 80% to prevent it firing if progress later drops to 80-99%
-        markMilestoneReached(key80)
+        markGoalNotified(at80Key)
         showToast(SHARED_MESSAGES.GOALS.COMPLETED(habitName), 'success')
-      } else if (progress.isEightyPercentReached && !reachedMilestones[key80]) {
-        markMilestoneReached(key80)
+      } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
+        markGoalNotified(at80Key)
         showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT(habitName), 'info')
       }
-      // AC2: reachedMilestones is persisted — once key100 is set, undo+redo
-      // within the same session or across reloads will not re-fire the toast.
     })
-  }, [goals, checkins, habits, getGoalProgress, reachedMilestones, markMilestoneReached, showToast])
+  }, [goals, checkins, habits, getGoalProgress, notifiedGoals, markGoalNotified, showToast])
 }

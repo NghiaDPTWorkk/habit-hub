@@ -1,9 +1,12 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+
 import { createHabitSlice } from '@/store/habitSlice'
 import { createCheckinSlice } from '@/store/checkinSlice'
 import { createGoalSlice } from '@/store/goalSlice'
+import { createThemeSlice } from '@/store/themeSlice'
 import { createToastSlice } from '@/store/toastSlice'
+
 import type { BoundStore } from './types'
 
 export const useBoundStore = create<BoundStore>()(
@@ -12,6 +15,7 @@ export const useBoundStore = create<BoundStore>()(
       ...createHabitSlice(...a),
       ...createCheckinSlice(...a),
       ...createGoalSlice(...a),
+      ...createThemeSlice(...a),
       ...createToastSlice(...a),
     }),
     {
@@ -21,7 +25,7 @@ export const useBoundStore = create<BoundStore>()(
         habits: state.habits,
         checkins: state.checkins,
         goals: state.goals,
-        reachedMilestones: state.reachedMilestones,
+        notifiedGoals: state.notifiedGoals,
       }),
     }
   )

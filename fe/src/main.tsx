@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './routes'
 import { getTheme } from '@/theme'
 import { useBoundStore } from '@/store'
+import { Toast } from '@/components/ui'
 import { initStore } from '@/storage/initStore'
 
 initStore()
@@ -20,6 +21,7 @@ const ThemeApp: React.FC = () => {
     <ThemeProvider theme={currentTheme}>
       <CssBaseline />
       <RouterProvider router={router} />
+      <Toast />
     </ThemeProvider>
   )
 }

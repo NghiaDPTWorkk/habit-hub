@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Box, Card, IconButton, Stack, Typography } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
-import { SHARED_MESSAGES } from '@/constants/messages'
 import { GOALS_CONTENT } from '../constants/content'
+import { useGoalMilestoneNotifications } from '../hooks'
 import type { Goal } from '@/types'
 
 interface GoalPanelProps {
@@ -16,16 +16,7 @@ const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const {
-    goals,
-    checkins,
-    deleteGoal,
-    getGoalProgress,
-    habits,
-    showToast,
-    notifiedGoals,
-    markGoalNotified,
-  } = useBoundStore()
+  const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
 
   useEffect(() => {
     const checkinList = Object.values(checkins)

@@ -59,7 +59,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           sx={{
             border: '1px solid',
             borderColor: 'divider',
-            borderRadius: 1.5,
+            borderRadius: 1,
             p: 0.75,
             display: { xs: 'none', md: 'inline-flex' },
             '&:hover': {
@@ -79,7 +79,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           sx={{
             border: '1px solid',
             borderColor: 'divider',
-            borderRadius: 1.5,
+            borderRadius: 1,
             p: 0.75,
             '&:hover': {
               bgcolor: 'action.hover',
@@ -95,7 +95,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           component={RouterLink}
           to="/habits"
           sx={{
-            borderRadius: 2,
+            borderRadius: 1,
             px: 3,
             py: 1.25,
             fontWeight: 600,

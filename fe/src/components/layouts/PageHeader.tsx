@@ -62,6 +62,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             borderRadius: 1,
             p: 0.75,
             display: { xs: 'none', md: 'inline-flex' },
+            color: 'text.primary',
             '&:hover': {
               bgcolor: 'action.hover',
             },
@@ -81,6 +82,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             borderColor: 'divider',
             borderRadius: 1,
             p: 0.75,
+            color: 'text.primary',
             '&:hover': {
               bgcolor: 'action.hover',
             },

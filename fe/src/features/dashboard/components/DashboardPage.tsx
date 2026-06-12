@@ -156,13 +156,10 @@ export const DashboardPage: React.FC = () => {
               </Typography>
             </Card>
           ) : (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, height: '100%' }}>
-              <WeeklyHabitsStats
-                filterCategory={filterCategory}
-                setFilterCategory={setFilterCategory}
-              />
-              <WeeklyTrendChart filterCategory={filterCategory} />
-            </Box>
+            <WeeklyHabitsStats
+              filterCategory={filterCategory}
+              setFilterCategory={setFilterCategory}
+            />
           )}
         </Grid>
 
@@ -172,6 +169,13 @@ export const DashboardPage: React.FC = () => {
             <CategoryDistributionChart />
           </Box>
         </Grid>
+
+        {/* Row 2: Full width Weekly Trend Chart */}
+        {habitsByCategory.length > 0 && (
+          <Grid size={{ xs: 12 }}>
+            <WeeklyTrendChart filterCategory={filterCategory} />
+          </Grid>
+        )}
       </Grid>
 
       {/* Activity History block at the bottom */}

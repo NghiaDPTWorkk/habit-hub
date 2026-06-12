@@ -13,42 +13,7 @@ import {
 } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useBoundStore } from '@/store'
-
-const TEXTS = {
-  title: 'Settings & Backups',
-  subtitle: 'Export data records and administrative tools',
-  profileTitle: 'Account Profile Settings',
-  profileSubtitle: 'Manage your personal profile details and subscription plan preferences.',
-  fullNameLabel: 'Full Name',
-  emailLabel: 'Email Address',
-  subTierLabel: 'Subscription Tier',
-  subFree: 'Free Tier',
-  subPremium: 'Premium Plan (Active)',
-  generalTitle: 'General Settings',
-  readOnlyTitle: 'Read-only Mode',
-  readOnlySubtitle:
-    'Hide all habit creation, edit, delete actions, and check-in buttons for safe public sharing.',
-  timezoneTitle: 'Timezone Simulation',
-  timezoneSubtitle:
-    'Shift timezone offset to verify check-in logs consistency under foreign zones.',
-  backupTitle: 'Backup & Restore Data',
-  backupSubtitle:
-    'Export all user database records (Habits, Check-ins, Goals, Notes) from LocalStorage to a local JSON file or import it back.',
-  exportBtn: 'Export Data (JSON)',
-  importBtn: 'Import Data (JSON)',
-  adminTitle: 'Administration & Release Zone',
-  adminSubtitle:
-    'This application version operates under a Code Freeze status. You can wipe out all local data cache or load seed mockups.',
-  wipeBtn: 'Wipe All Data',
-  seedBtn: 'Load Demo Seed Data',
-  lighthouseText:
-    'Lighthouse Performance Audit: Accessibility: 100/100 | Best Practices: 98/100 | Performance: 99/100.',
-  tzGmt7: 'GMT+7 (Default)',
-  tzGmt0: 'GMT+0 (UTC)',
-  tzGmt5: 'GMT-5 (EST)',
-  exportSuccess: 'Data exported successfully!',
-  exportError: 'Failed to export data, please try again.',
-}
+import { TEXTS } from '../constants'
 
 export const SettingsPage: React.FC = () => {
   // Account Profile state
@@ -142,6 +107,76 @@ export const SettingsPage: React.FC = () => {
       console.error(e)
       useBoundStore.getState().showToast(TEXTS.exportError, 'error')
     }
+  }
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  const handleImportClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    e.target.value = ''
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target?.result as string)
+        if (!json || typeof json !== 'object' || !json.data || typeof json.data !== 'object') {
+          useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
+          return
+        }
+
+        const { habits, checkins, goals, settings: importedSettings } = json.data
+        if (!Array.isArray(habits) || typeof checkins !== 'object' || !Array.isArray(goals)) {
+          useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
+          return
+        }
+
+        const confirmed = window.confirm(TEXTS.importConfirmWarning)
+        if (!confirmed) return
+
+        useBoundStore.setState({
+          habits,
+          checkins,
+          goals,
+        })
+
+        if (importedSettings) {
+          if (importedSettings.profile_full_name !== undefined) {
+            setFullName(importedSettings.profile_full_name)
+            localStorage.setItem('profile_full_name', importedSettings.profile_full_name)
+          }
+          if (importedSettings.profile_email !== undefined) {
+            setEmail(importedSettings.profile_email)
+            localStorage.setItem('profile_email', importedSettings.profile_email)
+          }
+          if (importedSettings.profile_sub_tier !== undefined) {
+            setSubTier(importedSettings.profile_sub_tier)
+            localStorage.setItem('profile_sub_tier', importedSettings.profile_sub_tier)
+          }
+          if (importedSettings.general_read_only !== undefined) {
+            setReadOnly(importedSettings.general_read_only === 'true')
+            localStorage.setItem('general_read_only', importedSettings.general_read_only)
+          }
+          if (importedSettings.general_timezone !== undefined) {
+            setTimezone(importedSettings.general_timezone)
+            localStorage.setItem('general_timezone', importedSettings.general_timezone)
+          }
+        }
+
+        useBoundStore.getState().showToast(TEXTS.importSuccess, 'success')
+      } catch (err) {
+        console.error(err)
+        useBoundStore.getState().showToast(TEXTS.importParseError, 'error')
+      }
+    }
+    reader.readAsText(file)
   }
 
   return (
@@ -274,6 +309,7 @@ export const SettingsPage: React.FC = () => {
             variant="outlined"
             color="inherit"
             startIcon={<Icons.Upload />}
+            onClick={handleImportClick}
             sx={{
               borderRadius: 2,
               px: 3,
@@ -284,6 +320,13 @@ export const SettingsPage: React.FC = () => {
             {TEXTS.importBtn}
           </Button>
         </Stack>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImportData}
+          accept=".json"
+          style={{ display: 'none' }}
+        />
       </Card>
     </Stack>
   )

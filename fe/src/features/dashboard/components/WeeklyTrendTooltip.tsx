@@ -3,7 +3,7 @@ import { Box, Typography } from '@/components/ui'
 import { pxToRem } from '@/utils'
 import type { Habit } from '@/types'
 
-interface DayTrendData {
+export interface DayTrendData {
   date: Date
   dateStr: string
   dayLabel: string

@@ -4,7 +4,7 @@ import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
 import { GOALS_CONTENT } from '../constants/content'
-import { useGoalMilestoneNotifications } from '../hooks'
+// import { useGoalMilestoneNotifications } from '../hooks'
 import type { Goal } from '@/types'
 
 interface GoalPanelProps {
@@ -18,6 +18,7 @@ const COLON_SEPARATOR = ': '
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   const { goals, checkins, deleteGoal, getGoalProgress, habits } = useBoundStore()
 
+  /*
   useEffect(() => {
     const checkinList = Object.values(checkins)
     goals.forEach((goal) => {
@@ -36,6 +37,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
       }
     })
   }, [goals, checkins, habits, getGoalProgress, showToast, notifiedGoals, markGoalNotified])
+  */
 
   const handleDeleteGoal = (goalId: string): void => {
     deleteGoal(goalId)

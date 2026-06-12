@@ -80,6 +80,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           )}
         </IconButton>
         <IconButton
+          component={RouterLink}
+          to="/settings"
           sx={{
             border: '1px solid',
             borderColor: 'divider',

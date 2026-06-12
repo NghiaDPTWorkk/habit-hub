@@ -29,9 +29,9 @@ export const getTheme = (mode: 'light' | 'dark') =>
         contrastText: '#ffffff',
       },
       warning: {
-        main: mode === 'light' ? '#9a6700' : '#d29922',
-        light: mode === 'light' ? '#fff8c5' : 'rgba(210, 153, 34, 0.15)',
-        dark: mode === 'light' ? '#704c00' : '#9e6a00',
+        main: mode === 'light' ? '#d97706' : '#f59e0b',
+        light: mode === 'light' ? '#fff3e0' : 'rgba(245, 158, 11, 0.15)',
+        dark: mode === 'light' ? '#b45309' : '#d97706',
         contrastText: '#ffffff',
       },
       success: {

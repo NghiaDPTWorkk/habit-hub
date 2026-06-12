@@ -1,12 +1,15 @@
 import React from 'react'
 import Grid from '@mui/material/Grid'
-import { Box, Typography, Card, CalendarHeatmap, MiniChart } from '@/components/ui'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import { alpha } from '@mui/material/styles'
+import { Box, Typography, Card, CalendarHeatmap } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
-import { useDashboard, useDailyIntensity, useWeeklyRates } from '../hooks'
+import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
-import { CategorySection } from './CategorySection'
-import { AtRiskBanner } from './AtRiskBanner'
+import { WeeklyHabitsStats } from './WeeklyHabitsStats'
+import { useBoundStore } from '@/store'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
+import { ActivityDetails } from './ActivityDetails'
 
 const PAGE_TITLE = 'Dashboard'
 const KPI_DONE_TITLE = '% Done Today'
@@ -15,15 +18,19 @@ const KPI_RISK_TITLE = 'At Risk'
 const KPI_GOALS_TITLE = 'Goals Achieved'
 const EMPTY_TITLE = 'No habits yet'
 const EMPTY_DESC = 'Go to Habits and create your first habit to see stats here.'
-const SECTION_ACTIVITY = 'Activity'
-const SECTION_WEEKLY = 'Weekly by Category'
+const SECTION_ACTIVITY_TITLE = 'Activity History'
+const SECTION_ACTIVITY_DESC = 'Daily check-in activity map — click any cell to view details.'
 const ICON_SIZE = { fontSize: 28 }
-const HEATMAP_WEEKS = 16
+const HEATMAP_WEEKS = 14
 
-const CARD_DONE = { iconColor: 'success.main', iconBg: 'rgba(16,185,129,0.12)' }
-const CARD_ACTIVE = { iconColor: 'primary.main', iconBg: 'rgba(140,122,230,0.12)' }
-const CARD_RISK = { iconColor: 'warning.main', iconBg: 'rgba(245,158,11,0.12)' }
-const CARD_GOALS = { iconColor: 'secondary.main', iconBg: 'rgba(113,128,147,0.12)' }
+const LABEL_LESS = 'Less'
+const LABEL_MORE = 'More'
+const LABEL_WEEKS = 'Last 14 weeks'
+
+const CARD_DONE = { iconColor: 'success.main', iconBg: 'rgba(39, 174, 96, 0.12)' }
+const CARD_ACTIVE = { iconColor: 'info.main', iconBg: 'rgba(9, 105, 218, 0.12)' }
+const CARD_RISK = { iconColor: 'secondary.main', iconBg: 'rgba(130, 80, 223, 0.12)' }
+const CARD_GOALS = { iconColor: 'warning.main', iconBg: 'rgba(154, 103, 0, 0.12)' }
 
 function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`
@@ -41,13 +48,39 @@ function getDateLabel(): string {
 export const DashboardPage: React.FC = () => {
   const { summary, habitsByCategory } = useDashboard()
   const heatmapData = useDailyIntensity(HEATMAP_WEEKS * 7)
-  const weeklyRates = useWeeklyRates()
   const dateLabel = getDateLabel()
 
-  const atRiskNames = habitsByCategory
-    .flatMap((g) => g.habits)
-    .filter((h) => summary.atRiskHabitIds.includes(h.habitId))
-    .map((h) => h.habitName)
+  const checkins = useBoundStore((s) => s.checkins)
+  const habits = useBoundStore((s) => s.habits)
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
+
+  const selectedDateDetails = React.useMemo(() => {
+    if (!selectedDate) return null
+    const dayCheckins = Object.values(checkins).filter(
+      (c) => c.date === selectedDate && c.completedCount > 0
+    )
+
+    const completedTasks = dayCheckins.map((c) => {
+      const habit = habits.find((h) => h.id === c.habitId)
+      return {
+        name: habit ? habit.name : `Habit #${c.habitId}`,
+        category: habit ? habit.category : 'General',
+        completedCount: c.completedCount,
+        targetPerDay: habit ? habit.targetPerDay : 1,
+      }
+    })
+
+    return {
+      date: new Date(selectedDate).toLocaleDateString('en-GB', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
+      count: completedTasks.length,
+      tasks: completedTasks,
+    }
+  }, [selectedDate, checkins, habits])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -99,29 +132,8 @@ export const DashboardPage: React.FC = () => {
         </Grid>
       </Grid>
 
-      <AtRiskBanner count={summary.atRiskHabits} habitNames={atRiskNames} />
-
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 5 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {weeklyRates.length > 0 && (
-              <Card sx={{ p: 3 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-                  {SECTION_WEEKLY}
-                </Typography>
-                <MiniChart data={weeklyRates} />
-              </Card>
-            )}
-            <Card sx={{ p: 3 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-                {SECTION_ACTIVITY}
-              </Typography>
-              <CalendarHeatmap data={heatmapData} weeks={HEATMAP_WEEKS} />
-            </Card>
-            <CategoryDistributionChart />
-          </Box>
-        </Grid>
-
+        {/* Left column: Weekly Habits Statistics list */}
         <Grid size={{ xs: 12, md: 7 }}>
           {habitsByCategory.length === 0 ? (
             <Card sx={{ textAlign: 'center', py: 6 }}>
@@ -133,19 +145,114 @@ export const DashboardPage: React.FC = () => {
               </Typography>
             </Card>
           ) : (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {habitsByCategory.map((group, idx) => (
-                <CategorySection
-                  key={group.category}
-                  category={group.category}
-                  habits={group.habits}
-                  defaultExpanded={idx === 0}
-                />
-              ))}
-            </Box>
+            <WeeklyHabitsStats />
           )}
         </Grid>
+
+        {/* Right column: Charts */}
+        <Grid size={{ xs: 12, md: 5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <CategoryDistributionChart />
+          </Box>
+        </Grid>
       </Grid>
+
+      {/* Activity History block at the bottom */}
+      <Card sx={{ p: 3 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            mb: 0.5,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CalendarMonthIcon sx={{ color: 'success.main' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {SECTION_ACTIVITY_TITLE}
+            </Typography>
+          </Box>
+          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+            {LABEL_WEEKS}
+          </Typography>
+        </Box>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          {SECTION_ACTIVITY_DESC}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: 4,
+            alignItems: 'flex-start',
+          }}
+        >
+          {/* Heatmap Section */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1.5,
+              width: { xs: '100%', md: 'auto' },
+              flexShrink: 0,
+            }}
+          >
+            {/* Scrollable wrapper for heatmap grid */}
+            <Box sx={{ overflowX: 'auto', pb: 1, width: '100%' }}>
+              <Box sx={{ width: 'fit-content' }}>
+                <CalendarHeatmap
+                  data={heatmapData}
+                  weeks={HEATMAP_WEEKS}
+                  onCellClick={setSelectedDate}
+                  activeDate={selectedDate}
+                />
+              </Box>
+            </Box>
+            {/* Legend - aligned right relative to the heatmap */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                justifyContent: 'flex-end',
+                width: '100%',
+                maxWidth: 276,
+              }}
+            >
+              <Typography variant="caption" color="text.secondary">
+                {LABEL_LESS}
+              </Typography>
+              <Box sx={{ width: 14, height: 14, bgcolor: 'divider', borderRadius: 0.5 }} />
+              <Box
+                sx={{
+                  width: 14,
+                  height: 14,
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.3),
+                  borderRadius: 0.5,
+                }}
+              />
+              <Box
+                sx={{
+                  width: 14,
+                  height: 14,
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.6),
+                  borderRadius: 0.5,
+                }}
+              />
+              <Box sx={{ width: 14, height: 14, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+              <Typography variant="caption" color="text.secondary">
+                {LABEL_MORE}
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Details Section */}
+          <Box sx={{ flexGrow: 1, width: '100%', minWidth: { xs: '100%', md: 320 } }}>
+            <ActivityDetails details={selectedDateDetails} />
+          </Box>
+        </Box>
+      </Card>
     </Box>
   )
 }

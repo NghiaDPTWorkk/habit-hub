@@ -2,7 +2,12 @@ import React from 'react'
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary, Category } from '@/types'
-import { HabitStatsRow, HABIT_STATS_GRID_COLS } from './HabitStatsRow'
+import { HabitStatsRow } from './HabitStatsRow'
+
+const HABIT_STATS_GRID_COLS = {
+  xs: '1fr 70px 100px',
+  sm: 'minmax(120px, 2fr) 80px 80px 80px 140px',
+}
 
 const COL_HABIT = 'Habit'
 const COL_STREAK = 'Current'
@@ -41,14 +46,22 @@ const HeaderRow: React.FC = () => (
     <Typography
       variant="caption"
       color="text.secondary"
-      sx={{ fontWeight: 600, textAlign: 'center' }}
+      sx={{
+        fontWeight: 600,
+        textAlign: 'center',
+        display: { xs: 'none', sm: 'block' },
+      }}
     >
       {COL_LONGEST}
     </Typography>
     <Typography
       variant="caption"
       color="text.secondary"
-      sx={{ fontWeight: 600, textAlign: 'center' }}
+      sx={{
+        fontWeight: 600,
+        textAlign: 'center',
+        display: { xs: 'none', sm: 'block' },
+      }}
     >
       {COL_TOTAL}
     </Typography>

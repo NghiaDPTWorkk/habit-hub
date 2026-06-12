@@ -29,10 +29,16 @@ const CATE_MINDFULNESS = 'Mindfulness'
 const CATE_OTHER = 'Other'
 const BTN_RESET = 'Reset'
 
-export const WeeklyHabitsStats: React.FC = () => {
-  const { habitsByCategory } = useDashboard()
+interface WeeklyHabitsStatsProps {
+  filterCategory: string
+  setFilterCategory: (category: string) => void
+}
 
-  const [filterCategory, setFilterCategory] = React.useState<string>('All')
+export const WeeklyHabitsStats: React.FC<WeeklyHabitsStatsProps> = ({
+  filterCategory,
+  setFilterCategory,
+}) => {
+  const { habitsByCategory } = useDashboard()
 
   const sortedHabits = React.useMemo(() => {
     const flatSummaries = habitsByCategory.flatMap((g) => g.habits)

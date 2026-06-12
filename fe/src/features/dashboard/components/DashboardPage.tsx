@@ -7,6 +7,7 @@ import { Icons } from '@/components/ui/icons'
 import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
 import { WeeklyHabitsStats } from './WeeklyHabitsStats'
+import { WeeklyTrendChart } from './WeeklyTrendChart'
 import { useBoundStore } from '@/store'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { ActivityDetails } from './ActivityDetails'
@@ -53,6 +54,7 @@ export const DashboardPage: React.FC = () => {
   const checkins = useBoundStore((s) => s.checkins)
   const habits = useBoundStore((s) => s.habits)
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
+  const [filterCategory, setFilterCategory] = React.useState<string>('All')
 
   const selectedDateDetails = React.useMemo(() => {
     if (!selectedDate) return null
@@ -154,7 +156,13 @@ export const DashboardPage: React.FC = () => {
               </Typography>
             </Card>
           ) : (
-            <WeeklyHabitsStats />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, height: '100%' }}>
+              <WeeklyHabitsStats
+                filterCategory={filterCategory}
+                setFilterCategory={setFilterCategory}
+              />
+              <WeeklyTrendChart filterCategory={filterCategory} />
+            </Box>
           )}
         </Grid>
 

@@ -28,6 +28,8 @@ export {
   RadioGroup,
   Select,
   Stack,
+  Switch,
+  Checkbox,
   Toolbar,
   Tooltip,
   Typography,

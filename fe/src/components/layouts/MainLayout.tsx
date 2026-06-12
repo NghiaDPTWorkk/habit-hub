@@ -7,11 +7,10 @@ import { pxToRem } from '@/utils'
 // Sub-layouts
 import { Sidebar } from './Sidebar'
 import { PageHeader } from './PageHeader'
+import { AtRiskBanner } from './AtRiskBanner'
 
-// MUI Icons
-import LightModeIcon from '@mui/icons-material/LightMode'
-import DarkModeIcon from '@mui/icons-material/DarkMode'
-import MenuIcon from '@mui/icons-material/Menu'
+// Icons
+import { Icons } from '@/components/ui/icons'
 
 const BRAND_FIRST = 'Trace'
 const BRAND_SECOND = 'X'
@@ -143,7 +142,7 @@ export const MainLayout: React.FC = () => {
           }}
         >
           <IconButton color="inherit" edge="start" onClick={handleDrawerToggle}>
-            <MenuIcon />
+            <Icons.Menu />
           </IconButton>
           <Box
             sx={{
@@ -159,7 +158,7 @@ export const MainLayout: React.FC = () => {
             </Box>
           </Box>
           <IconButton color="inherit" onClick={toggleThemeMode}>
-            {themeMode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+            {themeMode === 'light' ? <Icons.DarkMode /> : <Icons.LightMode />}
           </IconButton>
         </Box>
 
@@ -180,6 +179,7 @@ export const MainLayout: React.FC = () => {
             pb: { xs: 2, md: 4 },
           }}
         >
+          <AtRiskBanner />
           <Outlet />
         </Box>
       </Box>

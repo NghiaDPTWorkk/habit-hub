@@ -9,7 +9,10 @@ import {
   MenuItem,
   Switch,
   Stack,
+  Button,
 } from '@/components/ui'
+import { Icons } from '@/components/ui/icons'
+import { useBoundStore } from '@/store'
 
 const TEXTS = {
   title: 'Settings & Backups',
@@ -43,6 +46,8 @@ const TEXTS = {
   tzGmt7: 'GMT+7 (Default)',
   tzGmt0: 'GMT+0 (UTC)',
   tzGmt5: 'GMT-5 (EST)',
+  exportSuccess: 'Data exported successfully!',
+  exportError: 'Failed to export data, please try again.',
 }
 
 export const SettingsPage: React.FC = () => {
@@ -94,6 +99,49 @@ export const SettingsPage: React.FC = () => {
     const val = e.target.value
     setTimezone(val)
     localStorage.setItem('general_timezone', val)
+  }
+
+  const handleExportData = () => {
+    try {
+      const habits = useBoundStore.getState().habits
+      const checkins = useBoundStore.getState().checkins
+      const goals = useBoundStore.getState().goals
+
+      const settingsData = {
+        profile_full_name: localStorage.getItem('profile_full_name') || 'Trần Nghĩa',
+        profile_email: localStorage.getItem('profile_email') || 'trnghia@example.com',
+        profile_sub_tier: localStorage.getItem('profile_sub_tier') || 'Premium Plan (Active)',
+        general_read_only: localStorage.getItem('general_read_only') || 'false',
+        general_timezone: localStorage.getItem('general_timezone') || 'GMT+7 (Default)',
+      }
+
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        data: {
+          habits,
+          checkins,
+          goals,
+          settings: settingsData,
+        },
+      }
+
+      const jsonString = JSON.stringify(payload, null, 2)
+      const blob = new Blob([jsonString], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'tracex_export.json'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+
+      useBoundStore.getState().showToast(TEXTS.exportSuccess, 'success')
+    } catch (e) {
+      console.error(e)
+      useBoundStore.getState().showToast(TEXTS.exportError, 'error')
+    }
   }
 
   return (
@@ -189,6 +237,52 @@ export const SettingsPage: React.FC = () => {
               </Select>
             </FormControl>
           </Box>
+        </Stack>
+      </Card>
+
+      {/* Backup & Restore Data Card */}
+      <Card variant="outlined" sx={{ p: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+          {TEXTS.backupTitle}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
+          {TEXTS.backupSubtitle}
+        </Typography>
+
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <Button
+            variant="contained"
+            color="warning"
+            startIcon={<Icons.Download />}
+            onClick={handleExportData}
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              py: 1.25,
+              fontWeight: 600,
+              bgcolor: 'warning.main',
+              color: 'warning.contrastText',
+              '&:hover': {
+                bgcolor: 'warning.dark',
+              },
+            }}
+          >
+            {TEXTS.exportBtn}
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Icons.Upload />}
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              py: 1.25,
+              fontWeight: 600,
+            }}
+          >
+            {TEXTS.importBtn}
+          </Button>
         </Stack>
       </Card>
     </Stack>

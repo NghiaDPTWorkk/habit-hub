@@ -3,11 +3,14 @@ import { Box, Typography, Card, IconButton, Tooltip, Checkbox } from '@/componen
 import { Icons } from '@/components/ui/icons'
 import { useCheckinStore } from '../hooks'
 import type { Habit, Checkin } from '@/types'
+import { pxToRem } from '@/utils'
+import dayjs from 'dayjs'
 
 const LABEL_CATEGORY = 'Category: '
 const LABEL_PRIORITY = ' | Priority: '
 const LABEL_EDIT = 'Edit Progress'
 const LABEL_CHECKIN = 'Check-in'
+const LABEL_OVERDUE = 'Overdue'
 
 const CATEGORY_THEME_COLORS: Record<string, string> = {
   Health: 'success.main',
@@ -47,8 +50,18 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
     habit.targetPerDay > 1 ? ` | Progress: ${completedCount}/${habit.targetPerDay}` : ''
   const subtitleText = `${LABEL_CATEGORY}${habit.category}${LABEL_PRIORITY}${habit.priority}${progressText}`
 
+  const isPastDate = dayjs(today).isBefore(dayjs(), 'day')
+  const isOverdue = isPastDate && !isChecked
+
   return (
-    <Card sx={{ p: 2 }}>
+    <Card
+      sx={{
+        p: 2,
+        borderLeft: isOverdue ? '4px solid' : undefined,
+        borderLeftColor: isOverdue ? 'warning.main' : undefined,
+        bgcolor: isOverdue ? 'warning.light' : undefined,
+      }}
+    >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Left Part: Dot and Title/Subtitle */}
         <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: 1, pr: 2 }}>
@@ -63,9 +76,28 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
             }}
           />
           <Box sx={{ minWidth: 0 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-              {habit.name}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5, flexWrap: 'wrap' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                {habit.name}
+              </Typography>
+              {isOverdue && (
+                <Box
+                  sx={{
+                    px: 1,
+                    py: 0.25,
+                    bgcolor: 'error.light',
+                    color: 'error.dark',
+                    borderRadius: 1,
+                    fontSize: pxToRem(10),
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    lineHeight: 1,
+                  }}
+                >
+                  {LABEL_OVERDUE}
+                </Box>
+              )}
+            </Box>
             <Typography variant="caption" color="text.secondary">
               {subtitleText}
             </Typography>

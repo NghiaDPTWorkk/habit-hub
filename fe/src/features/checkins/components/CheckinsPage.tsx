@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs, { type Dayjs } from 'dayjs'
 import { Box, Typography, DatePicker, Button, Card, ProgressBar } from '@/components/ui'
+import { alpha } from '@mui/material/styles'
 import { pxToRem } from '@/utils'
 import { useBoundStore } from '@/store'
 import { useCheckinStore } from '../hooks'
@@ -112,67 +113,76 @@ export const CheckinsPage: React.FC = () => {
       )}
 
       {/* Weekly Date Selector */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
-        {weekDays.map((day, idx) => {
-          const isFuture = day.isAfter(dayjs(), 'day')
-          const isSelected = !isFuture && day.isSame(selectedDate, 'day')
-          const dateNum = day.date()
-          const label = WEEK_DAY_LABELS[idx]
+      <Card sx={{ p: 2 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+          {weekDays.map((day, idx) => {
+            const isFuture = day.isAfter(dayjs(), 'day')
+            const isSelected = !isFuture && day.isSame(selectedDate, 'day')
+            const dateNum = day.date()
+            const label = WEEK_DAY_LABELS[idx]
 
-          return (
-            <Box
-              key={idx}
-              onClick={() => {
-                if (!isFuture) {
-                  setSelectedDate(day)
-                }
-              }}
-              style={{
-                backgroundColor: isSelected ? 'rgba(39, 174, 96, 0.04)' : undefined,
-              }}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                py: 1.5,
-                borderRadius: 1,
-                border: '1px solid',
-                borderColor: isSelected ? 'success.main' : 'divider',
-                cursor: isFuture ? 'default' : 'pointer',
-                userSelect: 'none',
-                opacity: isFuture ? 0.5 : 1,
-                transition: 'all 0.2s',
-                '&:hover': isFuture
-                  ? {}
-                  : {
-                      borderColor: 'success.main',
-                    },
-              }}
-            >
-              <Typography
-                variant="caption"
+            return (
+              <Box
+                key={idx}
+                onClick={() => {
+                  if (!isFuture) {
+                    setSelectedDate(day)
+                  }
+                }}
                 sx={{
-                  fontWeight: 600,
-                  color: isSelected ? 'success.main' : 'text.secondary',
-                  mb: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  py: 1.5,
+                  borderRadius: 1.5,
+                  border: '1px solid',
+                  borderColor: isSelected ? 'success.main' : 'transparent',
+                  backgroundColor: isSelected
+                    ? (theme) => alpha(theme.palette.success.main, 0.04)
+                    : 'transparent',
+                  cursor: isFuture ? 'default' : 'pointer',
+                  userSelect: 'none',
+                  opacity: isFuture ? 0.5 : 1,
+                  transition: 'all 0.2s',
+                  '&:hover': isFuture
+                    ? {}
+                    : {
+                        borderColor: isSelected ? 'success.main' : 'divider',
+                        backgroundColor: isSelected
+                          ? (theme) => alpha(theme.palette.success.main, 0.04)
+                          : 'action.hover',
+                      },
                 }}
               >
-                {label}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 700,
-                  color: isSelected ? 'success.main' : isFuture ? 'text.secondary' : 'text.primary',
-                }}
-              >
-                {dateNum}
-              </Typography>
-            </Box>
-          )
-        })}
-      </Box>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontWeight: 600,
+                    color: isSelected ? 'success.main' : 'text.secondary',
+                    mb: 0.5,
+                  }}
+                >
+                  {label}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: 700,
+                    color: isSelected
+                      ? 'success.main'
+                      : isFuture
+                        ? 'text.secondary'
+                        : 'text.primary',
+                  }}
+                >
+                  {dateNum}
+                </Typography>
+              </Box>
+            )
+          })}
+        </Box>
+      </Card>
 
       {/* Daily Progress Card */}
       <Card sx={{ p: 2 }}>

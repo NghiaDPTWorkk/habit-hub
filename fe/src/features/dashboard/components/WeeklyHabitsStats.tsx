@@ -19,7 +19,7 @@ const TITLE_SORTED_PRIORITY = 'Sorted by Priority'
 const HEADER_NAME = 'Habit Name'
 const HEADER_PRIORITY = 'Priority'
 const HEADER_STREAK = 'Streak'
-const HEADER_CATEGORY = 'Category'
+const HEADER_LONGEST_STREAK = 'Longest Streak'
 
 const LABEL_FILTER_CATE = 'Category'
 
@@ -122,7 +122,7 @@ export const WeeklyHabitsStats: React.FC = () => {
             color="text.secondary"
             sx={{ fontWeight: 600, display: { xs: 'none', sm: 'block' } }}
           >
-            {HEADER_CATEGORY}
+            {HEADER_LONGEST_STREAK}
           </Typography>
         </Box>
 
@@ -131,6 +131,8 @@ export const WeeklyHabitsStats: React.FC = () => {
           const detail = habits.find((h) => h.id === item.habitId)
           const priority = detail ? detail.priority : 'Medium'
           const streakText = item.currentStreak === 1 ? '1 day' : `${item.currentStreak} days`
+          const longestStreakText =
+            item.longestStreak === 1 ? '1 day' : `${item.longestStreak} days`
 
           return (
             <Box
@@ -181,14 +183,21 @@ export const WeeklyHabitsStats: React.FC = () => {
                 </Typography>
               </Box>
 
-              {/* Category Column */}
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ display: { xs: 'none', sm: 'block' } }}
+              {/* Longest Streak Column */}
+              <Box
+                sx={{
+                  display: { xs: 'none', sm: 'flex' },
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
               >
-                {item.category}
-              </Typography>
+                <Box sx={{ color: 'warning.main', display: 'flex' }}>
+                  <Icons.TrendingUp fontSize="small" />
+                </Box>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  {longestStreakText}
+                </Typography>
+              </Box>
             </Box>
           )
         })}

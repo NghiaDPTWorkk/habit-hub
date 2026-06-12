@@ -1,8 +1,8 @@
 import React from 'react'
 import Grid from '@mui/material/Grid'
-import { Box, Typography, Card, CalendarHeatmap, MiniChart } from '@/components/ui'
+import { Box, Typography, Card, CalendarHeatmap } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
-import { useDashboard, useDailyIntensity, useWeeklyRates } from '../hooks'
+import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
 import { CategorySection } from './CategorySection'
 import { AtRiskBanner } from './AtRiskBanner'
@@ -16,7 +16,6 @@ const KPI_GOALS_TITLE = 'Goals Achieved'
 const EMPTY_TITLE = 'No habits yet'
 const EMPTY_DESC = 'Go to Habits and create your first habit to see stats here.'
 const SECTION_ACTIVITY = 'Activity'
-const SECTION_WEEKLY = 'Weekly by Category'
 const ICON_SIZE = { fontSize: 28 }
 const HEATMAP_WEEKS = 16
 
@@ -41,7 +40,6 @@ function getDateLabel(): string {
 export const DashboardPage: React.FC = () => {
   const { summary, habitsByCategory } = useDashboard()
   const heatmapData = useDailyIntensity(HEATMAP_WEEKS * 7)
-  const weeklyRates = useWeeklyRates()
   const dateLabel = getDateLabel()
 
   const atRiskNames = habitsByCategory
@@ -102,26 +100,7 @@ export const DashboardPage: React.FC = () => {
       <AtRiskBanner count={summary.atRiskHabits} habitNames={atRiskNames} />
 
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 5 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {weeklyRates.length > 0 && (
-              <Card sx={{ p: 3 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-                  {SECTION_WEEKLY}
-                </Typography>
-                <MiniChart data={weeklyRates} />
-              </Card>
-            )}
-            <Card sx={{ p: 3 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-                {SECTION_ACTIVITY}
-              </Typography>
-              <CalendarHeatmap data={heatmapData} weeks={HEATMAP_WEEKS} />
-            </Card>
-            <CategoryDistributionChart />
-          </Box>
-        </Grid>
-
+        {/* Left column: Habit categories list */}
         <Grid size={{ xs: 12, md: 7 }}>
           {habitsByCategory.length === 0 ? (
             <Card sx={{ textAlign: 'center', py: 6 }}>
@@ -144,6 +123,19 @@ export const DashboardPage: React.FC = () => {
               ))}
             </Box>
           )}
+        </Grid>
+
+        {/* Right column: Charts */}
+        <Grid size={{ xs: 12, md: 5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                {SECTION_ACTIVITY}
+              </Typography>
+              <CalendarHeatmap data={heatmapData} weeks={HEATMAP_WEEKS} />
+            </Card>
+            <CategoryDistributionChart />
+          </Box>
         </Grid>
       </Grid>
     </Box>

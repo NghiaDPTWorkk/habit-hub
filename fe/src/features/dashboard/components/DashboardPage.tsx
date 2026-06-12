@@ -128,13 +128,13 @@ export const DashboardPage: React.FC = () => {
         {/* Right column: Charts */}
         <Grid size={{ xs: 12, md: 5 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <CategoryDistributionChart />
             <Card sx={{ p: 3 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                 {SECTION_ACTIVITY}
               </Typography>
               <CalendarHeatmap data={heatmapData} weeks={HEATMAP_WEEKS} />
             </Card>
-            <CategoryDistributionChart />
           </Box>
         </Grid>
       </Grid>

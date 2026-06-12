@@ -26,6 +26,36 @@ export const useSettings = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Dialog confirmation state
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [confirmConfig, setConfirmConfig] = useState<{
+    title: string
+    content: string
+    severity?: 'error' | 'warning' | 'info'
+    onConfirm: () => void
+  } | null>(null)
+
+  const showConfirm = (
+    title: string,
+    content: string,
+    onConfirm: () => void,
+    severity?: 'error' | 'warning' | 'info'
+  ) => {
+    setConfirmConfig({ title, content, onConfirm, severity })
+    setConfirmOpen(true)
+  }
+
+  const handleConfirmClose = () => {
+    setConfirmOpen(false)
+  }
+
+  const handleConfirmAction = () => {
+    if (confirmConfig) {
+      confirmConfig.onConfirm()
+    }
+    setConfirmOpen(false)
+  }
+
   // Handlers for persistence
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
@@ -127,39 +157,43 @@ export const useSettings = () => {
           return
         }
 
-        const confirmed = window.confirm(TEXTS.importConfirmWarning)
-        if (!confirmed) return
+        showConfirm(
+          TEXTS.importTitleDialog,
+          TEXTS.importConfirmWarning,
+          () => {
+            useBoundStore.setState({
+              habits,
+              checkins,
+              goals,
+            })
 
-        useBoundStore.setState({
-          habits,
-          checkins,
-          goals,
-        })
+            if (importedSettings) {
+              if (importedSettings.profile_full_name !== undefined) {
+                setFullName(importedSettings.profile_full_name)
+                localStorage.setItem('profile_full_name', importedSettings.profile_full_name)
+              }
+              if (importedSettings.profile_email !== undefined) {
+                setEmail(importedSettings.profile_email)
+                localStorage.setItem('profile_email', importedSettings.profile_email)
+              }
+              if (importedSettings.profile_sub_tier !== undefined) {
+                setSubTier(importedSettings.profile_sub_tier)
+                localStorage.setItem('profile_sub_tier', importedSettings.profile_sub_tier)
+              }
+              if (importedSettings.general_read_only !== undefined) {
+                setReadOnly(importedSettings.general_read_only === 'true')
+                localStorage.setItem('general_read_only', importedSettings.general_read_only)
+              }
+              if (importedSettings.general_timezone !== undefined) {
+                setTimezone(importedSettings.general_timezone)
+                localStorage.setItem('general_timezone', importedSettings.general_timezone)
+              }
+            }
 
-        if (importedSettings) {
-          if (importedSettings.profile_full_name !== undefined) {
-            setFullName(importedSettings.profile_full_name)
-            localStorage.setItem('profile_full_name', importedSettings.profile_full_name)
-          }
-          if (importedSettings.profile_email !== undefined) {
-            setEmail(importedSettings.profile_email)
-            localStorage.setItem('profile_email', importedSettings.profile_email)
-          }
-          if (importedSettings.profile_sub_tier !== undefined) {
-            setSubTier(importedSettings.profile_sub_tier)
-            localStorage.setItem('profile_sub_tier', importedSettings.profile_sub_tier)
-          }
-          if (importedSettings.general_read_only !== undefined) {
-            setReadOnly(importedSettings.general_read_only === 'true')
-            localStorage.setItem('general_read_only', importedSettings.general_read_only)
-          }
-          if (importedSettings.general_timezone !== undefined) {
-            setTimezone(importedSettings.general_timezone)
-            localStorage.setItem('general_timezone', importedSettings.general_timezone)
-          }
-        }
-
-        useBoundStore.getState().showToast(TEXTS.importSuccess, 'success')
+            useBoundStore.getState().showToast(TEXTS.importSuccess, 'success')
+          },
+          'warning'
+        )
       } catch (err) {
         console.error(err)
         useBoundStore.getState().showToast(TEXTS.importParseError, 'error')
@@ -169,57 +203,65 @@ export const useSettings = () => {
   }
 
   const handleWipeData = () => {
-    const confirmed = window.confirm(TEXTS.wipeConfirmWarning)
-    if (!confirmed) return
+    showConfirm(
+      TEXTS.wipeTitleDialog,
+      TEXTS.wipeConfirmWarning,
+      () => {
+        useBoundStore.setState({
+          habits: [],
+          checkins: {},
+          goals: [],
+        })
 
-    useBoundStore.setState({
-      habits: [],
-      checkins: {},
-      goals: [],
-    })
+        localStorage.removeItem('profile_full_name')
+        localStorage.removeItem('profile_email')
+        localStorage.removeItem('profile_sub_tier')
+        localStorage.removeItem('general_read_only')
+        localStorage.removeItem('general_timezone')
 
-    localStorage.removeItem('profile_full_name')
-    localStorage.removeItem('profile_email')
-    localStorage.removeItem('profile_sub_tier')
-    localStorage.removeItem('general_read_only')
-    localStorage.removeItem('general_timezone')
+        setFullName('Trần Nghĩa')
+        setEmail('trnghia@example.com')
+        setSubTier('Premium Plan (Active)')
+        setReadOnly(false)
+        setTimezone('GMT+7 (Default)')
 
-    setFullName('Trần Nghĩa')
-    setEmail('trnghia@example.com')
-    setSubTier('Premium Plan (Active)')
-    setReadOnly(false)
-    setTimezone('GMT+7 (Default)')
-
-    useBoundStore.getState().showToast(TEXTS.wipeSuccess, 'success')
+        useBoundStore.getState().showToast(TEXTS.wipeSuccess, 'success')
+      },
+      'error'
+    )
   }
 
   const handleLoadSeedData = () => {
-    const confirmed = window.confirm(TEXTS.seedConfirmWarning)
-    if (!confirmed) return
+    showConfirm(
+      TEXTS.seedTitleDialog,
+      TEXTS.seedConfirmWarning,
+      () => {
+        const checkinsRecord = Object.fromEntries(
+          SEED_CHECKINS.map((c) => [makeCheckinKey(c.habitId, c.date), c])
+        )
 
-    const checkinsRecord = Object.fromEntries(
-      SEED_CHECKINS.map((c) => [makeCheckinKey(c.habitId, c.date), c])
+        useBoundStore.setState({
+          habits: SEED_HABITS,
+          checkins: checkinsRecord,
+          goals: SEED_GOALS,
+        })
+
+        localStorage.removeItem('profile_full_name')
+        localStorage.removeItem('profile_email')
+        localStorage.removeItem('profile_sub_tier')
+        localStorage.removeItem('general_read_only')
+        localStorage.removeItem('general_timezone')
+
+        setFullName('Trần Nghĩa')
+        setEmail('trnghia@example.com')
+        setSubTier('Premium Plan (Active)')
+        setReadOnly(false)
+        setTimezone('GMT+7 (Default)')
+
+        useBoundStore.getState().showToast(TEXTS.seedSuccess, 'success')
+      },
+      'info'
     )
-
-    useBoundStore.setState({
-      habits: SEED_HABITS,
-      checkins: checkinsRecord,
-      goals: SEED_GOALS,
-    })
-
-    localStorage.removeItem('profile_full_name')
-    localStorage.removeItem('profile_email')
-    localStorage.removeItem('profile_sub_tier')
-    localStorage.removeItem('general_read_only')
-    localStorage.removeItem('general_timezone')
-
-    setFullName('Trần Nghĩa')
-    setEmail('trnghia@example.com')
-    setSubTier('Premium Plan (Active)')
-    setReadOnly(false)
-    setTimezone('GMT+7 (Default)')
-
-    useBoundStore.getState().showToast(TEXTS.seedSuccess, 'success')
   }
 
   return {
@@ -229,6 +271,10 @@ export const useSettings = () => {
     readOnly,
     timezone,
     fileInputRef,
+    confirmOpen,
+    confirmConfig,
+    handleConfirmClose,
+    handleConfirmAction,
     handleFullNameChange,
     handleEmailChange,
     handleSubTierChange,

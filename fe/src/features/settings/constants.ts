@@ -41,4 +41,7 @@ export const TEXTS = {
   wipeSuccess: 'All data has been wiped successfully!',
   seedConfirmWarning: 'This will reset your data and load the demo database. Proceed?',
   seedSuccess: 'Demo seed data loaded successfully!',
+  importTitleDialog: 'Import Backup',
+  wipeTitleDialog: 'Wipe Database',
+  seedTitleDialog: 'Load Demo Database',
 }

@@ -11,6 +11,7 @@ import {
   Stack,
   Button,
   Divider,
+  ConfirmDialog,
 } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { TEXTS } from '../constants'
@@ -24,6 +25,10 @@ export const SettingsPage: React.FC = () => {
     readOnly,
     timezone,
     fileInputRef,
+    confirmOpen,
+    confirmConfig,
+    handleConfirmClose,
+    handleConfirmAction,
     handleFullNameChange,
     handleEmailChange,
     handleSubTierChange,
@@ -37,7 +42,7 @@ export const SettingsPage: React.FC = () => {
   } = useSettings()
 
   return (
-    <Stack spacing={3} sx={{ maxWidth: 800, mx: 'auto', mt: 1, mb: 4 }}>
+    <Stack spacing={3} sx={{ width: '100%', mt: 1, mb: 4 }}>
       {/* Account Profile Settings Card */}
       <Card variant="outlined" sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -231,6 +236,15 @@ export const SettingsPage: React.FC = () => {
           {TEXTS.lighthouseText}
         </Typography>
       </Card>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title={confirmConfig?.title || ''}
+        content={confirmConfig?.content || ''}
+        severity={confirmConfig?.severity}
+        onConfirm={handleConfirmAction}
+        onClose={handleConfirmClose}
+      />
     </Stack>
   )
 }

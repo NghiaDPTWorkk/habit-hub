@@ -196,7 +196,7 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
         </Grid>
       </Grid>
 
-      <Box sx={{ position: 'relative', width: '100%' }}>
+      <Box sx={{ position: 'relative', width: '100%', maxWidth: 500, mx: 'auto' }}>
         <svg
           viewBox={`0 0 ${svgW} ${svgH}`}
           width="100%"

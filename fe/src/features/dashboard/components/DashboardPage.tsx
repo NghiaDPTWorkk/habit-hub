@@ -2,14 +2,16 @@ import React from 'react'
 import Grid from '@mui/material/Grid'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { alpha } from '@mui/material/styles'
-import { Box, Typography, Card, CalendarHeatmap } from '@/components/ui'
+import { Box, Typography, Card, CalendarHeatmap, Stack } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
-import { WeeklyHabitsStats } from './WeeklyHabitsStats'
+import { WeeklyTrendChart } from './WeeklyTrendChart'
 import { useBoundStore } from '@/store'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { ActivityDetails } from './ActivityDetails'
+import { CategorySection } from './CategorySection'
+import { formatPercent, getDateLabel, getSelectedDateDetails } from '../utils'
 
 const PAGE_TITLE = 'Dashboard'
 const KPI_DONE_TITLE = '% Done Today'
@@ -20,6 +22,7 @@ const EMPTY_TITLE = 'No habits yet'
 const EMPTY_DESC = 'Go to Habits and create your first habit to see stats here.'
 const SECTION_ACTIVITY_TITLE = 'Activity History'
 const SECTION_ACTIVITY_DESC = 'Daily check-in activity map — click any cell to view details.'
+const TITLE_WEEKLY_STATS = 'Weekly Habits Statistics'
 const ICON_SIZE = { fontSize: 28 }
 const HEATMAP_WEEKS = 14
 
@@ -32,19 +35,6 @@ const CARD_ACTIVE = { iconColor: 'info.main', iconBg: 'rgba(9, 105, 218, 0.12)' 
 const CARD_RISK = { iconColor: 'secondary.main', iconBg: 'rgba(130, 80, 223, 0.12)' }
 const CARD_GOALS = { iconColor: 'warning.main', iconBg: 'rgba(154, 103, 0, 0.12)' }
 
-function formatPercent(value: number): string {
-  return `${Math.round(value * 100)}%`
-}
-
-function getDateLabel(): string {
-  return new Date().toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
-}
-
 export const DashboardPage: React.FC = () => {
   const { summary, habitsByCategory } = useDashboard()
   const heatmapData = useDailyIntensity(HEATMAP_WEEKS * 7)
@@ -55,31 +45,7 @@ export const DashboardPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null)
 
   const selectedDateDetails = React.useMemo(() => {
-    if (!selectedDate) return null
-    const dayCheckins = Object.values(checkins).filter(
-      (c) => c.date === selectedDate && c.completedCount > 0
-    )
-
-    const completedTasks = dayCheckins.map((c) => {
-      const habit = habits.find((h) => h.id === c.habitId)
-      return {
-        name: habit ? habit.name : `Habit #${c.habitId}`,
-        category: habit ? habit.category : 'General',
-        completedCount: c.completedCount,
-        targetPerDay: habit ? habit.targetPerDay : 1,
-      }
-    })
-
-    return {
-      date: new Date(selectedDate).toLocaleDateString('en-GB', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-      count: completedTasks.length,
-      tasks: completedTasks,
-    }
+    return getSelectedDateDetails(selectedDate, checkins, habits)
   }, [selectedDate, checkins, habits])
 
   return (
@@ -132,11 +98,20 @@ export const DashboardPage: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ alignItems: 'stretch' }}>
         {/* Left column: Weekly Habits Statistics list */}
-        <Grid size={{ xs: 12, md: 7 }}>
+        <Grid size={{ xs: 12, md: 7 }} sx={{ display: 'flex', flexDirection: 'column' }}>
           {habitsByCategory.length === 0 ? (
-            <Card sx={{ textAlign: 'center', py: 6 }}>
+            <Card
+              sx={{
+                textAlign: 'center',
+                py: 6,
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
               <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
                 {EMPTY_TITLE}
               </Typography>
@@ -145,20 +120,54 @@ export const DashboardPage: React.FC = () => {
               </Typography>
             </Card>
           ) : (
-            <WeeklyHabitsStats />
+            <Card
+              sx={{ p: { xs: 2, sm: 3 }, flexGrow: 1, display: 'flex', flexDirection: 'column' }}
+            >
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: 2,
+                  }}
+                >
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                    {TITLE_WEEKLY_STATS}
+                  </Typography>
+                </Box>
+
+                <Stack spacing={2} sx={{ flexGrow: 1, overflowY: 'auto', maxHeight: 380, pr: 0.5 }}>
+                  {habitsByCategory.map((group, index) => (
+                    <CategorySection
+                      key={group.category}
+                      category={group.category}
+                      habits={group.habits}
+                      defaultExpanded={index === 0}
+                    />
+                  ))}
+                </Stack>
+              </Box>
+            </Card>
           )}
         </Grid>
 
         {/* Right column: Charts */}
-        <Grid size={{ xs: 12, md: 5 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <CategoryDistributionChart />
-          </Box>
+        <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'flex', flexDirection: 'column' }}>
+          <CategoryDistributionChart />
         </Grid>
+
+        {/* Row 2: Full width Weekly Trend Chart */}
+        {habitsByCategory.length > 0 && (
+          <Grid size={{ xs: 12 }}>
+            <WeeklyTrendChart />
+          </Grid>
+        )}
       </Grid>
 
       {/* Activity History block at the bottom */}
-      <Card sx={{ p: 3 }}>
+      <Card sx={{ p: { xs: 2, sm: 3 } }}>
         <Box
           sx={{
             display: 'flex',
@@ -186,6 +195,8 @@ export const DashboardPage: React.FC = () => {
             flexDirection: { xs: 'column', md: 'row' },
             gap: 4,
             alignItems: 'flex-start',
+            width: '100%',
+            minWidth: 0,
           }}
         >
           {/* Heatmap Section */}
@@ -195,11 +206,13 @@ export const DashboardPage: React.FC = () => {
               flexDirection: 'column',
               gap: 1.5,
               width: { xs: '100%', md: 'auto' },
+              maxWidth: '100%',
+              minWidth: 0,
               flexShrink: 0,
             }}
           >
             {/* Scrollable wrapper for heatmap grid */}
-            <Box sx={{ overflowX: 'auto', pb: 1, width: '100%' }}>
+            <Box sx={{ overflowX: 'auto', pb: 1, width: '100%', maxWidth: '100%' }}>
               <Box sx={{ width: 'fit-content' }}>
                 <CalendarHeatmap
                   data={heatmapData}

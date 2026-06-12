@@ -2,13 +2,7 @@ import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { pxToRem } from '@/utils'
 import { Box, Typography, Button, IconButton } from '@/components/ui'
-
-// MUI Icons
-import SettingsIcon from '@mui/icons-material/Settings'
-import LightModeIcon from '@mui/icons-material/LightMode'
-import DarkModeIcon from '@mui/icons-material/DarkMode'
-
-import AddIcon from '@mui/icons-material/Add'
+import { Icons } from '@/components/ui/icons'
 
 interface PageHeaderProps {
   title: string
@@ -74,9 +68,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           }}
         >
           {themeMode === 'light' ? (
-            <DarkModeIcon fontSize="small" />
+            <Icons.DarkModeOutlined fontSize="small" />
           ) : (
-            <LightModeIcon fontSize="small" />
+            <Icons.LightModeOutlined fontSize="small" />
           )}
         </IconButton>
         <IconButton
@@ -92,12 +86,12 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             },
           }}
         >
-          <SettingsIcon fontSize="small" />
+          <Icons.SettingsOutlined fontSize="small" />
         </IconButton>
         <Button
           variant="contained"
           color="success"
-          startIcon={<AddIcon />}
+          startIcon={<Icons.Add />}
           component={RouterLink}
           to="/habits"
           sx={{

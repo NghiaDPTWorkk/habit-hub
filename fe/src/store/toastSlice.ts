@@ -3,34 +3,31 @@ import type { BoundStore } from './types'
 
 export type ToastSeverity = 'success' | 'error' | 'warning' | 'info'
 
-export interface ToastState {
-  open: boolean
+export interface ToastItem {
+  id: string
   message: string
   severity: ToastSeverity
 }
 
 export interface ToastSlice {
-  toast: ToastState
-  showToast: (message: string, severity?: ToastSeverity) => void
-  hideToast: () => void
-}
-
-const TOAST_INITIAL_STATE: ToastState = {
-  open: false,
-  message: '',
-  severity: 'info',
+  toastQueue: ToastItem[]
+  showToast: (message: string, severity: ToastSeverity) => void
+  dismissToast: () => void
 }
 
 export const createToastSlice: StateCreator<BoundStore, [], [], ToastSlice> = (set) => ({
-  toast: TOAST_INITIAL_STATE,
+  toastQueue: [],
 
-  showToast: (message, severity = 'info') =>
-    set(() => ({
-      toast: { open: true, message, severity },
+  showToast: (message, severity) =>
+    set((state) => ({
+      toastQueue: [
+        ...state.toastQueue,
+        { id: crypto.randomUUID(), message, severity },
+      ],
     })),
 
-  hideToast: () =>
+  dismissToast: () =>
     set((state) => ({
-      toast: { ...state.toast, open: false },
+      toastQueue: state.toastQueue.slice(1),
     })),
 })

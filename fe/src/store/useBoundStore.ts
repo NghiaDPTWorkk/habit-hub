@@ -20,12 +20,13 @@ export const useBoundStore = create<BoundStore>()(
     }),
     {
       name: 'habit-hub-storage',
-
-      partialize: (state) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { toast, showToast, hideToast, ...rest } = state
-        return rest
-      },
+      version: 1,
+      partialize: (state) => ({
+        habits: state.habits,
+        checkins: state.checkins,
+        goals: state.goals,
+        notifiedGoals: state.notifiedGoals,
+      }),
     }
   )
 )

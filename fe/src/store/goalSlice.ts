@@ -29,8 +29,7 @@ const calculateConsecutiveStreak = (habitId: number, checkins: Checkin[]): numbe
     const checkinDate = new Date(checkin.date)
     checkinDate.setHours(0, 0, 0, 0)
 
-    const diffDays =
-      (expectedDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
+    const diffDays = (expectedDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
 
     if (streak === 0 && diffDays <= 1) {
       // Chấp nhận hôm nay hoặc hôm qua là ngày bắt đầu

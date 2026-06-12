@@ -108,10 +108,14 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
         </FormControl>
 
         <FormControl fullWidth>
-          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>{GOALS_CONTENT.FORM_LABELS.TARGET_TYPE}</FormLabel>
+          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>
+            {GOALS_CONTENT.FORM_LABELS.TARGET_TYPE}
+          </FormLabel>
           <RadioGroup
             value={targetType}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTargetType(e.target.value as GoalTargetType)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setTargetType(e.target.value as GoalTargetType)
+            }
           >
             <FormControlLabel
               value="streak"
@@ -127,13 +131,19 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
         </FormControl>
 
         <FormControl fullWidth error={!!errors.targetValue}>
-          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>{GOALS_CONTENT.FORM_LABELS.TARGET_VALUE}</FormLabel>
+          <FormLabel sx={{ mb: 1, fontWeight: 600 }}>
+            {GOALS_CONTENT.FORM_LABELS.TARGET_VALUE}
+          </FormLabel>
           <TextField
             type="number"
             value={targetValue}
             onChange={(e) => {
               setTargetValue(e.target.value)
-              if (e.target.value && Number.isInteger(Number(e.target.value)) && Number(e.target.value) > 0) {
+              if (
+                e.target.value &&
+                Number.isInteger(Number(e.target.value)) &&
+                Number(e.target.value) > 0
+              ) {
                 setErrors((prev) => ({ ...prev, targetValue: '' }))
               }
             }}

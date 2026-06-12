@@ -144,12 +144,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
       >
         <Avatar
           sx={{
-            width: 36,
-            height: 36,
+            width: 40,
+            height: 40,
             bgcolor: 'primary.main',
             color: 'primary.contrastText',
             fontWeight: 'bold',
-            fontSize: pxToRem(14),
+            fontSize: pxToRem(15),
           }}
         >
           {USER_INITIALS}
@@ -186,10 +186,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
       <Box
         sx={{
           flexGrow: 1,
-          px: 1.5,
+          px: 3,
           display: 'flex',
           flexDirection: 'column',
-          gap: 0.5,
+          gap: 1,
         }}
       >
         {navItems.map((item) => (

@@ -54,7 +54,7 @@ export const WeeklyHabitsStats: React.FC = () => {
   }, [habitsByCategory, habits, filterCategory])
 
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: { xs: 2, sm: 3 } }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', mb: 3 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           {TITLE_WEEKLY_STATS}
@@ -95,8 +95,8 @@ export const WeeklyHabitsStats: React.FC = () => {
           sx={{
             display: 'grid',
             gridTemplateColumns: {
-              xs: '1fr ' + pxToRem(100),
-              sm: 'minmax(' + pxToRem(150) + ', 3fr) 1fr 1fr 1fr',
+              xs: 'minmax(' + pxToRem(100) + ', 2.5fr) 1.2fr 1.2fr 1fr',
+              sm: 'minmax(' + pxToRem(150) + ', 3fr) 1.2fr 1.2fr 1fr',
             },
             gap: 1,
             pb: 1,
@@ -110,18 +110,10 @@ export const WeeklyHabitsStats: React.FC = () => {
           <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
             {HEADER_STREAK}
           </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ fontWeight: 600, display: { xs: 'none', sm: 'block' } }}
-          >
+          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
             {HEADER_LONGEST_STREAK}
           </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ fontWeight: 600, display: { xs: 'none', sm: 'block' } }}
-          >
+          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
             {HEADER_TOTAL}
           </Typography>
         </Box>
@@ -137,8 +129,8 @@ export const WeeklyHabitsStats: React.FC = () => {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: {
-                  xs: '1fr ' + pxToRem(100),
-                  sm: 'minmax(' + pxToRem(150) + ', 3fr) 1fr 1fr 1fr',
+                  xs: 'minmax(' + pxToRem(100) + ', 2.5fr) 1.2fr 1.2fr 1fr',
+                  sm: 'minmax(' + pxToRem(150) + ', 3fr) 1.2fr 1.2fr 1fr',
                 },
                 gap: 1,
                 alignItems: 'center',
@@ -165,7 +157,7 @@ export const WeeklyHabitsStats: React.FC = () => {
               {/* Longest Streak Column */}
               <Box
                 sx={{
-                  display: { xs: 'none', sm: 'flex' },
+                  display: 'flex',
                   alignItems: 'center',
                   gap: 0.5,
                 }}
@@ -179,11 +171,7 @@ export const WeeklyHabitsStats: React.FC = () => {
               </Box>
 
               {/* Total Completions Column */}
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 500 }}
-              >
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                 {item.totalCompletions}
               </Typography>
             </Box>

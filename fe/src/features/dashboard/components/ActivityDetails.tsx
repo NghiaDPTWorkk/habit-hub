@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, Typography } from '@/components/ui'
+import { pxToRem } from '@/utils'
 
 const LABEL_COMPLETED = 'Completed: '
 const LABEL_HABITS = ' habits'
@@ -68,7 +69,22 @@ export const ActivityDetails: React.FC<ActivityDetailsProps> = ({ details }) => 
           {LABEL_NO_HABITS}
         </Typography>
       ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            maxHeight: pxToRem(220),
+            overflowY: 'auto',
+            pr: 0.5,
+            '&::-webkit-scrollbar': { width: 4 },
+            '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
+            '&::-webkit-scrollbar-thumb': {
+              bgcolor: 'divider',
+              borderRadius: 2,
+            },
+          }}
+        >
           {details.tasks.map((task, idx) => {
             const ratioText = `${task.completedCount}/${task.targetPerDay}`
             return (

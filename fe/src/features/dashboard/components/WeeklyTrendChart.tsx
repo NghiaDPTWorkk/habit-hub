@@ -283,6 +283,8 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
           sx={{
             flex: 1,
             minWidth: 200,
+            maxHeight: pxToRem(240),
+            overflowY: 'auto',
             p: 2,
             bgcolor: 'background.default',
             borderRadius: 1.5,
@@ -290,6 +292,9 @@ export const WeeklyTrendChart: React.FC<WeeklyTrendChartProps> = ({ filterCatego
             borderColor: 'divider',
             display: 'flex',
             flexDirection: 'column',
+            '&::-webkit-scrollbar': { width: 4 },
+            '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
+            '&::-webkit-scrollbar-thumb': { bgcolor: 'divider', borderRadius: 2 },
           }}
         >
           <WeeklyTrendTooltip d={dayData[selectedIdx]} isToday={selectedIdx === 6} />

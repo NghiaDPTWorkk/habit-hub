@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import { Box, Typography, Drawer, IconButton } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
@@ -34,7 +34,7 @@ const isDueToday = (habit: Habit) => {
   return Array.isArray(habit.specificDays) && habit.specificDays.includes(todayWeekDay)
 }
 
-export const HabitsPage: React.FC = () => {
+export const HabitsPage: FC = () => {
   const { habits, deleteHabit, pauseHabit, resumeHabit, archiveHabit } = useHabitStore()
   const checkins = useBoundStore((state) => state.checkins)
   const showToast = useBoundStore((s) => s.showToast)
@@ -42,6 +42,8 @@ export const HabitsPage: React.FC = () => {
   const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
   const [modalOpen, setModalOpen] = useState(false)
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [habitToDelete, setHabitToDelete] = useState<Habit | undefined>(undefined)
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
   const todayCheckinByHabit = useMemo(
@@ -161,11 +163,16 @@ export const HabitsPage: React.FC = () => {
           <Card sx={{ p: 2 }}>
             <HabitList
               habits={filteredHabits}
+              hasAnyHabits={habits.length > 0}
               todayCheckinByHabit={todayCheckinByHabit}
               onEdit={handleEdit}
               onDelete={handleDelete}
               onPauseResume={handlePauseResume}
               onArchive={handleArchive}
+              onCreate={() => {
+                setHabitToEdit(undefined)
+                setModalOpen(true)
+              }}
               isHabitMissed={isHabitMissed}
             />
           </Card>
@@ -189,6 +196,16 @@ export const HabitsPage: React.FC = () => {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         habitToEdit={habitToEdit}
+      />
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+        title="Confirm Delete"
+        content="Deleting this habit will remove all progress history. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        severity="error"
       />
     </Box>
   )

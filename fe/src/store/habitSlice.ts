@@ -35,7 +35,9 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
       if (!exists) return state
       return {
         habits: state.habits.filter((h) => h.id !== id),
-        checkins: state.checkins.filter((c) => c.habitId !== id),
+        checkins: Object.fromEntries(
+          Object.entries(state.checkins).filter(([, c]) => c.habitId !== id)
+        ),
         goals: state.goals.filter((g) => g.habitId !== id),
       }
     }),

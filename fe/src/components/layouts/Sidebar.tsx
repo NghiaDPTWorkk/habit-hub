@@ -130,13 +130,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
       <Box
         sx={{
           borderRadius: 2,
-          p: 1.5,
-          mx: 2.5,
+          px: 2,
+          py: 1.5,
+          mx: 3,
           mb: 3,
           display: 'flex',
           alignItems: 'center',
-          gap: 1.5,
-          bgcolor: 'action.hover',
+          gap: 2,
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
         <Avatar

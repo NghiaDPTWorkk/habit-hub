@@ -20,10 +20,7 @@ const HEADER_NAME = 'Habit Name'
 const HEADER_PRIORITY = 'Priority'
 const HEADER_STREAK = 'Streak'
 const HEADER_CATEGORY = 'Category'
-const HEADER_TODAY = 'Today'
 
-const LABEL_PENDING = 'Pending'
-const LABEL_COMPLETED = 'Completed'
 const LABEL_FILTER_CATE = 'Category'
 
 const CATE_ALL = 'All'
@@ -38,12 +35,9 @@ const PRIORITY_ORDER = { High: 3, Medium: 2, Low: 1 }
 
 export const WeeklyHabitsStats: React.FC = () => {
   const { habitsByCategory } = useDashboard()
-  const checkins = useBoundStore((s) => s.checkins)
   const habits = useBoundStore((s) => s.habits)
 
   const [filterCategory, setFilterCategory] = React.useState<string>('All')
-
-  const todayStr = React.useMemo(() => new Date().toISOString().split('T')[0], [])
 
   const sortedHabits = React.useMemo(() => {
     const flatSummaries = habitsByCategory.flatMap((g) => g.habits)
@@ -101,13 +95,12 @@ export const WeeklyHabitsStats: React.FC = () => {
           sx={{
             display: 'grid',
             gridTemplateColumns: {
-              xs: '1fr ' + pxToRem(80) + ' ' + pxToRem(100),
-              sm: 'minmax(' + pxToRem(150) + ', 3fr) 1fr 1fr 1fr 1.2fr',
+              xs: '1fr ' + pxToRem(100),
+              sm: 'minmax(' + pxToRem(150) + ', 3fr) 1fr 1fr 1fr',
             },
             gap: 1,
             pb: 1,
             borderBottom: 1,
-            borderStyle: 'solid',
             borderColor: 'divider',
           }}
         >
@@ -131,9 +124,6 @@ export const WeeklyHabitsStats: React.FC = () => {
           >
             {HEADER_CATEGORY}
           </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, pr: 1 }}>
-            {HEADER_TODAY}
-          </Typography>
         </Box>
 
         {/* Table Body */}
@@ -142,26 +132,19 @@ export const WeeklyHabitsStats: React.FC = () => {
           const priority = detail ? detail.priority : 'Medium'
           const streakText = item.currentStreak === 1 ? '1 day' : `${item.currentStreak} days`
 
-          // Determine today check-in status
-          const checkin = Object.values(checkins).find(
-            (c) => c.habitId === item.habitId && c.date === todayStr
-          )
-          const isCompleted = checkin ? checkin.status === 'Completed' : false
-
           return (
             <Box
               key={item.habitId}
               sx={{
                 display: 'grid',
                 gridTemplateColumns: {
-                  xs: '1fr ' + pxToRem(80) + ' ' + pxToRem(100),
-                  sm: 'minmax(' + pxToRem(150) + ', 3fr) 1fr 1fr 1fr 1.2fr',
+                  xs: '1fr ' + pxToRem(100),
+                  sm: 'minmax(' + pxToRem(150) + ', 3fr) 1fr 1fr 1fr',
                 },
                 gap: 1,
                 alignItems: 'center',
                 py: 1,
                 borderBottom: 1,
-                borderStyle: 'solid',
                 borderColor: 'divider',
                 '&:last-child': { borderBottom: 0 },
               }}
@@ -206,26 +189,6 @@ export const WeeklyHabitsStats: React.FC = () => {
               >
                 {item.category}
               </Typography>
-
-              {/* Today Column */}
-              <Box>
-                <Box
-                  sx={{
-                    display: 'inline-block',
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: 0.5,
-                    bgcolor: isCompleted ? 'success.light' : 'error.light',
-                    color: isCompleted ? 'success.main' : 'error.main',
-                    fontSize: pxToRem(12),
-                    fontWeight: 600,
-                    textAlign: 'center',
-                    minWidth: 80,
-                  }}
-                >
-                  {isCompleted ? LABEL_COMPLETED : LABEL_PENDING}
-                </Box>
-              </Box>
             </Box>
           )
         })}

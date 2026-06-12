@@ -11,9 +11,16 @@ export interface HeatmapDay {
 export interface CalendarHeatmapProps {
   data: HeatmapDay[]
   weeks?: number
+  onCellClick?: (date: string) => void
+  activeDate?: string | null
 }
 
-export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 12 }) => {
+export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
+  data,
+  weeks = 12,
+  onCellClick,
+  activeDate,
+}) => {
   const theme = useTheme()
 
   const dataMap = React.useMemo(() => {
@@ -58,17 +65,19 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
   }
 
   const getTooltipText = (dateStr: string, count: number): string => {
-    return `${count} check-ins on ${dateStr}`
+    return `${count} tasks completed on ${dateStr}`
   }
 
   return (
     <Box
       sx={{
         display: 'grid',
+        gridTemplateColumns: `repeat(${weeks}, 16px)`,
+        gridTemplateRows: 'repeat(7, 16px)',
         gridAutoFlow: 'column',
-        gridTemplateRows: 'repeat(7, auto)',
         gap: 0.5,
-        width: 'max-content',
+        width: 'fit-content',
+        p: 0.5,
       }}
     >
       {gridDays.map((day, index) => {
@@ -76,18 +85,42 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
         const count = dataMap.get(dateStr) || 0
         const cellColor = getCellColor(count)
         const tooltipText = getTooltipText(dateStr, count)
+        const isSelected = dateStr === activeDate
 
         return (
-          <Tooltip key={dateStr || index} title={tooltipText} arrow>
+          <Tooltip
+            key={dateStr || index}
+            title={tooltipText}
+            arrow
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: 'preventOverflow',
+                    options: {
+                      boundary: 'window',
+                    },
+                  },
+                ],
+              },
+            }}
+          >
             <Box
+              onClick={() => onCellClick?.(dateStr)}
               sx={{
-                width: 14,
-                height: 14,
+                width: 16,
+                height: 16,
                 borderRadius: 0.5,
                 backgroundColor: cellColor,
-                transition: 'background-color 0.2s',
+                cursor: onCellClick ? 'pointer' : 'default',
+                border: isSelected ? '2px solid' : 'none',
+                borderColor: 'text.primary',
+                boxSizing: 'border-box',
+                transition: 'all 0.2s',
                 '&:hover': {
                   opacity: 0.8,
+                  transform: 'scale(1.2)',
+                  zIndex: 2,
                 },
               }}
             />

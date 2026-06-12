@@ -8,7 +8,7 @@ import prettierConfig from 'eslint-config-prettier'
 import reactPlugin from 'eslint-plugin-react'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'coverage']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

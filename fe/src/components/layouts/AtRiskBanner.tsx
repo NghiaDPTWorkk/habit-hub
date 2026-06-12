@@ -14,6 +14,9 @@ const CHECKINS_ROUTE = '/checkins'
 const BTN_SHADOW = '0 4px 12px rgba(242, 153, 74, 0.15)'
 const BTN_HOVER_SHADOW = '0 6px 16px rgba(242, 153, 74, 0.25)'
 const CLOSE_BTN_HOVER_BG = 'rgba(242, 153, 74, 0.08)'
+const COMMA = ', '
+const AND_PREFIX = 'and '
+const MORE_SUFFIX = ' more'
 
 export const AtRiskBanner: React.FC = () => {
   const navigate = useNavigate()
@@ -38,7 +41,11 @@ export const AtRiskBanner: React.FC = () => {
   }
 
   const title = atRiskList.length === 1 ? BANNER_TITLE_SINGLE : BANNER_TITLE_PLURAL
-  const habitNamesText = atRiskList.map((h) => h.name).join(', ')
+
+  const MAX_DISPLAYED = 2
+  const displayedHabits = atRiskList.slice(0, MAX_DISPLAYED)
+  const remainingCount = atRiskList.length - MAX_DISPLAYED
+  const remainingText = `${AND_PREFIX}${remainingCount}${MORE_SUFFIX}`
 
   const handleGoToCheckin = () => {
     const todayStr = new Date().toLocaleDateString('en-CA')
@@ -89,15 +96,46 @@ export const AtRiskBanner: React.FC = () => {
           >
             {title}
           </Typography>
-          <Typography
-            sx={{
-              fontWeight: 500,
-              color: 'text.primary',
-              fontSize: pxToRem(14.5),
-            }}
-          >
-            {habitNamesText}
-          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 0.5 }}>
+            {displayedHabits.map((h, i) => (
+              <React.Fragment key={h.id}>
+                <Typography
+                  component="span"
+                  sx={{
+                    fontWeight: 500,
+                    color: 'text.primary',
+                    fontSize: pxToRem(14.5),
+                    textDecoration: 'underline',
+                    textDecorationColor: 'text.primary',
+                    textUnderlineOffset: 3,
+                  }}
+                >
+                  {h.name}
+                </Typography>
+                {i < displayedHabits.length - 1 && (
+                  <Typography
+                    component="span"
+                    sx={{ color: 'text.secondary', fontSize: pxToRem(14.5) }}
+                  >
+                    {COMMA}
+                  </Typography>
+                )}
+              </React.Fragment>
+            ))}
+            {remainingCount > 0 && (
+              <Typography
+                component="span"
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: pxToRem(14.5),
+                  fontWeight: 500,
+                  ml: 0.5,
+                }}
+              >
+                {remainingText}
+              </Typography>
+            )}
+          </Box>
         </Box>
       </Box>
       <Button

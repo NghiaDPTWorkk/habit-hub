@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   Typography,
@@ -10,174 +10,31 @@ import {
   Switch,
   Stack,
   Button,
+  Divider,
 } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
-import { useBoundStore } from '@/store'
 import { TEXTS } from '../constants'
+import { useSettings } from '../hooks/useSettings'
 
 export const SettingsPage: React.FC = () => {
-  // Account Profile state
-  const [fullName, setFullName] = useState(
-    () => localStorage.getItem('profile_full_name') || 'Trần Nghĩa'
-  )
-  const [email, setEmail] = useState(
-    () => localStorage.getItem('profile_email') || 'trnghia@example.com'
-  )
-  const [subTier, setSubTier] = useState(
-    () => localStorage.getItem('profile_sub_tier') || 'Premium Plan (Active)'
-  )
-
-  // General settings state
-  const [readOnly, setReadOnly] = useState(
-    () => localStorage.getItem('general_read_only') === 'true'
-  )
-  const [timezone, setTimezone] = useState(
-    () => localStorage.getItem('general_timezone') || 'GMT+7 (Default)'
-  )
-
-  // Handlers for persistence
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    setFullName(val)
-    localStorage.setItem('profile_full_name', val)
-  }
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    setEmail(val)
-    localStorage.setItem('profile_email', val)
-  }
-
-  const handleSubTierChange = (e: { target: { value: string } }) => {
-    const val = e.target.value
-    setSubTier(val)
-    localStorage.setItem('profile_sub_tier', val)
-  }
-
-  const handleReadOnlyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.checked
-    setReadOnly(val)
-    localStorage.setItem('general_read_only', String(val))
-  }
-
-  const handleTimezoneChange = (e: { target: { value: string } }) => {
-    const val = e.target.value
-    setTimezone(val)
-    localStorage.setItem('general_timezone', val)
-  }
-
-  const handleExportData = () => {
-    try {
-      const habits = useBoundStore.getState().habits
-      const checkins = useBoundStore.getState().checkins
-      const goals = useBoundStore.getState().goals
-
-      const settingsData = {
-        profile_full_name: localStorage.getItem('profile_full_name') || 'Trần Nghĩa',
-        profile_email: localStorage.getItem('profile_email') || 'trnghia@example.com',
-        profile_sub_tier: localStorage.getItem('profile_sub_tier') || 'Premium Plan (Active)',
-        general_read_only: localStorage.getItem('general_read_only') || 'false',
-        general_timezone: localStorage.getItem('general_timezone') || 'GMT+7 (Default)',
-      }
-
-      const payload = {
-        version: '1.0.0',
-        exportedAt: new Date().toISOString(),
-        data: {
-          habits,
-          checkins,
-          goals,
-          settings: settingsData,
-        },
-      }
-
-      const jsonString = JSON.stringify(payload, null, 2)
-      const blob = new Blob([jsonString], { type: 'application/json' })
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = 'tracex_export.json'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
-
-      useBoundStore.getState().showToast(TEXTS.exportSuccess, 'success')
-    } catch (e) {
-      console.error(e)
-      useBoundStore.getState().showToast(TEXTS.exportError, 'error')
-    }
-  }
-
-  const fileInputRef = React.useRef<HTMLInputElement>(null)
-
-  const handleImportClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click()
-    }
-  }
-
-  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    e.target.value = ''
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      try {
-        const json = JSON.parse(event.target?.result as string)
-        if (!json || typeof json !== 'object' || !json.data || typeof json.data !== 'object') {
-          useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
-          return
-        }
-
-        const { habits, checkins, goals, settings: importedSettings } = json.data
-        if (!Array.isArray(habits) || typeof checkins !== 'object' || !Array.isArray(goals)) {
-          useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
-          return
-        }
-
-        const confirmed = window.confirm(TEXTS.importConfirmWarning)
-        if (!confirmed) return
-
-        useBoundStore.setState({
-          habits,
-          checkins,
-          goals,
-        })
-
-        if (importedSettings) {
-          if (importedSettings.profile_full_name !== undefined) {
-            setFullName(importedSettings.profile_full_name)
-            localStorage.setItem('profile_full_name', importedSettings.profile_full_name)
-          }
-          if (importedSettings.profile_email !== undefined) {
-            setEmail(importedSettings.profile_email)
-            localStorage.setItem('profile_email', importedSettings.profile_email)
-          }
-          if (importedSettings.profile_sub_tier !== undefined) {
-            setSubTier(importedSettings.profile_sub_tier)
-            localStorage.setItem('profile_sub_tier', importedSettings.profile_sub_tier)
-          }
-          if (importedSettings.general_read_only !== undefined) {
-            setReadOnly(importedSettings.general_read_only === 'true')
-            localStorage.setItem('general_read_only', importedSettings.general_read_only)
-          }
-          if (importedSettings.general_timezone !== undefined) {
-            setTimezone(importedSettings.general_timezone)
-            localStorage.setItem('general_timezone', importedSettings.general_timezone)
-          }
-        }
-
-        useBoundStore.getState().showToast(TEXTS.importSuccess, 'success')
-      } catch (err) {
-        console.error(err)
-        useBoundStore.getState().showToast(TEXTS.importParseError, 'error')
-      }
-    }
-    reader.readAsText(file)
-  }
+  const {
+    fullName,
+    email,
+    subTier,
+    readOnly,
+    timezone,
+    fileInputRef,
+    handleFullNameChange,
+    handleEmailChange,
+    handleSubTierChange,
+    handleReadOnlyChange,
+    handleTimezoneChange,
+    handleExportData,
+    handleImportClick,
+    handleImportData,
+    handleWipeData,
+    handleLoadSeedData,
+  } = useSettings()
 
   return (
     <Stack spacing={3} sx={{ maxWidth: 800, mx: 'auto', mt: 1, mb: 4 }}>
@@ -327,6 +184,52 @@ export const SettingsPage: React.FC = () => {
           accept=".json"
           style={{ display: 'none' }}
         />
+      </Card>
+
+      {/* Administration & Release Zone Card */}
+      <Card variant="outlined" sx={{ p: 3, border: '1px solid', borderColor: 'error.light' }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, color: 'error.main', mb: 0.5 }}>
+          {TEXTS.adminTitle}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
+          {TEXTS.adminSubtitle}
+        </Typography>
+
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }}>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleWipeData}
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              py: 1.25,
+              fontWeight: 600,
+            }}
+          >
+            {TEXTS.wipeBtn}
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={handleLoadSeedData}
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              py: 1.25,
+              fontWeight: 600,
+            }}
+          >
+            {TEXTS.seedBtn}
+          </Button>
+        </Stack>
+
+        <Divider sx={{ mb: 2 }} />
+
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+          {TEXTS.lighthouseText}
+        </Typography>
       </Card>
     </Stack>
   )

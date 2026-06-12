@@ -20,11 +20,13 @@ const MOCK_SUBTITLE_DASHBOARD = 'System overview dashboard.'
 const MOCK_SUBTITLE_HABITS = 'Build and manage all the habits you want to track.'
 const MOCK_SUBTITLE_GOALS = 'Define targets and track progress achievements'
 const MOCK_SUBTITLE_CHECKINS = 'Track your progress and check-in history.'
+const MOCK_SUBTITLE_SETTINGS = 'Export data records and administrative tools'
 
 const MOCK_TITLE_DASHBOARD = 'Overview'
 const MOCK_TITLE_HABITS = 'Habits'
 const MOCK_TITLE_GOALS = 'Goals & Milestones'
 const MOCK_TITLE_CHECKINS = 'Progress'
+const MOCK_TITLE_SETTINGS = 'Settings & Backups'
 
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -55,6 +57,12 @@ export const MainLayout: React.FC = () => {
       return {
         title: MOCK_TITLE_CHECKINS,
         subtitle: MOCK_SUBTITLE_CHECKINS,
+      }
+    }
+    if (pathname.startsWith('/settings')) {
+      return {
+        title: MOCK_TITLE_SETTINGS,
+        subtitle: MOCK_SUBTITLE_SETTINGS,
       }
     }
     return {

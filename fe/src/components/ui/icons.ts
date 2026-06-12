@@ -13,6 +13,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import LockIcon from '@mui/icons-material/Lock'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
+import MenuIcon from '@mui/icons-material/Menu'
 import RemoveIcon from '@mui/icons-material/Remove'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
@@ -41,6 +42,7 @@ export const Icons = {
   Lock: LockIcon,
   LightMode: LightModeIcon,
   DarkMode: DarkModeIcon,
+  Menu: MenuIcon,
   Remove: RemoveIcon,
   TrendingUp: TrendingUpIcon,
   WarningAmber: WarningAmberIcon,

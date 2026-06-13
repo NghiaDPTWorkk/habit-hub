@@ -19,6 +19,7 @@ import {
 import { useBoundStore } from '@/store/useBoundStore'
 import type { Goal, GoalTargetType } from '@/types'
 import { GOALS_CONTENT } from '../constants/content'
+import { SHARED_MESSAGES } from '@/constants/messages'
 
 const TARGET_VALUE_STREAK = 'streak'
 const TARGET_VALUE_TOTAL = 'total_completions'
@@ -32,6 +33,7 @@ interface GoalEditDialogProps {
 export const GoalEditDialog: React.FC<GoalEditDialogProps> = ({ goal, open, onClose }) => {
   const habits = useBoundStore((s) => s.habits)
   const updateGoal = useBoundStore((s) => s.updateGoal)
+  const showToast = useBoundStore((s) => s.showToast)
 
   const [targetType, setGoalTargetType] = useState<GoalTargetType>(goal?.targetType ?? 'streak')
   const [targetValue, setTargetValue] = useState(goal?.targetValue?.toString() ?? '')
@@ -51,6 +53,7 @@ export const GoalEditDialog: React.FC<GoalEditDialogProps> = ({ goal, open, onCl
   const handleSubmit = () => {
     if (!validate() || !goal) return
     updateGoal(goal.id, { targetType, targetValue: Number(targetValue) })
+    showToast(SHARED_MESSAGES.SUCCESS.UPDATE, 'success')
     onClose()
   }
 

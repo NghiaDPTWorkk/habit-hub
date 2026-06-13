@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Snackbar } from './Snackbar'
-import { Alert } from './Alert'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 import { useBoundStore } from '@/store/useBoundStore'
 
-const TOAST_DURATION_MS = 4000
+const TOAST_DURATION_MS = 5000
 
 export const Toast: React.FC = () => {
   const toastQueue = useBoundStore((s) => s.toastQueue)
@@ -21,15 +21,23 @@ export const Toast: React.FC = () => {
       onClose={(_e, reason) => {
         if (reason !== 'clickaway') dismissToast()
       }}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      sx={{ top: { xs: 16, sm: 24 }, width: { xs: '92%', sm: 'auto' } }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <Alert
-        onClose={dismissToast}
         severity={current.severity}
         variant="filled"
-        sx={{ width: '100%' }}
+        onClose={dismissToast}
+        sx={{
+          borderRadius: 2,
+          minWidth: { xs: '100%', sm: 300 },
+          maxWidth: { xs: '100%', sm: 480 },
+          alignItems: 'center',
+          '& .MuiAlert-icon': { fontSize: 22 },
+          '& .MuiAlert-message': { fontWeight: 500 },
+        }}
       >
         {current.message}
       </Alert>

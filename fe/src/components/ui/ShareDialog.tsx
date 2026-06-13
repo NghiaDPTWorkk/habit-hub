@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions'
 import Box from '@mui/material/Box'
 import Button from './Button'
 import TextField from './TextField'
+import { useBoundStore } from '@/store'
 
 const DIALOG_TITLE = 'Share Progress'
 const HELPER_TEXT = 'Copy the link below to share your progress with others:'
@@ -18,6 +19,7 @@ const BUTTON_COLOR_SECONDARY = 'secondary'
 const BUTTON_COLOR_SUCCESS = 'success'
 const BUTTON_VARIANT_CONTAINED = 'contained'
 const BUTTON_COLOR_PRIMARY = 'primary'
+const TOAST_SUCCESS_MSG = 'Copied to clipboard!'
 
 export interface ShareDialogProps {
   open: boolean
@@ -27,11 +29,13 @@ export interface ShareDialogProps {
 
 export const ShareDialog: React.FC<ShareDialogProps> = ({ open, onClose, shareUrl }) => {
   const [copied, setCopied] = React.useState(false)
+  const showToast = useBoundStore((state) => state.showToast)
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
       setCopied(true)
+      showToast(TOAST_SUCCESS_MSG, 'success')
       setTimeout(() => {
         setCopied(false)
       }, 2000)

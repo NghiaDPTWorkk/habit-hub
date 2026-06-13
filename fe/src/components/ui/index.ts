@@ -34,6 +34,7 @@ export {
   Tooltip,
   Typography,
   useTheme,
+  InputAdornment,
 } from '@mui/material'
 export * from './Button'
 export * from './StatusPill'

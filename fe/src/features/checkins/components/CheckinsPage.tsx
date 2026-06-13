@@ -36,11 +36,6 @@ export const CheckinsPage: React.FC = () => {
     return dateParam ? dayjs(dateParam) : dayjs()
   }, [searchParams])
 
-  const selectedDate = useMemo(() => {
-    const dateParam = searchParams.get('date')
-    return dateParam ? dayjs(dateParam) : dayjs()
-  }, [searchParams])
-
   const dateStr = selectedDate.format('YYYY-MM-DD')
 
   const setSelectedDate = (v: Dayjs) => {

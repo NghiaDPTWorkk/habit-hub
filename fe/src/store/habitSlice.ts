@@ -4,7 +4,7 @@ import type { BoundStore } from './types'
 
 export interface HabitNote {
   id: string
-  habitId: string
+  habitId: number
   date: string
   content: string
 }
@@ -15,7 +15,7 @@ export interface HabitSlice {
   addHabit: (habit: Omit<Habit, 'id' | 'createdAt'>) => void
   updateHabit: (id: number, updates: Partial<Habit>) => void
   deleteHabit: (id: number) => void
-  addNote: (habitId: string, date: string, content: string) => void
+  addNote: (habitId: number, date: string, content: string) => void
   updateNote: (noteId: string, content: string) => void
   deleteNote: (noteId: string) => void
 }

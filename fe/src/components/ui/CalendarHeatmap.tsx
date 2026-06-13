@@ -13,6 +13,7 @@ export interface CalendarHeatmapProps {
   weeks?: number
   onCellClick?: (date: string) => void
   activeDate?: string | null
+  overdueDates?: string[]
 }
 
 export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
@@ -20,6 +21,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
   weeks = 12,
   onCellClick,
   activeDate,
+  overdueDates,
 }) => {
   const theme = useTheme()
 
@@ -35,7 +37,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
     const days: Date[] = []
     const today = new Date()
     const currentDayOfWeek = today.getDay()
-    const startOffset = weeks * 7 - 1 + currentDayOfWeek
+    const startOffset = weeks * 7 - 7 + currentDayOfWeek
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - startOffset)
 
@@ -61,7 +63,10 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
   }
 
   const formatDateString = (date: Date): string => {
-    return date.toISOString().split('T')[0]
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
   }
 
   const getTooltipText = (dateStr: string, count: number): string => {
@@ -86,6 +91,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
         const cellColor = getCellColor(count)
         const tooltipText = getTooltipText(dateStr, count)
         const isSelected = dateStr === activeDate
+        const isOverdue = overdueDates?.includes(dateStr)
 
         return (
           <Tooltip
@@ -116,6 +122,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
                 border: isSelected ? '2px solid' : 'none',
                 borderColor: 'text.primary',
                 boxSizing: 'border-box',
+                position: 'relative',
                 transition: 'all 0.2s',
                 '&:hover': {
                   opacity: 0.8,
@@ -123,7 +130,24 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
                   zIndex: 2,
                 },
               }}
-            />
+            >
+              {isOverdue && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -2,
+                    right: -2,
+                    width: 5,
+                    height: 5,
+                    borderRadius: '50%',
+                    backgroundColor: 'error.main',
+                    border: '1px solid',
+                    borderColor: 'background.paper',
+                    pointerEvents: 'none',
+                  }}
+                />
+              )}
+            </Box>
           </Tooltip>
         )
       })}

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Box, Typography, Tooltip, ProgressBar } from '@/components/ui'
+import { Box, Typography, Tooltip } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary } from '@/types'
 
 const HABIT_STATS_GRID_COLS = {
-  xs: '1fr 70px 100px',
-  sm: 'minmax(120px, 2fr) 80px 80px 80px 140px',
+  xs: 'minmax(80px, 2fr) 55px 55px 50px',
+  sm: 'minmax(120px, 2.5fr) 80px 80px 80px',
 }
 
 const STREAK_SUFFIX = 'd'
@@ -16,7 +16,6 @@ export interface HabitStatsRowProps {
 }
 
 export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
-  const rateValue = Math.round(summary.weeklyCompletionRate * 100)
   return (
     <Box
       sx={{
@@ -36,9 +35,7 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
           variant="body2"
           sx={{
             fontWeight: 500,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            wordBreak: 'break-word',
           }}
         >
           {summary.habitName}
@@ -62,27 +59,14 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
         </Typography>
       </Box>
 
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ textAlign: 'center', display: { xs: 'none', sm: 'block' } }}
-      >
+      <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
         {summary.longestStreak}
         {STREAK_SUFFIX}
       </Typography>
 
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ textAlign: 'center', display: { xs: 'none', sm: 'block' } }}
-      >
+      <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
         {summary.totalCompletions}
       </Typography>
-
-      <ProgressBar
-        value={rateValue}
-        color={rateValue >= 70 ? 'success' : rateValue >= 40 ? 'warning' : 'error'}
-      />
     </Box>
   )
 }

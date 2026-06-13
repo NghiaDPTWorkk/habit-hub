@@ -2,13 +2,17 @@ import React from 'react'
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary, Category } from '@/types'
-import { HabitStatsRow, HABIT_STATS_GRID_COLS } from './HabitStatsRow'
+import { HabitStatsRow } from './HabitStatsRow'
+
+const HABIT_STATS_GRID_COLS = {
+  xs: 'minmax(80px, 2fr) 55px 55px 50px',
+  sm: 'minmax(120px, 2.5fr) 80px 80px 80px',
+}
 
 const COL_HABIT = 'Habit'
 const COL_STREAK = 'Current'
 const COL_LONGEST = 'Longest'
 const COL_TOTAL = 'Total'
-const COL_RATE = '7-day rate'
 
 function getAvgRate(habits: HabitSummary[]): number {
   if (habits.length === 0) return 0
@@ -41,19 +45,22 @@ const HeaderRow: React.FC = () => (
     <Typography
       variant="caption"
       color="text.secondary"
-      sx={{ fontWeight: 600, textAlign: 'center' }}
+      sx={{
+        fontWeight: 600,
+        textAlign: 'center',
+      }}
     >
       {COL_LONGEST}
     </Typography>
     <Typography
       variant="caption"
       color="text.secondary"
-      sx={{ fontWeight: 600, textAlign: 'center' }}
+      sx={{
+        fontWeight: 600,
+        textAlign: 'center',
+      }}
     >
       {COL_TOTAL}
-    </Typography>
-    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-      {COL_RATE}
     </Typography>
   </Box>
 )

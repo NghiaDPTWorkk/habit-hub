@@ -28,10 +28,13 @@ export {
   RadioGroup,
   Select,
   Stack,
+  Switch,
+  Checkbox,
   Toolbar,
   Tooltip,
   Typography,
   useTheme,
+  useMediaQuery,
 } from '@mui/material'
 export * from './Button'
 export * from './StatusPill'
@@ -47,3 +50,5 @@ export * from './MiniChart'
 export * from './CalendarHeatmap'
 export * from './Toast'
 export * from './DatePicker'
+export * from './Alert'
+export { alpha } from '@mui/material/styles'

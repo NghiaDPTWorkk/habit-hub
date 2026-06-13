@@ -11,9 +11,18 @@ export interface HeatmapDay {
 export interface CalendarHeatmapProps {
   data: HeatmapDay[]
   weeks?: number
+  onCellClick?: (date: string) => void
+  activeDate?: string | null
+  overdueDates?: string[]
 }
 
-export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 12 }) => {
+export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
+  data,
+  weeks = 12,
+  onCellClick,
+  activeDate,
+  overdueDates,
+}) => {
   const theme = useTheme()
 
   const dataMap = React.useMemo(() => {
@@ -28,7 +37,7 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
     const days: Date[] = []
     const today = new Date()
     const currentDayOfWeek = today.getDay()
-    const startOffset = weeks * 7 - 1 + currentDayOfWeek
+    const startOffset = weeks * 7 - 7 + currentDayOfWeek
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - startOffset)
 
@@ -54,22 +63,26 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
   }
 
   const formatDateString = (date: Date): string => {
-    return date.toISOString().split('T')[0]
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
   }
 
   const getTooltipText = (dateStr: string, count: number): string => {
-    return `${count} check-ins on ${dateStr}`
+    return `${count} tasks completed on ${dateStr}`
   }
 
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${weeks}, 1fr)`,
-        gridTemplateRows: 'repeat(7, auto)',
+        gridTemplateColumns: `repeat(${weeks}, 16px)`,
+        gridTemplateRows: 'repeat(7, 16px)',
         gridAutoFlow: 'column',
         gap: 0.5,
-        width: '100%',
+        width: 'fit-content',
+        p: 0.5,
       }}
     >
       {gridDays.map((day, index) => {
@@ -77,20 +90,64 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ data, weeks = 
         const count = dataMap.get(dateStr) || 0
         const cellColor = getCellColor(count)
         const tooltipText = getTooltipText(dateStr, count)
+        const isSelected = dateStr === activeDate
+        const isOverdue = overdueDates?.includes(dateStr)
 
         return (
-          <Tooltip key={dateStr || index} title={tooltipText} arrow>
+          <Tooltip
+            key={dateStr || index}
+            title={tooltipText}
+            arrow
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: 'preventOverflow',
+                    options: {
+                      boundary: 'window',
+                    },
+                  },
+                ],
+              },
+            }}
+          >
             <Box
+              onClick={() => onCellClick?.(dateStr)}
               sx={{
-                aspectRatio: '1',
+                width: 16,
+                height: 16,
                 borderRadius: 0.5,
                 backgroundColor: cellColor,
-                transition: 'background-color 0.2s',
+                cursor: onCellClick ? 'pointer' : 'default',
+                border: isSelected ? '2px solid' : 'none',
+                borderColor: 'text.primary',
+                boxSizing: 'border-box',
+                position: 'relative',
+                transition: 'all 0.2s',
                 '&:hover': {
                   opacity: 0.8,
+                  transform: 'scale(1.2)',
+                  zIndex: 2,
                 },
               }}
-            />
+            >
+              {isOverdue && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -2,
+                    right: -2,
+                    width: 5,
+                    height: 5,
+                    borderRadius: '50%',
+                    backgroundColor: 'error.main',
+                    border: '1px solid',
+                    borderColor: 'background.paper',
+                    pointerEvents: 'none',
+                  }}
+                />
+              )}
+            </Box>
           </Tooltip>
         )
       })}

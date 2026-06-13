@@ -24,7 +24,7 @@ interface GoalFormProps {
 }
 
 export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) => {
-  const { habits, addGoal, updateGoal } = useBoundStore()
+  const { habits, addGoal, updateGoal, showToast } = useBoundStore()
   const [habitId, setHabitId] = useState<number | ''>(existingGoal?.habitId ?? '')
   const [targetType, setTargetType] = useState<GoalTargetType>(existingGoal?.targetType || 'streak')
   const [targetValue, setTargetValue] = useState(existingGoal?.targetValue?.toString() || '')
@@ -63,8 +63,10 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
 
     if (existingGoal) {
       updateGoal(existingGoal.id, goalData)
+      showToast(SHARED_MESSAGES.SUCCESS.UPDATE, 'success')
     } else {
       addGoal(goalData)
+      showToast(SHARED_MESSAGES.SUCCESS.CREATE, 'success')
     }
 
     setHabitId('')

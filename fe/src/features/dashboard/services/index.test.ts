@@ -96,6 +96,16 @@ describe('currentStreak', () => {
     ]
     expect(currentStreak(BASE_HABIT, checkins)).toBe(2)
   })
+
+  it('does not reset streak if today is not completed but yesterday was completed', () => {
+    const checkins = [makeCheckin('2026-06-09'), makeCheckin('2026-06-08')]
+    expect(currentStreak(BASE_HABIT, checkins)).toBe(2)
+  })
+
+  it('resets streak to 0 if yesterday was missed and today is not completed', () => {
+    const checkins = [makeCheckin('2026-06-08')]
+    expect(currentStreak(BASE_HABIT, checkins)).toBe(0)
+  })
 })
 
 describe('longestStreak', () => {

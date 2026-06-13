@@ -11,12 +11,22 @@ import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import LockIcon from '@mui/icons-material/Lock'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import MenuIcon from '@mui/icons-material/Menu'
 import RemoveIcon from '@mui/icons-material/Remove'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import WhatshotIcon from '@mui/icons-material/Whatshot'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import DownloadIcon from '@mui/icons-material/Download'
+import UploadIcon from '@mui/icons-material/Upload'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 export const Icons = {
   Add: AddIcon,
@@ -32,10 +42,20 @@ export const Icons = {
   Logout: LogoutIcon,
   Person: PersonIcon,
   Lock: LockIcon,
+  LightMode: LightModeIcon,
+  DarkMode: DarkModeIcon,
+  Menu: MenuIcon,
   Remove: RemoveIcon,
   TrendingUp: TrendingUpIcon,
   WarningAmber: WarningAmberIcon,
   EmojiEvents: EmojiEventsIcon,
   Whatshot: WhatshotIcon,
   ExpandMore: ExpandMoreIcon,
+  Download: DownloadIcon,
+  Upload: UploadIcon,
+  SettingsOutlined: SettingsOutlinedIcon,
+  LightModeOutlined: LightModeOutlinedIcon,
+  DarkModeOutlined: DarkModeOutlinedIcon,
+  ChevronLeft: ChevronLeftIcon,
+  ChevronRight: ChevronRightIcon,
 }

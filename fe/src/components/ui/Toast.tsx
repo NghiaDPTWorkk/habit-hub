@@ -1,32 +1,37 @@
-import React from 'react'
-import { Snackbar, Alert } from '@mui/material'
-import { useBoundStore } from '@/store'
+import React, { useState } from 'react'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import { useBoundStore } from '@/store/useBoundStore'
 
-const TOAST_DURATION_MS = 3000
+const TOAST_DURATION_MS = 4000
 
 export const Toast: React.FC = () => {
-  const toast = useBoundStore((s) => s.toast)
-  const hideToast = useBoundStore((s) => s.hideToast)
+  const toastQueue = useBoundStore((s) => s.toastQueue)
+  const dismissToast = useBoundStore((s) => s.dismissToast)
+  const current = toastQueue[0] ?? null
+  const [paused, setPaused] = useState(false)
 
-  const handleClose = (_: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') return
-    hideToast()
-  }
+  if (!current) return null
 
   return (
     <Snackbar
-      open={toast?.open ?? false}
-      autoHideDuration={TOAST_DURATION_MS}
-      onClose={handleClose}
+      key={current.id}
+      open
+      autoHideDuration={paused ? null : TOAST_DURATION_MS}
+      onClose={(_e, reason) => {
+        if (reason !== 'clickaway') dismissToast()
+      }}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <Alert
-        onClose={hideToast}
-        severity={toast?.severity ?? 'info'}
+        onClose={dismissToast}
+        severity={current.severity}
         variant="filled"
         sx={{ width: '100%' }}
       >
-        {toast?.message ?? ''}
+        {current.message}
       </Alert>
     </Snackbar>
   )

@@ -2,15 +2,27 @@ import type { StateCreator } from 'zustand'
 import type { Habit } from '@/types'
 import type { BoundStore } from './types'
 
+export interface HabitNote {
+  id: string
+  habitId: number
+  date: string
+  content: string
+}
+
 export interface HabitSlice {
   habits: Habit[]
+  notes: HabitNote[]
   addHabit: (habit: Omit<Habit, 'id' | 'createdAt'>) => void
   updateHabit: (id: number, updates: Partial<Habit>) => void
   deleteHabit: (id: number) => void
+  addNote: (habitId: number, date: string, content: string) => void
+  updateNote: (noteId: string, content: string) => void
+  deleteNote: (noteId: string) => void
 }
 
 export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (set) => ({
   habits: [],
+  notes: [],
 
   addHabit: (habit) =>
     set((state) => ({
@@ -33,6 +45,7 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
     set((state) => {
       const exists = state.habits.some((h) => h.id === id)
       if (!exists) return state
+
       return {
         habits: state.habits.filter((h) => h.id !== id),
         checkins: Object.fromEntries(
@@ -41,4 +54,19 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
         goals: state.goals.filter((g) => g.habitId !== id),
       }
     }),
+
+  addNote: (habitId, date, content) =>
+    set((state) => ({
+      notes: [...state.notes, { id: crypto.randomUUID(), habitId, date, content }],
+    })),
+
+  updateNote: (noteId, content) =>
+    set((state) => ({
+      notes: state.notes.map((note) => (note.id === noteId ? { ...note, content } : note)),
+    })),
+
+  deleteNote: (noteId) =>
+    set((state) => ({
+      notes: state.notes.filter((note) => note.id !== noteId),
+    })),
 })

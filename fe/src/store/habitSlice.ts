@@ -1,6 +1,6 @@
 import { getLocalDateString } from '@/utils'
 import type { StateCreator } from 'zustand'
-import type { Habit } from '@/types'
+import type { Habit, Note } from '@/types'
 import type { BoundStore } from './types'
 
 export interface HabitNote {
@@ -58,16 +58,25 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
 
   addNote: (habitId, date, content) =>
     set((state) => ({
-      notes: [...state.notes, { id: crypto.randomUUID(), habitId, date, content }],
+      notes: [
+        ...state.notes,
+        {
+          id: crypto.randomUUID(),
+          habitId,
+          date,
+          content,
+          createdAt: new Date().toISOString(),
+        },
+      ],
     })),
 
   updateNote: (noteId, content) =>
     set((state) => ({
-      notes: state.notes.map((note) => (note.id === noteId ? { ...note, content } : note)),
+      notes: state.notes.map((n) => (n.id === noteId ? { ...n, content } : n)) as Note[],
     })),
 
   deleteNote: (noteId) =>
     set((state) => ({
-      notes: state.notes.filter((note) => note.id !== noteId),
+      notes: state.notes.filter((n) => n.id !== noteId) as Note[],
     })),
 })

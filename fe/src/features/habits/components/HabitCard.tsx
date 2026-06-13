@@ -16,10 +16,9 @@ import { getPriorityColor } from '../utils/habitHelpers'
 import { HabitCardFooter } from './HabitCardFooter'
 import { HabitNoteModal } from './HabitNoteModal'
 
-const { SHORT_WEEK_DAYS, CARD_TEXTS, DESCRIPTIONS } = HABIT_CARD_CONTENT
+const { SHORT_WEEK_DAYS, CARD_TEXTS } = HABIT_CARD_CONTENT
 
 const TEXT_CATEGORY_LABEL = 'Category: '
-const getHabitDescription = (category: string) => DESCRIPTIONS[category] || DESCRIPTIONS.Default
 
 export interface HabitCardProps {
   habit: Habit
@@ -133,12 +132,6 @@ export const HabitCard: FC<HabitCardProps> = ({
         <Box>
           <Typography
             variant="body2"
-            sx={{ color: 'text.secondary', fontSize: pxToRem(13), lineHeight: 1.4, mb: 0.5 }}
-          >
-            {getHabitDescription(habit.category)}
-          </Typography>
-          <Typography
-            variant="body2"
             sx={{ color: 'text.secondary', fontSize: pxToRem(12), fontWeight: 500 }}
           >
             {TEXT_CATEGORY_LABEL}
@@ -184,6 +177,44 @@ export const HabitCard: FC<HabitCardProps> = ({
               </Box>
             )}
           </Box>
+
+          {/* Today's Note Display */}
+          {todayNote?.content && (
+            <Box
+              sx={{
+                p: { xs: 1.25, sm: 1.5 },
+                mt: 1.5,
+                borderRadius: 1.5,
+                backgroundColor: alpha(theme.palette.primary.main, 0.06),
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.16)}`,
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  display: 'block',
+                  fontWeight: 700,
+                  mb: 0.5,
+                  color: 'primary.main',
+                  fontSize: pxToRem(11),
+                }}
+              >
+                {CARD_TEXTS.noteLabel}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  m: 0,
+                  whiteSpace: 'pre-wrap',
+                  color: 'text.primary',
+                  fontSize: pxToRem(12),
+                  lineHeight: 1.4,
+                }}
+              >
+                {todayNote.content}
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         {/* Footer Info & Quick Check-in Button */}
@@ -215,3 +246,5 @@ export const HabitCard: FC<HabitCardProps> = ({
     </Card>
   )
 }
+
+// Local state for notes modal

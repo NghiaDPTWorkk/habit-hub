@@ -4,6 +4,12 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     dark: string
   }
+  interface SimplePaletteColorOptions {
+    border?: string
+  }
+  interface PaletteColor {
+    border?: string
+  }
 }
 
 export const getTheme = (mode: 'light' | 'dark') =>
@@ -29,10 +35,11 @@ export const getTheme = (mode: 'light' | 'dark') =>
         contrastText: '#ffffff',
       },
       warning: {
-        main: mode === 'light' ? '#d97706' : '#f59e0b',
-        light: mode === 'light' ? '#fff3e0' : 'rgba(245, 158, 11, 0.15)',
-        dark: mode === 'light' ? '#b45309' : '#d97706',
+        main: mode === 'light' ? '#f2994a' : '#ffb04f',
+        light: mode === 'light' ? '#fff2e0' : 'rgba(242, 153, 74, 0.15)',
+        dark: mode === 'light' ? '#e0822f' : '#f2994a',
         contrastText: '#ffffff',
+        border: mode === 'light' ? '#ffdbb3' : 'rgba(242, 153, 74, 0.25)',
       },
       success: {
         main: mode === 'light' ? '#27ae60' : '#34d399',

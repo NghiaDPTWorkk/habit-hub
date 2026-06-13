@@ -1,5 +1,5 @@
 import { type FC, useMemo, useState } from 'react'
-import { Box, Typography, Drawer, IconButton } from '@/components/ui'
+import { Box, Typography, Drawer, IconButton, ConfirmDialog } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
 import { Icons } from '@/components/ui/icons'
@@ -82,9 +82,23 @@ export const HabitsPage: FC = () => {
     setModalOpen(true)
   }
 
-  const handleDelete = (id: number) => {
-    deleteHabit(id)
-    showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+  const handleDelete = (habit: Habit) => {
+    setHabitToDelete(habit)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false)
+    setHabitToDelete(undefined)
+  }
+
+  const handleConfirmDelete = () => {
+    if (habitToDelete) {
+      deleteHabit(habitToDelete.id)
+      showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+    }
+    setDeleteDialogOpen(false)
+    setHabitToDelete(undefined)
   }
 
   const handlePauseResume = (habit: Habit) => {

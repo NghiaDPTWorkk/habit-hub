@@ -34,4 +34,16 @@ export const GOALS_CONTENT = {
     HABIT_REQUIRED: 'Please select a habit',
     TARGET_INTEGER: 'Target must be a positive whole number',
   },
+  KPI: {
+    COMPLETED: 'Completed',
+    ACTIVE: 'Active',
+    SUCCESS_RATE: 'Success Rate',
+  },
+  FILTER: {
+    ALL: 'All',
+    ACTIVE: 'Active',
+    COMPLETED: 'Completed',
+  },
+  FILTER_EMPTY_STATE: 'No goals match this filter.',
+  ACCORDION_LABEL: '+ Tạo mục tiêu mới',
 }

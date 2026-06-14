@@ -88,16 +88,16 @@ export const HabitsPage: FC = () => {
     setDeleteDialogOpen(true)
   }
 
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false)
+    setHabitToDelete(undefined)
+  }
+
   const handleConfirmDelete = () => {
     if (habitToDelete) {
       deleteHabit(habitToDelete.id)
       showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
     }
-    setDeleteDialogOpen(false)
-    setHabitToDelete(undefined)
-  }
-
-  const handleCancelDelete = () => {
     setDeleteDialogOpen(false)
     setHabitToDelete(undefined)
   }

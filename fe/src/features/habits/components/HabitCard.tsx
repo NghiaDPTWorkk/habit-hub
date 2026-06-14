@@ -26,29 +26,30 @@ const CARD_TEXTS = {
   statusLabel: 'Status:',
   dot: '.',
   slash: '/',
+  noteLabel: 'Note today:',
+  addNote: 'Add note',
+  editNote: 'Edit note',
+  notePlaceholder: 'Write your note here...',
+  cancel: 'Cancel',
+  save: 'Save',
 }
+
+const WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+const WEEK_DAYS_MAP = WEEK_DAYS.map((label, index) => ({
+  value: index,
+  label,
+}))
 
 export interface HabitCardProps {
   habit: Habit
-  todayCheckin?: {
-    completedCount: number
-  }
+  todayCheckin?: { completedCount: number }
   isMissed: boolean
   onEdit: (habit: Habit) => void
   onDelete: (habit: Habit) => void
   onPauseResume: (habit: Habit) => void
   onArchive: (habit: Habit) => void
 }
-
-const weekDays = [
-  { label: 'Sunday', value: 0 },
-  { label: 'Monday', value: 1 },
-  { label: 'Tuesday', value: 2 },
-  { label: 'Wednesday', value: 3 },
-  { label: 'Thursday', value: 4 },
-  { label: 'Friday', value: 5 },
-  { label: 'Saturday', value: 6 },
-]
 
 export const HabitCard: FC<HabitCardProps> = ({
   habit,
@@ -60,7 +61,6 @@ export const HabitCard: FC<HabitCardProps> = ({
   onArchive,
 }) => {
   const theme = useTheme()
-
   const dueToday =
     habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
   const nextStatusAction =
@@ -158,7 +158,7 @@ export const HabitCard: FC<HabitCardProps> = ({
           >
             {CARD_TEXTS.scheduled}{' '}
             {habit.specificDays
-              .map((day) => weekDays.find((item) => item.value === day)?.label)
+              .map((day) => WEEK_DAYS_MAP.find((item) => item.value === day)?.label)
               .filter(Boolean)
               .join(', ')}
             {CARD_TEXTS.dot}

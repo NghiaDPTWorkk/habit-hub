@@ -1,5 +1,14 @@
 import { type FC, useMemo, useState } from 'react'
-import { Box, Typography, Drawer, IconButton, ConfirmDialog } from '@/components/ui'
+import {
+  Box,
+  Typography,
+  ConfirmDialog,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
 import { Icons } from '@/components/ui/icons'
@@ -7,15 +16,35 @@ import { useBoundStore } from '@/store/useBoundStore'
 import { useHabitStore } from '@/features/habits/hooks'
 import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
-import { FilterSideBar } from './FilterSideBar'
 import { SHARED_MESSAGES } from '@/constants/messages'
+import SearchIcon from '@mui/icons-material/Search'
+import InputAdornment from '@mui/material/InputAdornment'
 import type { HabitFilters } from './FilterSideBar'
-import type { Habit } from '@/types'
+import type { Category, Frequency, HabitStatus, Habit } from '@/types'
+
+const TEXT_SEARCH_PLACEHOLDER = 'Tìm kiếm thói quen...'
+const TEXT_CATEGORY_LABEL = 'Category'
+const TEXT_FREQUENCY_LABEL = 'Frequency'
+const TEXT_STATUS_LABEL = 'Status'
+const TEXT_ALL_CATEGORIES = 'All Categories'
+const TEXT_ALL_FREQUENCIES = 'All Frequencies'
+const TEXT_ALL_STATUSES = 'All Status'
+
+const TEXT_VAL_ALL = 'All'
+const TEXT_VAL_HEALTH = 'Health'
+const TEXT_VAL_STUDY = 'Study'
+const TEXT_VAL_WORK = 'Work'
+const TEXT_VAL_MINDFULNESS = 'Mindfulness'
+const TEXT_VAL_OTHER = 'Other'
+const TEXT_VAL_DAILY = 'Daily'
+const TEXT_VAL_SPECIFIC = 'Specific'
+const TEXT_VAL_ACTIVE = 'Active'
+const TEXT_VAL_PAUSED = 'Paused'
+const TEXT_VAL_ARCHIVED = 'Archived'
 
 const PAGE_TITLE = 'Habits'
 const PAGE_DESC = 'Build and manage all the habits you want to track.'
 const ADD_HABIT_LABEL = 'Add Habit'
-const FILTER_BUTTON_LABEL = 'Filters'
 
 const DEFAULT_FILTERS: HabitFilters = {
   category: 'All',
@@ -44,11 +73,7 @@ export const HabitsPage: FC = () => {
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [habitToDelete, setHabitToDelete] = useState<Habit | undefined>(undefined)
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  if (modalOpen && setSearchTerm && searchTerm.length < 0) {
-    setSearchTerm('')
-  }
 
   const todayCheckinByHabit = useMemo(
     () =>
@@ -144,77 +169,100 @@ export const HabitsPage: FC = () => {
       <Typography variant="body1" sx={{ mb: 3 }}>
         {PAGE_DESC}
       </Typography>
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 3,
-          gridTemplateColumns: { xs: '1fr', md: '320px 1fr' },
-          maxWidth: '100vw',
-        }}
-      >
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          <Card sx={{ p: 2 }}>
-            <FilterSideBar
-              filters={filters}
-              onChange={setFilters}
-              onClear={() => setFilters(DEFAULT_FILTERS)}
-            />
-          </Card>
-        </Box>
 
-        <Box sx={{ display: 'grid', gap: 3 }}>
-          <Card sx={{ p: 2 }}>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button
-                variant="contained"
-                startIcon={<Icons.Add />}
-                onClick={() => {
-                  setHabitToEdit(undefined)
-                  setModalOpen(true)
-                }}
-              >
-                {ADD_HABIT_LABEL}
-              </Button>
-              <IconButton
-                sx={{ display: { xs: 'flex', md: 'none' } }}
-                onClick={() => setFilterDrawerOpen(true)}
-              >
-                <Typography variant="button">{FILTER_BUTTON_LABEL}</Typography>
-              </IconButton>
-            </Box>
-          </Card>
-
-          <Card sx={{ p: 2 }}>
-            <HabitList
-              habits={filteredHabits}
-              hasAnyHabits={habits.length > 0}
-              todayCheckinByHabit={todayCheckinByHabit}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onPauseResume={handlePauseResume}
-              onArchive={handleArchive}
-              onCreate={() => {
-                setHabitToEdit(undefined)
-                setModalOpen(true)
-              }}
-              isHabitMissed={isHabitMissed}
-            />
-          </Card>
-        </Box>
-      </Box>
-
-      <Drawer anchor="left" open={filterDrawerOpen} onClose={() => setFilterDrawerOpen(false)}>
-        <Box sx={{ maxWidth: 280, p: 2 }}>
-          <FilterSideBar
-            filters={filters}
-            onChange={setFilters}
-            onClear={() => {
-              setFilters(DEFAULT_FILTERS)
-              setFilterDrawerOpen(false)
+      <Card sx={{ p: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+          <TextField
+            placeholder={TEXT_SEARCH_PLACEHOLDER}
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ minWidth: 200, flexGrow: 1 }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
+          <FormControl size="small" sx={{ minWidth: 140 }}>
+            <InputLabel>{TEXT_CATEGORY_LABEL}</InputLabel>
+            <Select
+              label={TEXT_CATEGORY_LABEL}
+              value={filters.category}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, category: e.target.value as Category | 'All' }))
+              }
+            >
+              <MenuItem value={TEXT_VAL_ALL}>{TEXT_ALL_CATEGORIES}</MenuItem>
+              <MenuItem value={TEXT_VAL_HEALTH}>{TEXT_VAL_HEALTH}</MenuItem>
+              <MenuItem value={TEXT_VAL_STUDY}>{TEXT_VAL_STUDY}</MenuItem>
+              <MenuItem value={TEXT_VAL_WORK}>{TEXT_VAL_WORK}</MenuItem>
+              <MenuItem value={TEXT_VAL_MINDFULNESS}>{TEXT_VAL_MINDFULNESS}</MenuItem>
+              <MenuItem value={TEXT_VAL_OTHER}>{TEXT_VAL_OTHER}</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ minWidth: 140 }}>
+            <InputLabel>{TEXT_FREQUENCY_LABEL}</InputLabel>
+            <Select
+              label={TEXT_FREQUENCY_LABEL}
+              value={filters.frequency}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, frequency: e.target.value as Frequency | 'All' }))
+              }
+            >
+              <MenuItem value={TEXT_VAL_ALL}>{TEXT_ALL_FREQUENCIES}</MenuItem>
+              <MenuItem value={TEXT_VAL_DAILY}>{TEXT_VAL_DAILY}</MenuItem>
+              <MenuItem value={TEXT_VAL_SPECIFIC}>{TEXT_VAL_SPECIFIC}</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ minWidth: 140 }}>
+            <InputLabel>{TEXT_STATUS_LABEL}</InputLabel>
+            <Select
+              label={TEXT_STATUS_LABEL}
+              value={filters.status}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, status: e.target.value as HabitStatus | 'All' }))
+              }
+            >
+              <MenuItem value={TEXT_VAL_ALL}>{TEXT_ALL_STATUSES}</MenuItem>
+              <MenuItem value={TEXT_VAL_ACTIVE}>{TEXT_VAL_ACTIVE}</MenuItem>
+              <MenuItem value={TEXT_VAL_PAUSED}>{TEXT_VAL_PAUSED}</MenuItem>
+              <MenuItem value={TEXT_VAL_ARCHIVED}>{TEXT_VAL_ARCHIVED}</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            variant="contained"
+            startIcon={<Icons.Add />}
+            onClick={() => {
+              setHabitToEdit(undefined)
+              setModalOpen(true)
+            }}
+          >
+            {ADD_HABIT_LABEL}
+          </Button>
         </Box>
-      </Drawer>
+      </Card>
+
+      <Card sx={{ p: 2 }}>
+        <HabitList
+          habits={filteredHabits}
+          hasAnyHabits={habits.length > 0}
+          todayCheckinByHabit={todayCheckinByHabit}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onPauseResume={handlePauseResume}
+          onArchive={handleArchive}
+          onCreate={() => {
+            setHabitToEdit(undefined)
+            setModalOpen(true)
+          }}
+          isHabitMissed={isHabitMissed}
+        />
+      </Card>
 
       <HabitFormModal
         open={modalOpen}

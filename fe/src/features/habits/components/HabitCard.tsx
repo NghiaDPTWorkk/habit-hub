@@ -196,7 +196,7 @@ export const HabitCard: FC<HabitCardProps> = ({
             component="p"
             sx={{
               ...theme.typography.body2,
-              color: theme.palette.success.main,
+              color: (theme) => (theme.palette.mode === 'light' ? 'success.dark' : 'success.main'),
               mb: 0.5,
               margin: 0,
             }}

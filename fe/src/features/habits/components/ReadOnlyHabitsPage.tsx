@@ -81,7 +81,7 @@ export const ReadOnlyHabitsPage: React.FC = () => {
 
   return (
     <Box sx={{ p: 3, maxWidth: '100vw' }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom>
         {PAGE_TEXTS.title}
       </Typography>
       <Typography variant="body1" sx={{ mb: 3 }}>
@@ -108,7 +108,7 @@ export const ReadOnlyHabitsPage: React.FC = () => {
         <Box sx={{ display: 'grid', gap: 3 }}>
           <Card sx={{ p: 2, display: { xs: 'block', md: 'none' } }}>
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-              <IconButton onClick={() => setFilterDrawerOpen(true)}>
+              <IconButton onClick={() => setFilterDrawerOpen(true)} aria-label="Open filters">
                 <Typography variant="button">{PAGE_TEXTS.filterButton}</Typography>
               </IconButton>
             </Box>

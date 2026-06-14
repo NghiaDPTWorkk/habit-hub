@@ -46,7 +46,7 @@ export const GoalsPage: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
       </Box>
@@ -95,7 +95,7 @@ export const GoalsPage: React.FC = () => {
               onChange={(_: React.SyntheticEvent, expanded: boolean) => setAccordionOpen(expanded)}
             >
               <AccordionSummary expandIcon={<Icons.ExpandMore />}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
                   {editingGoal ? GOALS_CONTENT.FORM_TITLE_EDIT : ACCORDION_LABEL}
                 </Typography>
               </AccordionSummary>
@@ -106,7 +106,7 @@ export const GoalsPage: React.FC = () => {
           </Box>
 
           <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
               {editingGoal ? GOALS_CONTENT.FORM_TITLE_EDIT : FORM_SECTION_TITLE}
             </Typography>
             <GoalForm existingGoal={editingGoal} onSuccess={handleFormSuccess} />
@@ -114,7 +114,7 @@ export const GoalsPage: React.FC = () => {
         </Box>
 
         <Box>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 2 }}>
             {PANEL_SECTION_TITLE}
           </Typography>
           <GoalPanel onEditGoal={handleEditGoal} />

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import { AppBar, Toolbar, Typography, Container, Box } from '@/components/ui'
+import { AppBar, Toolbar, Typography, Container, Box, LinearProgress } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 
 const READ_ONLY_LAYOUT_CONTENT = {
@@ -43,7 +43,9 @@ export const ReadOnlyLayout: React.FC = () => {
       </Box>
 
       <Container component="main" sx={{ flexGrow: 1, py: 4 }}>
-        <Outlet />
+        <React.Suspense fallback={<LinearProgress sx={{ my: 4 }} />}>
+          <Outlet />
+        </React.Suspense>
       </Container>
 
       <Box

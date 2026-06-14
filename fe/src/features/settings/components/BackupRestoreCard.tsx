@@ -29,7 +29,11 @@ export const BackupRestoreCard: React.FC<BackupRestoreCardProps> = ({
         borderColor: orangeBorderColor,
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: orangeMainColor }}>
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ fontWeight: 700, mb: 0.5, color: orangeMainColor }}
+      >
         {TEXTS.backupTitle}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>

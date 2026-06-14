@@ -127,7 +127,7 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
         {/* Right Part: Edit and Checkin Toggle */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
           <Tooltip title={LABEL_EDIT}>
-            <IconButton size="small" onClick={onOpenModal}>
+            <IconButton size="small" onClick={onOpenModal} aria-label={LABEL_EDIT}>
               <Icons.Edit fontSize="small" />
             </IconButton>
           </Tooltip>

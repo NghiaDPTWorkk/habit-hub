@@ -42,7 +42,12 @@ export const StatCard: React.FC<StatCardProps> = ({
         >
           {title}
         </Typography>
-        <Typography variant="h4" color={COLOR_TEXT_PRIMARY} sx={{ fontWeight: 'bold' }}>
+        <Typography
+          variant="h4"
+          component="p"
+          color={COLOR_TEXT_PRIMARY}
+          sx={{ fontWeight: 'bold' }}
+        >
           {value}
         </Typography>
         {trend && (

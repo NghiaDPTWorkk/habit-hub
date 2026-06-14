@@ -113,6 +113,8 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
           >
             <Box
               onClick={() => onCellClick?.(dateStr)}
+              role="button"
+              aria-label={tooltipText}
               sx={{
                 width: 16,
                 height: 16,

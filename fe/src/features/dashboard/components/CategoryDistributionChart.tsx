@@ -40,7 +40,7 @@ export const CategoryDistributionChart: React.FC = () => {
   if (data.length === 0) {
     return (
       <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant={VARIANT_H6} sx={{ mb: 2, fontWeight: 600 }}>
+        <Typography variant={VARIANT_H6} component="h2" sx={{ mb: 2, fontWeight: 600 }}>
           {CHART_TITLE}
         </Typography>
         <Typography variant={VARIANT_BODY2} color={COLOR_TEXT_SECONDARY}>
@@ -52,7 +52,7 @@ export const CategoryDistributionChart: React.FC = () => {
 
   return (
     <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-      <Typography variant={VARIANT_H6} sx={{ mb: 2, fontWeight: 600 }}>
+      <Typography variant={VARIANT_H6} component="h2" sx={{ mb: 2, fontWeight: 600 }}>
         {CHART_TITLE}
       </Typography>
 

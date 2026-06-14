@@ -72,14 +72,14 @@ export const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant={VARIANT_SUBTITLE1} sx={{ fontWeight: 700 }}>
+        <Typography variant={VARIANT_SUBTITLE1} component="h2" sx={{ fontWeight: 700 }}>
           {currentMonth.format(DATE_FORMAT_MONTH_YEAR)}
         </Typography>
         <Box sx={{ display: 'flex', gap: 0.5 }}>
-          <IconButton size={SIZE_SMALL} onClick={handlePrevMonth}>
+          <IconButton size={SIZE_SMALL} onClick={handlePrevMonth} aria-label="Previous month">
             <Icons.ChevronLeft fontSize={SIZE_SMALL} />
           </IconButton>
-          <IconButton size={SIZE_SMALL} onClick={handleNextMonth}>
+          <IconButton size={SIZE_SMALL} onClick={handleNextMonth} aria-label="Next month">
             <Icons.ChevronRight fontSize={SIZE_SMALL} />
           </IconButton>
         </Box>

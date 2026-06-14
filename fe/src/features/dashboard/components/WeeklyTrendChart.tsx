@@ -86,7 +86,7 @@ export const WeeklyTrendChart: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <TimelineIcon sx={{ color: 'primary.main' }} />
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+          <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 700 }}>
             {TITLE_TREND}
           </Typography>
         </Box>
@@ -98,7 +98,7 @@ export const WeeklyTrendChart: React.FC = () => {
             bgcolor: theme.palette.mode === 'light' ? LIGHT_BG : DARK_BG,
             border: '1px solid',
             borderColor: theme.palette.mode === 'light' ? LIGHT_BORDER : DARK_BORDER,
-            color: 'success.main',
+            color: theme.palette.mode === 'light' ? 'success.dark' : 'success.main',
             fontWeight: 600,
             fontSize: pxToRem(12),
           }}
@@ -132,7 +132,12 @@ export const WeeklyTrendChart: React.FC = () => {
               >
                 {m.label}
               </Typography>
-              <Typography variant="h6" color="success.main" sx={{ fontWeight: 700 }}>
+              <Typography
+                variant="h6"
+                component="p"
+                color={theme.palette.mode === 'light' ? 'success.dark' : 'success.main'}
+                sx={{ fontWeight: 700 }}
+              >
                 {m.value}
               </Typography>
             </Box>
@@ -152,8 +157,7 @@ export const WeeklyTrendChart: React.FC = () => {
           <svg
             viewBox={`0 0 ${svgW} ${svgH}`}
             width="100%"
-            height="auto"
-            style={{ display: 'block', overflow: 'visible' }}
+            style={{ display: 'block', overflow: 'visible', height: 'auto' }}
           >
             <defs>
               <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">

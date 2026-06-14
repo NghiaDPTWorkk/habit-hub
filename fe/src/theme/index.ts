@@ -18,8 +18,8 @@ export const getTheme = (mode: 'light' | 'dark') =>
       mode,
       primary: {
         main: mode === 'light' ? '#27ae60' : '#34d399',
-        light: mode === 'light' ? '#e6f4ea' : 'rgba(46, 125, 50, 0.15)',
-        dark: mode === 'light' ? '#219653' : '#059669',
+        light: mode === 'light' ? '#e8f5e9' : 'rgba(39, 174, 96, 0.15)',
+        dark: mode === 'light' ? '#1b5e20' : '#27ae60',
         contrastText: '#ffffff',
       },
       secondary: {
@@ -37,14 +37,14 @@ export const getTheme = (mode: 'light' | 'dark') =>
       warning: {
         main: mode === 'light' ? '#f2994a' : '#ffb04f',
         light: mode === 'light' ? '#fff2e0' : 'rgba(242, 153, 74, 0.15)',
-        dark: mode === 'light' ? '#e0822f' : '#f2994a',
+        dark: mode === 'light' ? '#9e3f00' : '#f2994a',
         contrastText: '#ffffff',
         border: mode === 'light' ? '#ffdbb3' : 'rgba(242, 153, 74, 0.25)',
       },
       success: {
         main: mode === 'light' ? '#27ae60' : '#34d399',
-        light: mode === 'light' ? '#e6f4ea' : 'rgba(46, 125, 50, 0.15)',
-        dark: mode === 'light' ? '#219653' : '#059669',
+        light: mode === 'light' ? '#e8f5e9' : 'rgba(39, 174, 96, 0.15)',
+        dark: mode === 'light' ? '#1b5e20' : '#27ae60',
         contrastText: '#ffffff',
       },
       info: {

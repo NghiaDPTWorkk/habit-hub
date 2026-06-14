@@ -51,7 +51,7 @@ export const DashboardPage: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -133,7 +133,7 @@ export const DashboardPage: React.FC = () => {
                     gap: 2,
                   }}
                 >
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 700 }}>
                     {TITLE_WEEKLY_STATS}
                   </Typography>
                 </Box>
@@ -178,7 +178,7 @@ export const DashboardPage: React.FC = () => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <CalendarMonthIcon sx={{ color: 'success.main' }} />
-            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 700 }}>
               {SECTION_ACTIVITY_TITLE}
             </Typography>
           </Box>

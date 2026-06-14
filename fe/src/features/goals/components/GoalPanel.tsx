@@ -76,7 +76,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
       {filteredGoals.length === 0 ? (
         <Card sx={{ p: 6, textAlign: 'center', backgroundColor: 'background.paper' }}>
           <Typography sx={{ fontSize: 48, mb: 2 }}>{EMPTY_STATE_ICON}</Typography>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant="h6" component="p" sx={{ fontWeight: 600, mb: 1 }}>
             {goals.length === 0 ? GOALS_CONTENT.EMPTY_STATE : FILTER_EMPTY}
           </Typography>
         </Card>
@@ -100,7 +100,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                 <Box sx={{ flex: 1, minWidth: 0 }}>
                   <Stack spacing={2}>
                     <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                      <Typography variant="h6" component="p" sx={{ fontWeight: 700, mb: 0.5 }}>
                         {habitName}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -127,6 +127,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                     size="small"
                     onClick={() => onEditGoal?.(goal)}
                     sx={{ color: 'primary.main' }}
+                    aria-label="Edit goal"
                   >
                     <Icons.Edit fontSize="small" />
                   </IconButton>
@@ -134,6 +135,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                     size="small"
                     onClick={() => handleDeleteGoal(goal.id)}
                     sx={{ color: 'error.main' }}
+                    aria-label="Delete goal"
                   >
                     <Icons.Delete fontSize="small" />
                   </IconButton>

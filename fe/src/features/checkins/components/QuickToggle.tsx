@@ -33,6 +33,7 @@ export const QuickToggle: React.FC<QuickToggleProps> = ({ habitId, date, checked
     <Tooltip title={checked ? TOOLTIP_UNMARK : TOOLTIP_MARK_DONE}>
       <IconButton
         onClick={handleToggle}
+        aria-label={checked ? TOOLTIP_UNMARK : TOOLTIP_MARK_DONE}
         sx={{
           bgcolor: checked ? COLOR_CHECKED_BG : COLOR_UNCHECKED_BG,
           color: checked ? COLOR_CHECKED_TEXT : COLOR_UNCHECKED_TEXT,

@@ -26,7 +26,7 @@ export const SettingsPage: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1, mb: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
       </Box>

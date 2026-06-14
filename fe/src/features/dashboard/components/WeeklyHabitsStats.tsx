@@ -53,7 +53,7 @@ export const WeeklyHabitsStats: React.FC<WeeklyHabitsStatsProps> = ({
   return (
     <Card sx={{ p: { xs: 2, sm: 3 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', mb: 3 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+        <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 700 }}>
           {TITLE_WEEKLY_STATS}
         </Typography>
       </Box>

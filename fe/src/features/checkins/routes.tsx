@@ -1,5 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
+import { lazy } from 'react'
 import type { RouteObject } from 'react-router-dom'
-import { CheckinsPage } from './components/CheckinsPage'
+
+const CheckinsPage = lazy(() =>
+  import('./components/CheckinsPage').then((m) => ({ default: m.CheckinsPage }))
+)
 
 export const checkinsRoutes: RouteObject[] = [
   {

@@ -102,7 +102,7 @@ export const CheckinsPage: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
@@ -249,7 +249,7 @@ export const CheckinsPage: React.FC = () => {
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}
         >
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+          <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 700 }}>
             {progressForDateText}
           </Typography>
           <Typography variant="subtitle2" color="text.secondary">

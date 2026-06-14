@@ -42,7 +42,12 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
         </Typography>
         {summary.isAtRisk && (
           <Tooltip title={AT_RISK_LABEL}>
-            <Box component="span" sx={{ color: 'warning.main', display: 'flex', flexShrink: 0 }}>
+            <Box
+              component="span"
+              role="img"
+              aria-label={AT_RISK_LABEL}
+              sx={{ color: 'warning.main', display: 'flex', flexShrink: 0 }}
+            >
               <Icons.WarningAmber fontSize="small" />
             </Box>
           </Tooltip>

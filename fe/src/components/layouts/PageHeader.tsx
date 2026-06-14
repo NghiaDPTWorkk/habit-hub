@@ -48,7 +48,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         }}
       >
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 700, color: 'text.primary' }}>
             {title}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
@@ -66,6 +66,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         >
           <IconButton
             onClick={toggleThemeMode}
+            aria-label="Toggle theme"
             sx={{
               border: '1px solid',
               borderColor: 'divider',
@@ -87,6 +88,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           <IconButton
             component={RouterLink}
             to="/settings"
+            aria-label="Settings"
             sx={{
               border: '1px solid',
               borderColor: isSettingsActive ? 'primary.main' : 'divider',
@@ -107,7 +109,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           </IconButton>
           <Button
             variant="contained"
-            color="success"
+            color="primary"
             startIcon={<Icons.Add />}
             component={RouterLink}
             to="/habits"
@@ -117,10 +119,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
               py: 1.25,
               fontWeight: 600,
               fontSize: pxToRem(15),
-              bgcolor: 'primary.main',
-              '&:hover': {
-                bgcolor: 'primary.dark',
-              },
             }}
           >
             {BTN_CREATE_HABIT}

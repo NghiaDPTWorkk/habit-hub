@@ -39,7 +39,7 @@ export const FilterSideBar: React.FC<FilterSideBarProps> = ({ filters, onChange,
   return (
     <Box sx={{ display: 'grid', gap: 2 }}>
       <Box>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" component="h3" gutterBottom>
           {FILTER_SIDEBAR_TEXT.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">

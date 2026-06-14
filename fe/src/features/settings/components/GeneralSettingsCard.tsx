@@ -13,7 +13,7 @@ export const GeneralSettingsCard: React.FC<GeneralSettingsCardProps> = ({
 }) => {
   return (
     <Card variant="outlined" sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+      <Typography variant="h6" component="h3" sx={{ fontWeight: 700, mb: 2 }}>
         {TEXTS.generalTitle}
       </Typography>
 

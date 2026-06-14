@@ -82,7 +82,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
     <Accordion defaultExpanded={defaultExpanded} disableGutters elevation={1}>
       <AccordionSummary expandIcon={<Icons.ExpandMore />}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', pr: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          <Typography variant="subtitle1" component="h3" sx={{ fontWeight: 600 }}>
             {category}
           </Typography>
           <Typography variant="caption" color="text.secondary">

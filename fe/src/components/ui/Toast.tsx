@@ -105,6 +105,7 @@ const CelebrationModal: React.FC<CelebrationModalProps> = ({ current, dismissToa
       >
         <IconButton
           onClick={dismissToast}
+          aria-label="Close dialog"
           sx={{
             position: 'absolute',
             top: 12,

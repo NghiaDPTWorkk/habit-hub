@@ -1,6 +1,12 @@
 import React from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Box, IconButton, BottomNavigation, BottomNavigationAction } from '@/components/ui'
+import {
+  Box,
+  IconButton,
+  BottomNavigation,
+  BottomNavigationAction,
+  LinearProgress,
+} from '@/components/ui'
 import { useBoundStore } from '@/store'
 import { pxToRem } from '@/utils'
 
@@ -145,7 +151,7 @@ export const MainLayout: React.FC = () => {
           }}
         >
           {location.pathname === '/settings' ? (
-            <IconButton color="inherit" edge="start" onClick={() => navigate(-1)}>
+            <IconButton color="inherit" edge="start" onClick={() => navigate(-1)} aria-label="Back">
               <ArrowBackIcon />
             </IconButton>
           ) : (
@@ -172,6 +178,7 @@ export const MainLayout: React.FC = () => {
           </Box>
           <IconButton
             onClick={toggleThemeMode}
+            aria-label="Toggle theme"
             sx={{
               color: themeMode === 'dark' ? 'warning.main' : 'inherit',
             }}
@@ -202,7 +209,9 @@ export const MainLayout: React.FC = () => {
         >
           <Box sx={{ width: '100%', maxWidth: 'lg' }}>
             <AtRiskBanner />
-            <Outlet />
+            <React.Suspense fallback={<LinearProgress sx={{ my: 4 }} />}>
+              <Outlet />
+            </React.Suspense>
           </Box>
         </Box>
       </Box>
@@ -223,6 +232,12 @@ export const MainLayout: React.FC = () => {
           borderColor: 'divider',
           bgcolor: 'background.paper',
           height: 56,
+          '& .Mui-selected': {
+            color: (theme) => (theme.palette.mode === 'light' ? 'primary.dark' : 'primary.main'),
+          },
+          '& .MuiBottomNavigationAction-root.Mui-selected': {
+            color: (theme) => (theme.palette.mode === 'light' ? 'primary.dark' : 'primary.main'),
+          },
         }}
       >
         <BottomNavigationAction label="Overview" icon={<GridViewIcon />} />

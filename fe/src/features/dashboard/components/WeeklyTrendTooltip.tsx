@@ -54,7 +54,11 @@ export const WeeklyTrendTooltip: React.FC<WeeklyTrendTooltipProps> = ({ d, isTod
         <Box sx={{ mt: 0.5 }}>
           <Typography
             variant="caption"
-            sx={{ fontWeight: 600, color: 'success.main', display: 'block' }}
+            sx={{
+              fontWeight: 600,
+              color: (theme) => (theme.palette.mode === 'light' ? 'success.dark' : 'success.main'),
+              display: 'block',
+            }}
           >
             {TXT_COMPLETED_LABEL}
           </Typography>
@@ -74,7 +78,11 @@ export const WeeklyTrendTooltip: React.FC<WeeklyTrendTooltipProps> = ({ d, isTod
         <Box sx={{ mt: 0.5 }}>
           <Typography
             variant="caption"
-            sx={{ fontWeight: 600, color: 'warning.main', display: 'block' }}
+            sx={{
+              fontWeight: 600,
+              color: (theme) => (theme.palette.mode === 'light' ? 'warning.dark' : 'warning.main'),
+              display: 'block',
+            }}
           >
             {TXT_PENDING_LABEL}
           </Typography>

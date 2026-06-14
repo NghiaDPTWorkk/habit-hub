@@ -131,7 +131,8 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
               component="p"
               sx={{
                 ...theme.typography.body2,
-                color: theme.palette.success.main,
+                color: (theme) =>
+                  theme.palette.mode === 'light' ? 'success.dark' : 'success.main',
                 margin: 0,
                 mb: 0.5,
               }}

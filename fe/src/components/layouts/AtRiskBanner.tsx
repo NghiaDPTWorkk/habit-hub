@@ -88,7 +88,7 @@ export const AtRiskBanner: React.FC = () => {
           <Typography
             sx={{
               fontWeight: 600,
-              color: 'warning.main',
+              color: (theme) => (theme.palette.mode === 'light' ? 'warning.dark' : 'warning.main'),
               fontSize: pxToRem(16),
               lineHeight: 1.3,
               mb: 0.5,
@@ -165,6 +165,7 @@ export const AtRiskBanner: React.FC = () => {
       <IconButton
         onClick={handleDismiss}
         size="small"
+        aria-label="Dismiss warning"
         sx={{
           position: 'absolute',
           top: pxToRem(10),

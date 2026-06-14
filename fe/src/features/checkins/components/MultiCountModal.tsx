@@ -97,7 +97,12 @@ const MultiCountModalContent: React.FC<MultiCountModalProps> = ({
           {MODAL_TITLE}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <IconButton onClick={handleDecrement} disabled={count <= 0} size={SIZE_SMALL}>
+          <IconButton
+            onClick={handleDecrement}
+            disabled={count <= 0}
+            size={SIZE_SMALL}
+            aria-label="Decrease completion count"
+          >
             <Icons.Remove />
           </IconButton>
           <TextField
@@ -107,7 +112,12 @@ const MultiCountModalContent: React.FC<MultiCountModalProps> = ({
             error={isInvalid}
             sx={{ width: 80, '& input': { textAlign: 'center' } }}
           />
-          <IconButton onClick={handleIncrement} disabled={count >= targetPerDay} size={SIZE_SMALL}>
+          <IconButton
+            onClick={handleIncrement}
+            disabled={count >= targetPerDay}
+            size={SIZE_SMALL}
+            aria-label="Increase completion count"
+          >
             <Icons.Add />
           </IconButton>
         </Box>

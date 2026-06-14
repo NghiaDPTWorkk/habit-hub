@@ -130,7 +130,7 @@ export const HabitsPage: FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
       </Box>
@@ -169,6 +169,7 @@ export const HabitsPage: FC = () => {
               <IconButton
                 sx={{ display: { xs: 'flex', md: 'none' } }}
                 onClick={() => setFilterDrawerOpen(true)}
+                aria-label="Open filters"
               >
                 <Typography variant="button">{FILTER_BUTTON_LABEL}</Typography>
               </IconButton>

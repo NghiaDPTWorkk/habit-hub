@@ -22,7 +22,11 @@ export const AdminZoneCard: React.FC<AdminZoneCardProps> = ({ onWipeData, onLoad
         borderColor: redBorderColor,
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, color: redMainColor }}>
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ fontWeight: 700, mb: 0.5, color: redMainColor }}
+      >
         {TEXTS.adminTitle}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>

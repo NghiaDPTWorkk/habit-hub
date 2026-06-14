@@ -31,7 +31,7 @@ export const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon, iconColor,
         <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
           {title}
         </Typography>
-        <Typography variant="h4" color="text.primary" sx={{ fontWeight: 700 }}>
+        <Typography variant="h4" component="p" color="text.primary" sx={{ fontWeight: 700 }}>
           {value}
         </Typography>
       </Box>

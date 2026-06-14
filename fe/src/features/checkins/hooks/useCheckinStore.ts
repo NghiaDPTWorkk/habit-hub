@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useBoundStore } from '@/store'
 import { makeCheckinKey } from '@/store/checkinSlice'
-import { getLocalDateString } from '@/utils'
+import { getLocalDateString, toLocalDateString, toUTCDateString } from '@/utils'
 import type { Checkin, CheckinStatus } from '@/types'
 
 function computeStatus(completedCount: number, targetPerDay: number): CheckinStatus {
@@ -14,7 +14,7 @@ export function useCheckinStore() {
   const checkins = useBoundStore((state) => state.checkins)
   const addCheckin = useBoundStore((state) => state.addCheckin)
   const updateCheckin = useBoundStore((state) => state.updateCheckin)
-  const deleteCheckin = useBoundStore((state) => state.deleteCheckin)
+  const storeDeleteCheckin = useBoundStore((state) => state.deleteCheckin)
   const habits = useBoundStore((state) => state.habits)
   const previousCheckins = useBoundStore((state) => state.previousCheckins)
   const undoLastCheckin = useBoundStore((state) => state.undoLastCheckin)
@@ -22,19 +22,21 @@ export function useCheckinStore() {
   const today = getLocalDateString()
 
   const getCheckinByHabitAndDate = useCallback(
-    (habitId: number, date: string): Checkin | undefined => checkins[makeCheckinKey(habitId, date)],
+    (habitId: number, date: string): Checkin | undefined =>
+      checkins[makeCheckinKey(habitId, toUTCDateString(date))],
     [checkins]
   )
 
   const todayCheckins = useMemo(
-    () => Object.values(checkins).filter((c) => c.date === today),
+    () => Object.values(checkins).filter((c) => toLocalDateString(c.date) === today),
     [checkins, today]
   )
 
   const checkinsByDate = useMemo(
     () =>
       Object.values(checkins).reduce<Record<string, Checkin[]>>((acc, c) => {
-        ;(acc[c.date] ??= []).push(c)
+        const localDate = toLocalDateString(c.date)
+        ;(acc[localDate] ??= []).push(c)
         return acc
       }, {}),
     [checkins]
@@ -67,11 +69,18 @@ export function useCheckinStore() {
         }
       }
 
+      const utcDate = toUTCDateString(date)
       const existing = getCheckinByHabitAndDate(habitId, date)
       if (existing) {
-        updateCheckin(habitId, date, safeUpdates)
+        updateCheckin(habitId, utcDate, safeUpdates)
       } else {
-        addCheckin({ habitId, date, completedCount: 0, status: 'Not Started', ...safeUpdates })
+        addCheckin({
+          habitId,
+          date: utcDate,
+          completedCount: 0,
+          status: 'Not Started',
+          ...safeUpdates,
+        })
       }
     },
     [habits, getCheckinByHabitAndDate, addCheckin, updateCheckin]
@@ -112,6 +121,13 @@ export function useCheckinStore() {
       })
     },
     [habits, getCheckinByHabitAndDate, upsertCheckin]
+  )
+
+  const deleteCheckin = useCallback(
+    (habitId: number, date: string) => {
+      storeDeleteCheckin(habitId, toUTCDateString(date))
+    },
+    [storeDeleteCheckin]
   )
 
   return {

@@ -1,9 +1,14 @@
 import type { Goal, Checkin } from '@/types'
+import { parseLocalDate, toLocalDateString } from '@/utils'
 
 export const computeStreak = (habitId: number, checkins: Checkin[]): number => {
   const completed = checkins
     .filter((c) => c.habitId === habitId && c.status === 'Completed')
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((c) => ({
+      ...c,
+      localDate: parseLocalDate(toLocalDateString(c.date)),
+    }))
+    .sort((a, b) => b.localDate.getTime() - a.localDate.getTime())
 
   if (completed.length === 0) return 0
 
@@ -13,8 +18,7 @@ export const computeStreak = (habitId: number, checkins: Checkin[]): number => {
   let expectedDate = new Date(today)
 
   for (const checkin of completed) {
-    const checkinDate = new Date(checkin.date)
-    checkinDate.setHours(0, 0, 0, 0)
+    const checkinDate = checkin.localDate
     const diffDays = (expectedDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
 
     if (streak === 0 && diffDays <= 1) {

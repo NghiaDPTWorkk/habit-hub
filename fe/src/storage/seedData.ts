@@ -1,4 +1,5 @@
 import type { Habit, Checkin, Goal } from '@/types'
+import { toUTCDateString } from '@/utils'
 
 // Fixed seed IDs — not generated at runtime so the demo state is always deterministic.
 const H1 = 1001
@@ -13,7 +14,7 @@ const H8 = 1008
 function daysAgo(n: number): string {
   const d = new Date()
   d.setDate(d.getDate() - n)
-  return d.toLocaleDateString('en-CA')
+  return toUTCDateString(d.toLocaleDateString('en-CA'))
 }
 
 export const SEED_HABITS: Habit[] = [

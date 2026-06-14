@@ -9,7 +9,7 @@ import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
 import { FilterSideBar } from './FilterSideBar'
 import { SHARED_MESSAGES } from '@/constants/messages'
-import { getLocalDateString } from '@/utils'
+import { getLocalDateString, toLocalDateString } from '@/utils'
 import type { HabitFilters } from './FilterSideBar'
 import type { Habit } from '@/types'
 import { ShareProgressButton } from './ShareProgressButton'
@@ -50,7 +50,7 @@ export const HabitsPage: FC = () => {
   const todayCheckinByHabit = useMemo(
     () =>
       Object.values(checkins).reduce<Record<number, { completedCount: number }>>((acc, checkin) => {
-        if (checkin.date === todayString) {
+        if (toLocalDateString(checkin.date) === todayString) {
           acc[checkin.habitId] = { completedCount: checkin.completedCount }
         }
         return acc

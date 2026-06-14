@@ -1,4 +1,5 @@
 import type { Checkin, Habit } from '@/types'
+import { toLocalDateString } from '@/utils'
 
 export function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`
@@ -31,7 +32,7 @@ export function getSelectedDateDetails(
 ): SelectedDateDetail | null {
   if (!selectedDate) return null
   const dayCheckins = Object.values(checkins).filter(
-    (c) => c.date === selectedDate && c.completedCount > 0
+    (c) => toLocalDateString(c.date) === selectedDate && c.completedCount > 0
   )
 
   const completedTasks = dayCheckins.map((c) => {

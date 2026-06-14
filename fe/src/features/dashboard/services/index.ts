@@ -3,6 +3,7 @@ import type { HabitSummary, DashboardDto } from '@/types'
 import { isScheduledForDate } from '@/features/habits/services/ScheduleService'
 import type { HeatmapDay } from '@/components/ui/CalendarHeatmap'
 import type { MiniChartItem } from '@/components/ui/MiniChart'
+import { toLocalDateString } from '@/utils'
 
 const CATEGORIES: Category[] = ['Health', 'Study', 'Work', 'Mindfulness', 'Other']
 const MAX_STREAK_DAYS = 365
@@ -29,7 +30,9 @@ export function addDays(dateStr: string, n: number): string {
 }
 
 function isCompleted(habitId: number, checkins: Checkin[], date: string): boolean {
-  return checkins.some((c) => c.habitId === habitId && c.date === date && c.status === 'Completed')
+  return checkins.some(
+    (c) => c.habitId === habitId && toLocalDateString(c.date) === date && c.status === 'Completed'
+  )
 }
 
 function streakUpToDate(habit: Habit, checkins: Checkin[], endDate: string): number {
@@ -126,7 +129,9 @@ export function getDailyIntensity(days: number, checkins: Checkin[]): HeatmapDay
   const today = todayStr()
   return Array.from({ length: days }, (_, i) => {
     const date = subDays(today, days - 1 - i)
-    const count = checkins.filter((c) => c.date === date && c.status === 'Completed').length
+    const count = checkins.filter(
+      (c) => toLocalDateString(c.date) === date && c.status === 'Completed'
+    ).length
     return { date, count }
   })
 }
@@ -155,9 +160,10 @@ export function getDashboard(habits: Habit[], checkins: Checkin[], goals: Goal[]
     scheduledToday.length === 0 ? 0 : completedToday.length / scheduledToday.length
   const atRiskList = activeHabits.filter((h) => isAtRisk(h, checkins))
   const weekStart = subDays(today, 6)
-  const checkInsThisWeek = checkins.filter(
-    (c) => c.date >= weekStart && c.date <= today && c.status === 'Completed'
-  ).length
+  const checkInsThisWeek = checkins.filter((c) => {
+    const localDate = toLocalDateString(c.date)
+    return localDate >= weekStart && localDate <= today && c.status === 'Completed'
+  }).length
   const achievedGoals = goals.filter((g) => {
     const habit = activeHabits.find((h) => h.id === g.habitId)
     return habit ? goalProgress(g, habit, checkins) >= 100 : false
@@ -187,9 +193,10 @@ export function getWeeklyCategoryStats(
 ): { name: string; value: number; percentage: number }[] {
   const today = todayStr()
   const weekStart = subDays(today, 6)
-  const weekCheckins = checkins.filter(
-    (c) => c.date >= weekStart && c.date <= today && c.status === 'Completed'
-  )
+  const weekCheckins = checkins.filter((c) => {
+    const localDate = toLocalDateString(c.date)
+    return localDate >= weekStart && localDate <= today && c.status === 'Completed'
+  })
   const activeHabits = habits.filter((h) => h.status === 'Active')
   const countByCategory = CATEGORIES.reduce(
     (acc, cat) => {

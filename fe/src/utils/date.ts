@@ -9,3 +9,27 @@ export function subtractDays(days: number): string {
   d.setDate(d.getDate() - days)
   return getLocalDateString(d)
 }
+
+export function toUTCDateString(localDateStr: string): string {
+  if (!localDateStr) return ''
+  if (localDateStr.includes('T')) {
+    return localDateStr
+  }
+  const [year, month, day] = localDateStr.split('-').map(Number)
+  const localDate = new Date(year, month - 1, day)
+  return localDate.toISOString()
+}
+
+export function toLocalDateString(utcDateStr: string): string {
+  if (!utcDateStr) return ''
+  if (!utcDateStr.includes('T')) {
+    return utcDateStr
+  }
+  const date = new Date(utcDateStr)
+  return getLocalDateString(date)
+}
+
+export function parseLocalDate(localDateStr: string): Date {
+  const [year, month, day] = localDateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}

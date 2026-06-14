@@ -5,6 +5,7 @@ import { Box, Typography, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
 import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
+import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
 import type { Habit } from '@/types'
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -84,6 +85,13 @@ export const HabitCard: FC<HabitCardProps> = ({
   onArchive,
 }) => {
   const theme = useTheme()
+  const { incrementCount, getCheckinByHabitAndDate, today } = useCheckinStore()
+  const currentCheckin = getCheckinByHabitAndDate(habit.id, today) || todayCheckin
+  const completedCount = currentCheckin?.completedCount ?? 0
+  if (habit.id < 0) {
+    incrementCount(habit.id, today)
+    console.log(completedCount)
+  }
   const dueToday =
     habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
   const nextStatusAction =

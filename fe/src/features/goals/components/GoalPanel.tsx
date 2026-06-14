@@ -93,38 +93,22 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
               <Box
                 sx={{
                   display: 'flex',
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  gap: 2,
                   alignItems: 'flex-start',
                   justifyContent: 'space-between',
+                  mb: 2,
                 }}
               >
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Stack spacing={2}>
-                    <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                        {habitName}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {targetLabel}
-                        {COLON_SEPARATOR}
-                        {goal.targetValue}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <ProgressBar value={progress.percentage} />
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
-                      >
-                        {progress.currentValue}
-                        {DATE_SEPARATOR}
-                        {goal.targetValue}
-                      </Typography>
-                    </Box>
-                  </Stack>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    {habitName}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {targetLabel}
+                    {COLON_SEPARATOR}
+                    {goal.targetValue}
+                  </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
+                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0, ml: 1 }}>
                   <IconButton
                     size="small"
                     onClick={() => onEditGoal?.(goal)}
@@ -141,6 +125,15 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                   </IconButton>
                 </Box>
               </Box>
+              <ProgressBar value={progress.percentage} />
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
+              >
+                {progress.currentValue}
+                {DATE_SEPARATOR}
+                {goal.targetValue}
+              </Typography>
             </Card>
           )
         })

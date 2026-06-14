@@ -80,7 +80,9 @@ export function longestStreak(habit: Habit, checkins: Checkin[]): number {
 }
 
 export function totalCompletions(habit: Habit, checkins: Checkin[]): number {
-  return checkins.filter((c) => c.habitId === habit.id && c.status === 'Completed').length
+  return checkins
+    .filter((c) => c.habitId === habit.id && c.status === 'Completed')
+    .reduce((sum, c) => sum + c.completedCount, 0)
 }
 
 export function weeklyCompletionRate(habit: Habit, checkins: Checkin[]): number {

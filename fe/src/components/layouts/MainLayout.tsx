@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Box, IconButton, Drawer, BottomNavigation, BottomNavigationAction } from '@/components/ui'
+import { Box, IconButton, BottomNavigation, BottomNavigationAction } from '@/components/ui'
 import { useBoundStore } from '@/store'
 import { pxToRem } from '@/utils'
 
@@ -37,13 +37,6 @@ export const MainLayout: React.FC = () => {
   const navigate = useNavigate()
   const themeMode = useBoundStore((state) => state.themeMode) || 'light'
   const toggleThemeMode = useBoundStore((state) => state.toggleThemeMode)
-
-  const [mobileOpen, setMobileOpen] = useState(false)
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
-  }
-
   const getBottomNavValue = () => {
     if (location.pathname.startsWith('/habits')) return 1
     if (location.pathname.startsWith('/checkins')) return 2
@@ -127,29 +120,6 @@ export const MainLayout: React.FC = () => {
         <Sidebar pathname={location.pathname} currentYear={currentYear} />
       </Box>
 
-      {/* Mobile Drawer */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: pxToRem(260),
-          },
-        }}
-      >
-        <Sidebar
-          pathname={location.pathname}
-          onCloseMobile={handleDrawerToggle}
-          currentYear={currentYear}
-        />
-      </Drawer>
-
       {/* Main Content Pane */}
       <Box
         sx={{
@@ -179,9 +149,7 @@ export const MainLayout: React.FC = () => {
               <ArrowBackIcon />
             </IconButton>
           ) : (
-            <IconButton color="inherit" edge="start" onClick={handleDrawerToggle}>
-              <Icons.Menu />
-            </IconButton>
+            <Box sx={{ width: 40 }} />
           )}
           <Box
             sx={{

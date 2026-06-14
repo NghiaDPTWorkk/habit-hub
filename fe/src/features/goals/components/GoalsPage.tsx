@@ -12,6 +12,7 @@ import { GoalForm } from './GoalForm'
 import { GoalPanel } from './GoalPanel'
 import { GOALS_CONTENT } from '../constants/content'
 import { useBoundStore } from '@/store/useBoundStore'
+import { useGoalProgressMap } from '../hooks'
 import type { Goal } from '@/types'
 
 const PAGE_TITLE = GOALS_CONTENT.PAGE_TITLE
@@ -25,11 +26,10 @@ const ACCORDION_LABEL = GOALS_CONTENT.ACCORDION_LABEL
 export const GoalsPage: React.FC = () => {
   const [editingGoal, setEditingGoal] = useState<Goal | undefined>()
   const [accordionOpen, setAccordionOpen] = useState(false)
-  const { goals, checkins, getGoalProgress } = useBoundStore()
+  const { goals } = useBoundStore()
+  const progressMap = useGoalProgressMap()
 
-  const completedCount = goals.filter(
-    (goal) => getGoalProgress(goal, Object.values(checkins)).isCompleted
-  ).length
+  const completedCount = goals.filter((goal) => progressMap.get(goal.id)?.isCompleted).length
   const activeCount = goals.length - completedCount
   const successRate = goals.length > 0 ? Math.round((completedCount / goals.length) * 100) : 0
 

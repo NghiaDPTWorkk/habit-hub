@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 import { createHabitSlice } from '@/store/habitSlice'
 import { createCheckinSlice } from '@/store/checkinSlice'
@@ -8,6 +8,23 @@ import { createThemeSlice } from '@/store/themeSlice'
 import { createToastSlice } from '@/store/toastSlice'
 
 import type { BoundStore } from './types'
+
+const STORAGE_DEBOUNCE_MS = 300
+
+function createDebouncedLocalStorage() {
+  let timer: ReturnType<typeof setTimeout> | null = null
+  return {
+    getItem: (name: string) => localStorage.getItem(name),
+    setItem: (name: string, value: string) => {
+      if (timer !== null) clearTimeout(timer)
+      timer = setTimeout(() => {
+        localStorage.setItem(name, value)
+        timer = null
+      }, STORAGE_DEBOUNCE_MS)
+    },
+    removeItem: (name: string) => localStorage.removeItem(name),
+  }
+}
 
 export const useBoundStore = create<BoundStore>()(
   persist(
@@ -32,6 +49,7 @@ export const useBoundStore = create<BoundStore>()(
     }),
     {
       name: 'habit-hub-storage',
+      storage: createJSONStorage(createDebouncedLocalStorage),
 
       partialize: (state) => ({
         habits: state.habits,

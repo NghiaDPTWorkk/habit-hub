@@ -4,7 +4,7 @@ import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
 import { GOALS_CONTENT } from '../constants/content'
-import { useGoalMilestoneNotifications } from '../hooks'
+import { useGoalMilestoneNotifications, useGoalProgressMap } from '../hooks'
 import { SHARED_MESSAGES } from '@/constants/messages'
 import type { Goal } from '@/types'
 
@@ -21,8 +21,9 @@ const FILTER_COMPLETED = GOALS_CONTENT.FILTER.COMPLETED
 const FILTER_EMPTY = GOALS_CONTENT.FILTER_EMPTY_STATE
 
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
-  const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
+  const { goals, deleteGoal, habits, showToast } = useBoundStore()
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const progressMap = useGoalProgressMap()
 
   useGoalMilestoneNotifications()
 
@@ -31,21 +32,18 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
     showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
   }
 
-  const getHabitName = (habitId: number): string => {
-    return habits.find((h) => h.id === habitId)?.name || 'Unknown Habit'
-  }
+  const getHabitName = (habitId: number): string =>
+    habits.find((h) => h.id === habitId)?.name || 'Unknown Habit'
 
-  const getTargetLabel = (goal: Goal): string => {
-    if (goal.targetType === 'streak') {
-      return GOALS_CONTENT.TARGET_TYPES.STREAK
-    }
-    return GOALS_CONTENT.TARGET_TYPES.TOTAL_COMPLETIONS
-  }
+  const getTargetLabel = (goal: Goal): string =>
+    goal.targetType === 'streak'
+      ? GOALS_CONTENT.TARGET_TYPES.STREAK
+      : GOALS_CONTENT.TARGET_TYPES.TOTAL_COMPLETIONS
 
   const filteredGoals = goals.filter((goal) => {
-    const progress = getGoalProgress(goal, Object.values(checkins))
-    if (filter === 'completed') return progress.isCompleted
-    if (filter === 'active') return !progress.isCompleted
+    const progress = progressMap.get(goal.id)
+    if (filter === 'completed') return progress?.isCompleted ?? false
+    if (filter === 'active') return !(progress?.isCompleted ?? false)
     return true
   })
 
@@ -84,7 +82,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
         </Card>
       ) : (
         filteredGoals.map((goal) => {
-          const progress = getGoalProgress(goal, Object.values(checkins))
+          const progress = progressMap.get(goal.id)
           const habitName = getHabitName(goal.habitId)
           const targetLabel = getTargetLabel(goal)
 
@@ -112,12 +110,12 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                       </Typography>
                     </Box>
                     <Box>
-                      <ProgressBar value={progress.percentage} />
+                      <ProgressBar value={progress?.percentage ?? 0} />
                       <Typography
                         variant="caption"
                         sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
                       >
-                        {progress.currentValue}
+                        {progress?.currentValue ?? 0}
                         {DATE_SEPARATOR}
                         {goal.targetValue}
                       </Typography>

@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useBoundStore } from '@/store/useBoundStore'
 import { SHARED_MESSAGES } from '@/constants/messages'
 import { GOALS_CONTENT } from '../constants/content'
+import type { GoalProgress } from '@/types'
 
 export const useGoalMilestoneNotifications = (): void => {
   const goals = useBoundStore((s) => s.goals)
@@ -23,7 +24,6 @@ export const useGoalMilestoneNotifications = (): void => {
 
       if (progress.isCompleted && !notifiedGoals[completedKey]) {
         markGoalNotified(completedKey)
-        // AC1: also mark 80% to prevent it firing if progress later drops to 80-99%
         markGoalNotified(at80Key)
         showToast(SHARED_MESSAGES.GOALS.COMPLETED(habitName), 'success', true)
       } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
@@ -32,4 +32,17 @@ export const useGoalMilestoneNotifications = (): void => {
       }
     })
   }, [goals, checkins, habits, getGoalProgress, notifiedGoals, markGoalNotified, showToast])
+}
+
+export const useGoalProgressMap = (): Map<string, GoalProgress> => {
+  const goals = useBoundStore((s) => s.goals)
+  const checkins = useBoundStore((s) => s.checkins)
+  const getGoalProgress = useBoundStore((s) => s.getGoalProgress)
+
+  const checkinsArray = useMemo(() => Object.values(checkins), [checkins])
+
+  return useMemo(
+    () => new Map(goals.map((goal) => [goal.id, getGoalProgress(goal, checkinsArray)])),
+    [goals, checkinsArray, getGoalProgress]
+  )
 }

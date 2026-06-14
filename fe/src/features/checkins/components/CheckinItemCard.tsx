@@ -11,6 +11,7 @@ const LABEL_PRIORITY = ' | Priority: '
 const LABEL_EDIT = 'Edit Progress'
 const LABEL_CHECKIN = 'Check-in'
 const LABEL_OVERDUE = 'Overdue'
+const LABEL_STREAK_AT_RISK = 'Streak at risk'
 
 const CATEGORY_THEME_COLORS: Record<string, string> = {
   Health: 'success.main',
@@ -25,6 +26,7 @@ export interface CheckinItemCardProps {
   checkin: Checkin | undefined
   today: string
   onOpenModal: () => void
+  isAtRisk?: boolean
 }
 
 export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
@@ -32,6 +34,7 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
   checkin,
   today,
   onOpenModal,
+  isAtRisk = false,
 }) => {
   const { markComplete, upsertCheckin } = useCheckinStore()
   const completedCount = checkin?.completedCount ?? 0
@@ -57,8 +60,8 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
     <Card
       sx={{
         p: 2,
-        borderLeft: isOverdue ? '4px solid' : undefined,
-        borderLeftColor: isOverdue ? 'warning.main' : undefined,
+        borderLeft: isAtRisk || isOverdue ? '4px solid' : undefined,
+        borderLeftColor: isAtRisk ? 'error.main' : isOverdue ? 'warning.main' : undefined,
         bgcolor: isOverdue ? 'warning.light' : undefined,
       }}
     >
@@ -95,6 +98,23 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
                   }}
                 >
                   {LABEL_OVERDUE}
+                </Box>
+              )}
+              {isAtRisk && (
+                <Box
+                  sx={{
+                    px: 1,
+                    py: 0.25,
+                    bgcolor: 'error.light',
+                    color: 'error.dark',
+                    borderRadius: 1,
+                    fontSize: pxToRem(10),
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    lineHeight: 1,
+                  }}
+                >
+                  {LABEL_STREAK_AT_RISK}
                 </Box>
               )}
             </Box>

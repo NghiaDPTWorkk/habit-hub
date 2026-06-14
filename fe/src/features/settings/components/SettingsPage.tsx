@@ -1,25 +1,21 @@
 import React from 'react'
-import { Stack, ConfirmDialog } from '@/components/ui'
+import { Box, ConfirmDialog, Typography } from '@/components/ui'
 import { useSettings } from '../hooks/useSettings'
-import { AccountProfileCard } from './AccountProfileCard'
 import { GeneralSettingsCard } from './GeneralSettingsCard'
 import { BackupRestoreCard } from './BackupRestoreCard'
 import { AdminZoneCard } from './AdminZoneCard'
 
+const PAGE_TITLE = 'Settings & Backups'
+
 export const SettingsPage: React.FC = () => {
   const {
-    fullName,
-    email,
-    subTier,
     readOnly,
-    timezone,
     fileInputRef,
     confirmOpen,
     confirmConfig,
     handleConfirmClose,
     handleConfirmAction,
     handleReadOnlyChange,
-    handleTimezoneChange,
     handleExportData,
     handleImportClick,
     handleImportData,
@@ -28,17 +24,14 @@ export const SettingsPage: React.FC = () => {
   } = useSettings()
 
   return (
-    <Stack spacing={3} sx={{ width: '100%', mt: 1, mb: 4 }}>
-      {/* Account Profile Settings Card (Read-only) */}
-      <AccountProfileCard fullName={fullName} email={email} subTier={subTier} />
-
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1, mb: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {PAGE_TITLE}
+        </Typography>
+      </Box>
       {/* General Settings Card */}
-      <GeneralSettingsCard
-        readOnly={readOnly}
-        timezone={timezone}
-        onReadOnlyChange={handleReadOnlyChange}
-        onTimezoneChange={handleTimezoneChange}
-      />
+      <GeneralSettingsCard readOnly={readOnly} onReadOnlyChange={handleReadOnlyChange} />
 
       {/* Backup & Restore Data Card */}
       <BackupRestoreCard
@@ -59,7 +52,7 @@ export const SettingsPage: React.FC = () => {
         onConfirm={handleConfirmAction}
         onClose={handleConfirmClose}
       />
-    </Stack>
+    </Box>
   )
 }
 

@@ -1,7 +1,13 @@
 import { z } from 'zod'
+import { getLocalDateString, subtractDays } from '@/utils'
 
 export const habitFormSchema = z
   .object({
+    startDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format')
+      .refine((date) => date <= getLocalDateString(), 'Start date cannot be in the future')
+      .refine((date) => date >= subtractDays(2), 'Start date cannot be more than 2 days ago'),
     name: z
       .string()
       .trim()
@@ -36,6 +42,7 @@ export const habitFormSchema = z
 export type HabitFormValues = z.infer<typeof habitFormSchema>
 
 export const defaultHabitFormValues: HabitFormValues = {
+  startDate: getLocalDateString(),
   name: '',
   category: 'Health',
   frequency: 'Daily',

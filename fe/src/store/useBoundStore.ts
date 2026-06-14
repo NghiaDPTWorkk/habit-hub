@@ -49,7 +49,11 @@ export const useBoundStore = create<BoundStore>()(
     }),
     {
       name: 'habit-hub-storage',
+      version: 1,
       storage: createJSONStorage(createDebouncedLocalStorage),
+      migrate: (persistedState: unknown, _version: number): unknown => {
+        return persistedState
+      },
 
       partialize: (state) => ({
         habits: state.habits,

@@ -13,7 +13,7 @@ export interface HabitNote {
 export interface HabitSlice {
   habits: Habit[]
   notes: HabitNote[]
-  addHabit: (habit: Omit<Habit, 'id' | 'createdAt'>) => void
+  addHabit: (habit: Omit<Habit, 'id' | 'createdAt'> & { createdAt?: string }) => void
   updateHabit: (id: number, updates: Partial<Habit>) => void
   deleteHabit: (id: number) => void
   addNote: (habitId: number, date: string, content: string) => void

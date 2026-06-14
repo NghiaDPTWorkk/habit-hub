@@ -3,75 +3,34 @@ import { useTheme, type Theme } from '@mui/material/styles'
 import { Box, Typography, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
+import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
 
 import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import type { Habit } from '@/types'
 
-const SHORT_WEEK_DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
+import { HABIT_CARD_CONTENT } from '../constants/content'
+
+const {
+  SHORT_WEEK_DAYS,
+  WEEK_DAYS_MAP,
+  TEXT_ACCUMULATED_DAYS,
+  TEXT_TARGET_PREFIX,
+  TEXT_SLASH,
+  CARD_TEXTS,
+  DESCRIPTIONS,
+} = HABIT_CARD_CONTENT
 
 const TEXT_CATEGORY_PREFIX = 'Category: '
 
 const getPriorityColor = (priority: string, theme: Theme) => {
-  switch (priority) {
-    case 'High':
-      return theme.palette.error.main
-    case 'Medium':
-      return theme.palette.warning.main
-    default:
-      return theme.palette.text.secondary
-  }
+  if (priority === 'High') return theme.palette.error.main
+  if (priority === 'Medium') return theme.palette.warning.main
+  return theme.palette.text.secondary
 }
 
-const getHabitDescription = (category: string) => {
-  switch (category) {
-    case 'Health':
-      return 'Duy trì sức khỏe và thể lực tốt mỗi ngày.'
-    case 'Study':
-      return 'Tích lũy kiến thức và phát triển kỹ năng.'
-    case 'Work':
-      return 'Tập trung làm việc và tối ưu hóa hiệu suất.'
-    case 'Mindfulness':
-      return 'Giữ tâm trí bình yên và cân bằng cuộc sống.'
-    default:
-      return 'Theo dõi và xây dựng thói quen tốt hơn.'
-  }
-}
-
-const CARD_TEXTS = {
-  scheduled: 'Scheduled on',
-  dueToday: 'Due today.',
-  missed: 'Missed today',
-  completed: 'Completed',
-  today: 'today',
-  edit: 'Edit',
-  delete: 'Delete',
-  pause: 'Pause',
-  resume: 'Resume',
-  restore: 'Restore',
-  archive: 'Archive',
-  daily: 'Daily',
-  specificDays: 'Specific days',
-  targetLabel: 'Target:',
-  priorityLabel: 'Priority:',
-  statusLabel: 'Status:',
-  dot: '.',
-  slash: '/',
-  noteLabel: 'Note today:',
-  addNote: 'Add note',
-  editNote: 'Edit note',
-  notePlaceholder: 'Write your note here...',
-  cancel: 'Cancel',
-  save: 'Save',
-}
-
-const WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-const WEEK_DAYS_MAP = WEEK_DAYS.map((label, index) => ({
-  value: index,
-  label,
-}))
+const getHabitDescription = (category: string) => DESCRIPTIONS[category] || DESCRIPTIONS.Default
 
 export interface HabitCardProps {
   habit: Habit
@@ -140,7 +99,7 @@ export const HabitCard: FC<HabitCardProps> = ({
   ).length
   const scheduledText =
     habit.frequency === 'Daily'
-      ? 'Hàng ngày'
+      ? 'Daily'
       : habit.specificDays?.map((d) => SHORT_WEEK_DAYS[d]).join(', ') || ''
 
   return (
@@ -240,7 +199,7 @@ export const HabitCard: FC<HabitCardProps> = ({
           >
             {CARD_TEXTS.dueToday}
           </Box>
-        </Box>
+        )}
         {isMissed && (
           <Box
             component="p"

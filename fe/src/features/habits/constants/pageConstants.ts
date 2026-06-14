@@ -1,4 +1,4 @@
-export const TEXT_SEARCH_PLACEHOLDER = 'Tìm kiếm thói quen...'
+export const TEXT_SEARCH_PLACEHOLDER = 'Search habits...'
 export const TEXT_CATEGORY_LABEL = 'Category'
 export const TEXT_FREQUENCY_LABEL = 'Frequency'
 export const TEXT_STATUS_LABEL = 'Status'
@@ -6,7 +6,7 @@ export const TEXT_ALL_CATEGORIES = 'All Categories'
 export const TEXT_ALL_FREQUENCIES = 'All Frequencies'
 export const TEXT_ALL_STATUSES = 'All Status'
 
-export const TEXT_PRIORITY_LABEL = 'Ưu tiên:'
+export const TEXT_PRIORITY_LABEL = 'Priority:'
 export const TEXT_CLEAR_FILTERS = 'Clear filters'
 
 export const TEXT_VAL_ALL = 'All'

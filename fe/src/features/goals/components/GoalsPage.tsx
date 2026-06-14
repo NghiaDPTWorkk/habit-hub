@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import {
-  Container,
-  Stack,
   Typography,
   Box,
   StatCard,
@@ -12,12 +10,12 @@ import {
 import { Icons } from '@/components/ui/icons'
 import { GoalForm } from './GoalForm'
 import { GoalPanel } from './GoalPanel'
+import { GoalEditDialog } from './GoalEditDialog'
 import { GOALS_CONTENT } from '../constants/content'
 import { useBoundStore } from '@/store/useBoundStore'
 import type { Goal } from '@/types'
 
 const PAGE_TITLE = GOALS_CONTENT.PAGE_TITLE
-const PAGE_DESC = GOALS_CONTENT.PAGE_DESC
 const FORM_SECTION_TITLE = GOALS_CONTENT.FORM_TITLE_ADD
 const PANEL_SECTION_TITLE = GOALS_CONTENT.PANEL_TITLE
 const KPI_COMPLETED = GOALS_CONTENT.KPI.COMPLETED
@@ -26,8 +24,9 @@ const KPI_SUCCESS_RATE = GOALS_CONTENT.KPI.SUCCESS_RATE
 const ACCORDION_LABEL = GOALS_CONTENT.ACCORDION_LABEL
 
 export const GoalsPage: React.FC = () => {
-  const [editingGoal, setEditingGoal] = useState<Goal | undefined>()
   const [accordionOpen, setAccordionOpen] = useState(false)
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const { goals, checkins, getGoalProgress } = useBoundStore()
 
   const completedCount = goals.filter(
@@ -38,96 +37,98 @@ export const GoalsPage: React.FC = () => {
 
   const handleEditGoal = (goal: Goal): void => {
     setEditingGoal(goal)
-    setAccordionOpen(true)
+    setDialogOpen(true)
   }
 
-  const handleFormSuccess = (): void => {
-    setEditingGoal(undefined)
-    setAccordionOpen(false)
+  const handleDialogClose = (): void => {
+    setEditingGoal(null)
+    setDialogOpen(false)
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Stack spacing={4}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {PAGE_TITLE}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
+          gap: 2,
+        }}
+      >
+        <StatCard
+          title={KPI_COMPLETED}
+          value={completedCount}
+          icon={<Icons.Check />}
+          iconColor="success.main"
+          sx={{ borderLeft: '4px solid', borderColor: 'success.main' }}
+        />
+        <StatCard
+          title={KPI_ACTIVE}
+          value={activeCount}
+          icon={<Icons.TrendingUp />}
+          iconColor="info.main"
+          sx={{ borderLeft: '4px solid', borderColor: 'info.main' }}
+        />
+        <StatCard
+          title={KPI_SUCCESS_RATE}
+          value={`${successRate}%`}
+          icon={<Icons.EmojiEvents />}
+          iconColor="secondary.main"
+          sx={{ borderLeft: '4px solid', borderColor: 'secondary.main' }}
+        />
+      </Box>
+
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' },
+          gap: 3,
+          alignItems: 'start',
+        }}
+      >
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
-            {PAGE_TITLE}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {PAGE_DESC}
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-            gap: 2,
-          }}
-        >
-          <StatCard
-            title={KPI_COMPLETED}
-            value={completedCount}
-            icon={<Icons.Check />}
-            sx={{ borderLeft: '4px solid', borderColor: 'success.main' }}
-          />
-          <StatCard
-            title={KPI_ACTIVE}
-            value={activeCount}
-            icon={<Icons.TrendingUp />}
-            sx={{ borderLeft: '4px solid', borderColor: 'primary.main' }}
-          />
-          <StatCard
-            title={KPI_SUCCESS_RATE}
-            value={`${successRate}%`}
-            icon={<Icons.EmojiEvents />}
-            sx={{ borderLeft: '4px solid', borderColor: 'secondary.main' }}
-          />
-        </Box>
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' },
-            gap: 3,
-            alignItems: 'start',
-          }}
-        >
-          <Box>
-            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-              <Accordion
-                expanded={accordionOpen}
-                onChange={(_: React.SyntheticEvent, expanded: boolean) =>
-                  setAccordionOpen(expanded)
-                }
-              >
-                <AccordionSummary expandIcon={<Icons.ExpandMore />}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {editingGoal ? GOALS_CONTENT.FORM_TITLE_EDIT : ACCORDION_LABEL}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <GoalForm existingGoal={editingGoal} onSuccess={handleFormSuccess} />
-                </AccordionDetails>
-              </Accordion>
-            </Box>
-
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-                {editingGoal ? GOALS_CONTENT.FORM_TITLE_EDIT : FORM_SECTION_TITLE}
-              </Typography>
-              <GoalForm existingGoal={editingGoal} onSuccess={handleFormSuccess} />
-            </Box>
+          <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+            <Accordion
+              expanded={accordionOpen}
+              onChange={(_: React.SyntheticEvent, expanded: boolean) => setAccordionOpen(expanded)}
+            >
+              <AccordionSummary expandIcon={<Icons.ExpandMore />}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  {ACCORDION_LABEL}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <GoalForm onSuccess={() => setAccordionOpen(false)} />
+              </AccordionDetails>
+            </Accordion>
           </Box>
 
-          <Box>
+          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-              {PANEL_SECTION_TITLE}
+              {FORM_SECTION_TITLE}
             </Typography>
-            <GoalPanel onEditGoal={handleEditGoal} />
+            <GoalForm />
           </Box>
         </Box>
-      </Stack>
-    </Container>
+
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            {PANEL_SECTION_TITLE}
+          </Typography>
+          <GoalPanel onEditGoal={handleEditGoal} />
+        </Box>
+      </Box>
+
+      <GoalEditDialog
+        key={editingGoal?.id}
+        goal={editingGoal}
+        open={dialogOpen}
+        onClose={handleDialogClose}
+      />
+    </Box>
   )
 }

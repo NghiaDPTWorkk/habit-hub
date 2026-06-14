@@ -35,6 +35,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           sx={{
             height: pxToRem(height),
             borderRadius: pxToRem(height / 2),
+            bgcolor: 'divider',
           }}
         />
       </Box>

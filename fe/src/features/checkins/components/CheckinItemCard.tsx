@@ -5,12 +5,16 @@ import { useCheckinStore } from '../hooks'
 import type { Habit, Checkin } from '@/types'
 import { pxToRem } from '@/utils'
 import dayjs from 'dayjs'
+import { useState } from 'react'
+import { useBoundStore } from '@/store'
+import { HabitNoteModal } from '@/features/habits/components'
 
 const LABEL_CATEGORY = 'Category: '
 const LABEL_PRIORITY = ' | Priority: '
 const LABEL_EDIT = 'Edit Progress'
 const LABEL_CHECKIN = 'Check-in'
 const LABEL_OVERDUE = 'Overdue'
+const LABEL_STREAK_AT_RISK = 'Streak at risk'
 
 const CATEGORY_THEME_COLORS: Record<string, string> = {
   Health: 'success.main',
@@ -25,6 +29,7 @@ export interface CheckinItemCardProps {
   checkin: Checkin | undefined
   today: string
   onOpenModal: () => void
+  isAtRisk?: boolean
 }
 
 export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
@@ -32,7 +37,38 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
   checkin,
   today,
   onOpenModal,
+  isAtRisk = false,
 }) => {
+  const [noteOpen, setNoteOpen] = useState(false)
+  const [noteText, setNoteText] = useState('')
+  const [noteId, setNoteId] = useState('')
+
+  const storeAddNote = useBoundStore((s) => s.addNote)
+  const storeUpdateNote = useBoundStore((s) => s.updateNote)
+  const storeDeleteNote = useBoundStore((s) => s.deleteNote)
+
+  const openNoteForDate = (date: string) => {
+    const existing = useBoundStore
+      .getState()
+      .notes.find((n) => n.habitId === habit.id && n.date === date)
+    setNoteText(existing?.content ?? '')
+    setNoteId(existing?.id ?? '')
+    setNoteOpen(true)
+  }
+
+  const handleSaveNote = () => {
+    if (noteId) storeUpdateNote(noteId, noteText)
+    else storeAddNote(habit.id, today, noteText)
+    setNoteOpen(false)
+  }
+
+  const handleDeleteNote = () => {
+    if (noteId) storeDeleteNote(noteId)
+    setNoteText('')
+    setNoteId('')
+    setNoteOpen(false)
+  }
+
   const { markComplete, upsertCheckin } = useCheckinStore()
   const completedCount = checkin?.completedCount ?? 0
   const isChecked = checkin?.status === 'Completed'
@@ -57,8 +93,8 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
     <Card
       sx={{
         p: 2,
-        borderLeft: isOverdue ? '4px solid' : undefined,
-        borderLeftColor: isOverdue ? 'warning.main' : undefined,
+        borderLeft: isAtRisk || isOverdue ? '4px solid' : undefined,
+        borderLeftColor: isAtRisk ? 'error.main' : isOverdue ? 'warning.main' : undefined,
         bgcolor: isOverdue ? 'warning.light' : undefined,
       }}
     >
@@ -97,6 +133,23 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
                   {LABEL_OVERDUE}
                 </Box>
               )}
+              {isAtRisk && (
+                <Box
+                  sx={{
+                    px: 1,
+                    py: 0.25,
+                    bgcolor: 'error.light',
+                    color: 'error.dark',
+                    borderRadius: 1,
+                    fontSize: pxToRem(10),
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    lineHeight: 1,
+                  }}
+                >
+                  {LABEL_STREAK_AT_RISK}
+                </Box>
+              )}
             </Box>
             <Typography variant="caption" color="text.secondary">
               {subtitleText}
@@ -108,6 +161,12 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
           <Tooltip title={LABEL_EDIT}>
             <IconButton size="small" onClick={onOpenModal}>
+              <Icons.Edit fontSize="small" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Note">
+            <IconButton size="small" onClick={() => openNoteForDate(today)}>
               <Icons.Edit fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -127,6 +186,21 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
           </Tooltip>
         </Box>
       </Box>
+      <HabitNoteModal
+        open={noteOpen}
+        noteText={noteText}
+        onNoteTextChange={setNoteText}
+        onSave={handleSaveNote}
+        onDelete={noteId ? handleDeleteNote : undefined}
+        onClose={() => setNoteOpen(false)}
+        title="Daily Journal & Notes"
+        placeholder="Read 15 pages/day ..."
+        saveLabel="Save Note"
+        cancelLabel="Cancel"
+        deleteLabel="Delete Note"
+        habitName={habit.name}
+        date={today}
+      />
     </Card>
   )
 }

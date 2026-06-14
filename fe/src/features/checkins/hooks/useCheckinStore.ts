@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useBoundStore } from '@/store'
 import { makeCheckinKey } from '@/store/checkinSlice'
+import { getLocalDateString } from '@/utils'
 import type { Checkin, CheckinStatus } from '@/types'
 
 function computeStatus(completedCount: number, targetPerDay: number): CheckinStatus {
@@ -9,18 +10,14 @@ function computeStatus(completedCount: number, targetPerDay: number): CheckinSta
   return 'In Progress'
 }
 
-function getLocalDateString(date = new Date()): string {
-  const offset = date.getTimezoneOffset()
-  const localDate = new Date(date.getTime() - offset * 60 * 1000)
-  return localDate.toISOString().split('T')[0]
-}
-
 export function useCheckinStore() {
   const checkins = useBoundStore((state) => state.checkins)
   const addCheckin = useBoundStore((state) => state.addCheckin)
   const updateCheckin = useBoundStore((state) => state.updateCheckin)
   const deleteCheckin = useBoundStore((state) => state.deleteCheckin)
   const habits = useBoundStore((state) => state.habits)
+  const previousCheckins = useBoundStore((state) => state.previousCheckins)
+  const undoLastCheckin = useBoundStore((state) => state.undoLastCheckin)
 
   const today = getLocalDateString()
 
@@ -123,11 +120,13 @@ export function useCheckinStore() {
     todayCheckins,
     checkinsByDate,
     todayProgress,
+    previousCheckins,
     getCheckinByHabitAndDate,
     upsertCheckin,
     markComplete,
     incrementCount,
     decrementCount,
     deleteCheckin,
+    undoLastCheckin,
   }
 }

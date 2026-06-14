@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Card, IconButton, Stack, Typography } from '@/components/ui'
+import { Box, Button, Card, IconButton, Stack, Typography, ConfirmDialog } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { useBoundStore } from '@/store/useBoundStore'
@@ -23,12 +23,28 @@ const FILTER_EMPTY = GOALS_CONTENT.FILTER_EMPTY_STATE
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [goalIdToDelete, setGoalIdToDelete] = useState<string | null>(null)
 
   useGoalMilestoneNotifications()
 
-  const handleDeleteGoal = (goalId: string): void => {
-    deleteGoal(goalId)
-    showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+  const handleDeleteClick = (goalId: string): void => {
+    setGoalIdToDelete(goalId)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleCancelDelete = (): void => {
+    setDeleteDialogOpen(false)
+    setGoalIdToDelete(null)
+  }
+
+  const handleConfirmDelete = (): void => {
+    if (goalIdToDelete) {
+      deleteGoal(goalIdToDelete)
+      showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+    }
+    setDeleteDialogOpen(false)
+    setGoalIdToDelete(null)
   }
 
   const getHabitName = (habitId: number): string => {
@@ -93,38 +109,22 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
               <Box
                 sx={{
                   display: 'flex',
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  gap: 2,
                   alignItems: 'flex-start',
                   justifyContent: 'space-between',
+                  mb: 2,
                 }}
               >
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Stack spacing={2}>
-                    <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                        {habitName}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {targetLabel}
-                        {COLON_SEPARATOR}
-                        {goal.targetValue}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <ProgressBar value={progress.percentage} />
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
-                      >
-                        {progress.currentValue}
-                        {DATE_SEPARATOR}
-                        {goal.targetValue}
-                      </Typography>
-                    </Box>
-                  </Stack>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    {habitName}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {targetLabel}
+                    {COLON_SEPARATOR}
+                    {goal.targetValue}
+                  </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
+                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0, ml: 1 }}>
                   <IconButton
                     size="small"
                     onClick={() => onEditGoal?.(goal)}
@@ -134,17 +134,36 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                   </IconButton>
                   <IconButton
                     size="small"
-                    onClick={() => handleDeleteGoal(goal.id)}
+                    onClick={() => handleDeleteClick(goal.id)}
                     sx={{ color: 'error.main' }}
                   >
                     <Icons.Delete fontSize="small" />
                   </IconButton>
                 </Box>
               </Box>
+              <ProgressBar value={progress.percentage} />
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
+              >
+                {progress.currentValue}
+                {DATE_SEPARATOR}
+                {goal.targetValue}
+              </Typography>
             </Card>
           )
         })
       )}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+        title="Confirm Delete"
+        content="Deleting this goal will remove it permanently. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        severity="error"
+      />
     </Stack>
   )
 }

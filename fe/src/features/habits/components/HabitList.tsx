@@ -83,7 +83,18 @@ export const HabitList: FC<HabitListProps> = ({
   }
 
   return (
-    <Box sx={{ display: 'grid', gap: 2 }}>
+    <Box
+      sx={{
+        display: 'grid',
+        gap: 2,
+        gridTemplateColumns: {
+          xs: '1fr',
+          sm: '1fr',
+          md: '1fr 1fr',
+          lg: '1fr 1fr',
+        },
+      }}
+    >
       {habits.map((habit) => (
         <HabitCard
           key={habit.id}

@@ -25,10 +25,4 @@ type _NsGuard = AssertNoOverlap<
 
 declare const _nsGuard: _NsGuard
 
-export type BoundStore = HabitSlice &
-  CheckinSlice &
-  GoalSlice &
-  ThemeSlice &
-  ToastSlice & {
-    cascadeDeleteHabit: (id: number) => void
-  }
+export type BoundStore = HabitSlice & CheckinSlice & GoalSlice & ThemeSlice & ToastSlice

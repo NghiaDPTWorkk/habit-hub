@@ -18,7 +18,7 @@ export const useBoundStore = create<BoundStore>()(
       ...createThemeSlice(...a),
       ...createToastSlice(...a),
 
-      cascadeDeleteHabit: (id) => {
+      deleteHabit: (id) => {
         const [set] = a
         set((state) => ({
           habits: state.habits.filter((h) => h.id !== id),

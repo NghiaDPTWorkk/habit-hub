@@ -6,7 +6,7 @@ export function useHabitStore() {
   const habits = useBoundStore((s) => s.habits)
   const storeAddHabit = useBoundStore((s) => s.addHabit)
   const storeUpdateHabit = useBoundStore((s) => s.updateHabit)
-  const storeCascadeDelete = useBoundStore((s) => s.cascadeDeleteHabit)
+  const storeDeleteHabit = useBoundStore((s) => s.deleteHabit)
 
   const activeHabits = habits.filter((h) => h.status === 'Active')
 
@@ -24,7 +24,7 @@ export function useHabitStore() {
   }
 
   function deleteHabit(id: number): void {
-    storeCascadeDelete(id)
+    storeDeleteHabit(id)
   }
 
   function pauseHabit(id: number): void {

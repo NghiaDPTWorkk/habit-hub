@@ -1,11 +1,34 @@
 import { type FC } from 'react'
 import Chip from '@mui/material/Chip'
 import { useTheme, alpha } from '@mui/material/styles'
-import { Box } from '@/components/ui'
+import { Box, Typography } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
 import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
 import type { Habit } from '@/types'
+
+const CATEGORY_COLORS: Record<string, string> = {
+  Health: 'success.main',
+  Study: 'info.main',
+  Work: 'primary.main',
+  Mindfulness: 'secondary.main',
+  Other: 'warning.main',
+}
+
+const getHabitDescription = (category: string) => {
+  switch (category) {
+    case 'Health':
+      return 'Duy trì sức khỏe và thể lực tốt mỗi ngày.'
+    case 'Study':
+      return 'Tích lũy kiến thức và phát triển kỹ năng.'
+    case 'Work':
+      return 'Tập trung làm việc và tối ưu hóa hiệu suất.'
+    case 'Mindfulness':
+      return 'Giữ tâm trí bình yên và cân bằng cuộc sống.'
+    default:
+      return 'Theo dõi và xây dựng thói quen tốt hơn.'
+  }
+}
 
 const CARD_TEXTS = {
   scheduled: 'Scheduled on',
@@ -123,16 +146,36 @@ export const HabitCard: FC<HabitCardProps> = ({
         >
           <Box>
             <Box
-              component="h3"
               sx={{
-                ...theme.typography.subtitle1,
-                fontWeight: 700,
-                margin: 0,
-                mb: 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                mb: 0.5,
               }}
             >
-              {habit.name}
+              <Box
+                component="span"
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: CATEGORY_COLORS[habit.category] || 'text.secondary',
+                  display: 'inline-block',
+                }}
+              />
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: 700,
+                  margin: 0,
+                }}
+              >
+                {habit.name}
+              </Typography>
             </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, display: 'block' }}>
+              {getHabitDescription(habit.category)}
+            </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
               <Chip label={habit.category} size="small" />
               <Chip

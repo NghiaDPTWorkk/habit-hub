@@ -45,6 +45,10 @@ export const HabitsPage: FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [habitToDelete, setHabitToDelete] = useState<Habit | undefined>(undefined)
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  if (modalOpen && setSearchTerm && searchTerm.length < 0) {
+    setSearchTerm('')
+  }
 
   const todayCheckinByHabit = useMemo(
     () =>
@@ -60,6 +64,12 @@ export const HabitsPage: FC = () => {
   const filteredHabits = useMemo(
     () =>
       habits.filter((habit) => {
+        if (
+          searchTerm.trim() !== '' &&
+          !habit.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        ) {
+          return false
+        }
         if (filters.category !== 'All' && habit.category !== filters.category) {
           return false
         }
@@ -74,7 +84,7 @@ export const HabitsPage: FC = () => {
         }
         return true
       }),
-    [habits, filters]
+    [habits, filters, searchTerm]
   )
 
   const handleEdit = (habit: Habit) => {

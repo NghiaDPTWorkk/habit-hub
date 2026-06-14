@@ -1,5 +1,4 @@
 import { type FC } from 'react'
-import Chip from '@mui/material/Chip'
 import { useTheme, alpha } from '@mui/material/styles'
 import { Box, Typography, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
@@ -8,7 +7,11 @@ import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMe
 import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined'
+import StarIcon from '@mui/icons-material/Star'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import type { Habit } from '@/types'
+
+const SHORT_WEEK_DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
 
 const CATEGORY_COLORS: Record<string, string> = {
   Health: 'success.main',
@@ -60,12 +63,9 @@ const CARD_TEXTS = {
   save: 'Save',
 }
 
-const WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-const WEEK_DAYS_MAP = WEEK_DAYS.map((label, index) => ({
-  value: index,
-  label,
-}))
+const TEXT_ACCUMULATED_DAYS = ' ngày'
+const TEXT_TARGET_PREFIX = 'Mục tiêu: '
+const TEXT_SLASH = '/'
 
 export interface HabitCardProps {
   habit: Habit
@@ -87,11 +87,16 @@ export const HabitCard: FC<HabitCardProps> = ({
   onArchive,
 }) => {
   const theme = useTheme()
-  const { incrementCount, getCheckinByHabitAndDate, today } = useCheckinStore()
+  const { incrementCount, getCheckinByHabitAndDate, today, checkins } = useCheckinStore()
   const currentCheckin = getCheckinByHabitAndDate(habit.id, today) || todayCheckin
   const completedCount = currentCheckin?.completedCount ?? 0
-  const dueToday =
-    habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
+  const accumulatedCount = Object.values(checkins || {}).filter(
+    (c) => c.habitId === habit.id && c.completedCount > 0
+  ).length
+  const scheduledText =
+    habit.frequency === 'Daily'
+      ? 'Hàng ngày'
+      : habit.specificDays?.map((d) => SHORT_WEEK_DAYS[d]).join(', ') || ''
   const nextStatusAction =
     habit.status === 'Paused'
       ? CARD_TEXTS.resume
@@ -169,19 +174,9 @@ export const HabitCard: FC<HabitCardProps> = ({
                 {habit.name}
               </Typography>
             </Box>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, display: 'block' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
               {getHabitDescription(habit.category)}
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
-              <Chip label={habit.category} size="small" />
-              <Chip
-                label={habit.frequency === 'Daily' ? CARD_TEXTS.daily : CARD_TEXTS.specificDays}
-                size="small"
-              />
-              <Chip label={`${CARD_TEXTS.targetLabel} ${habit.targetPerDay}`} size="small" />
-              <Chip label={`${CARD_TEXTS.priorityLabel} ${habit.priority}`} size="small" />
-              <Chip label={`${CARD_TEXTS.statusLabel} ${habit.status}`} size="small" />
-            </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
             <IconButton size="small" onClick={() => onEdit(habit)} aria-label="Edit habit">
@@ -198,37 +193,6 @@ export const HabitCard: FC<HabitCardProps> = ({
             <HabitOverflowMenu items={menuItems} />
           </Box>
         </Box>
-        {habit.frequency === 'Specific' && habit.specificDays?.length ? (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.text.secondary,
-              mb: 1,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.scheduled}{' '}
-            {habit.specificDays
-              .map((day) => WEEK_DAYS_MAP.find((item) => item.value === day)?.label)
-              .filter(Boolean)
-              .join(', ')}
-            {CARD_TEXTS.dot}
-          </Box>
-        ) : null}
-        {dueToday && (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.text.secondary,
-              mb: 0.5,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.dueToday}
-          </Box>
-        )}
         {isMissed && (
           <Box
             component="p"
@@ -243,23 +207,44 @@ export const HabitCard: FC<HabitCardProps> = ({
             {CARD_TEXTS.missed}
           </Box>
         )}
-        {todayCheckin && !isMissed && dueToday && (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.success.main,
-              mb: 0.5,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.completed} {todayCheckin.completedCount} {CARD_TEXTS.slash}{' '}
-            {habit.targetPerDay} {CARD_TEXTS.today}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mt: 1,
+            pt: 1,
+            borderTop: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <StarIcon sx={{ fontSize: 16, color: 'warning.main' }} />
+              <Typography variant="caption" color="text.secondary">
+                {habit.priority}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <CalendarTodayIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+              <Typography variant="caption" color="text.secondary">
+                {scheduledText}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Icons.Whatshot sx={{ fontSize: 16, color: 'error.main' }} />
+              <Typography variant="caption" color="text.secondary">
+                {accumulatedCount}
+                {TEXT_ACCUMULATED_DAYS}
+              </Typography>
+            </Box>
           </Box>
-        )}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-          <Box />
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, mr: 0.5 }}>
+              {TEXT_TARGET_PREFIX}
+              {completedCount}
+              {TEXT_SLASH}
+              {habit.targetPerDay}
+            </Typography>
             <IconButton
               onClick={() => onEdit(habit)}
               aria-label="Edit habit"

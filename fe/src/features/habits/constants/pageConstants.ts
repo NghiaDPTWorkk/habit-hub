@@ -21,6 +21,6 @@ export const TEXT_VAL_ACTIVE = 'Active'
 export const TEXT_VAL_PAUSED = 'Paused'
 export const TEXT_VAL_ARCHIVED = 'Archived'
 
-export const PAGE_TITLE = 'Habits'
-export const PAGE_DESC = 'Habit Personal'
+export const PAGE_TITLE = 'Habits Personal'
+export const PAGE_DESC = ''
 export const ADD_HABIT_LABEL = 'Add Habit'

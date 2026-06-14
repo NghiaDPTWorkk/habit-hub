@@ -1,4 +1,5 @@
 import type { Habit } from '@/types'
+import { alpha, type Theme } from '@mui/material/styles'
 
 /**
  * String representation of today's date in YYYY-MM-DD format.
@@ -35,4 +36,46 @@ export const isHabitMissed = (
   }
   const todayCheckin = todayCheckinByHabit[habit.id]
   return !todayCheckin || todayCheckin.completedCount < habit.targetPerDay
+}
+
+/**
+ * Gets the color associated with a habit's priority.
+ */
+export const getPriorityColor = (priority: string, theme: Theme): string => {
+  if (priority === 'High') return theme.palette.error.main
+  if (priority === 'Medium') return theme.palette.warning.main
+  return theme.palette.text.secondary
+}
+
+/**
+ * Gets the background and text colors for a habit's category.
+ */
+export const getCategoryColors = (category: string, theme: Theme) => {
+  switch (category) {
+    case 'Health':
+      return {
+        bg: theme.palette.success.light ? alpha(theme.palette.success.main, 0.1) : '#e8f5e9',
+        text: theme.palette.success.main,
+      }
+    case 'Study':
+      return {
+        bg: theme.palette.info.light ? alpha(theme.palette.info.main, 0.1) : '#e3f2fd',
+        text: theme.palette.info.main,
+      }
+    case 'Work':
+      return {
+        bg: theme.palette.secondary.light ? alpha(theme.palette.secondary.main, 0.1) : '#f3e5f5',
+        text: theme.palette.secondary.main,
+      }
+    case 'Mindfulness':
+      return {
+        bg: theme.palette.primary.light ? alpha(theme.palette.primary.main, 0.1) : '#e0f2f1',
+        text: theme.palette.primary.main,
+      }
+    default:
+      return {
+        bg: theme.palette.text.secondary ? alpha(theme.palette.text.secondary, 0.1) : '#f5f5f5',
+        text: theme.palette.text.secondary,
+      }
+  }
 }

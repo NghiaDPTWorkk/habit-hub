@@ -46,7 +46,6 @@ import {
   TEXT_VAL_PAUSED,
   TEXT_VAL_ARCHIVED,
   PAGE_TITLE,
-  PAGE_DESC,
   ADD_HABIT_LABEL,
 } from '../constants/pageConstants'
 
@@ -150,17 +149,14 @@ export const HabitsPage: FC = () => {
   const isHabitMissed = (habit: Habit) => helperIsHabitMissed(habit, todayCheckinByHabit)
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Box>
         <Typography variant="h5" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-          {PAGE_DESC}
-        </Typography>
       </Box>
 
-      <Card sx={{ p: 2, mb: 3 }}>
+      <Card sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
           <TextField
             placeholder={TEXT_SEARCH_PLACEHOLDER}
@@ -281,22 +277,20 @@ export const HabitsPage: FC = () => {
         </Box>
       </Card>
 
-      <Card sx={{ p: 2 }}>
-        <HabitList
-          habits={filteredHabits}
-          hasAnyHabits={habits.length > 0}
-          todayCheckinByHabit={todayCheckinByHabit}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onPauseResume={handlePauseResume}
-          onArchive={handleArchive}
-          onCreate={() => {
-            setHabitToEdit(undefined)
-            setModalOpen(true)
-          }}
-          isHabitMissed={isHabitMissed}
-        />
-      </Card>
+      <HabitList
+        habits={filteredHabits}
+        hasAnyHabits={habits.length > 0}
+        todayCheckinByHabit={todayCheckinByHabit}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onPauseResume={handlePauseResume}
+        onArchive={handleArchive}
+        onCreate={() => {
+          setHabitToEdit(undefined)
+          setModalOpen(true)
+        }}
+        isHabitMissed={isHabitMissed}
+      />
 
       <HabitFormModal
         open={modalOpen}

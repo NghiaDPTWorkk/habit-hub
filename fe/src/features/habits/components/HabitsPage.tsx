@@ -253,8 +253,11 @@ export const HabitsPage: FC = () => {
               label={opt.label}
               onClick={() => setFilters((prev) => ({ ...prev, priority: opt.value }))}
               color={filters.priority === opt.value ? 'primary' : 'default'}
-              variant={filters.priority === opt.value ? 'filled' : 'outlined'}
-              size="small"
+              variant="outlined"
+              sx={{
+                fontWeight: 500,
+                ...(filters.priority === opt.value && { bgcolor: 'primary.light' }),
+              }}
             />
           ))}
           {(searchTerm ||

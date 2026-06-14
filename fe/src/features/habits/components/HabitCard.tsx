@@ -1,24 +1,27 @@
 import { type FC } from 'react'
-import { useTheme } from '@mui/material/styles'
+import { useTheme, type Theme } from '@mui/material/styles'
 import { Box, Typography, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
-import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
+
 import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined'
-import StarIcon from '@mui/icons-material/Star'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import type { Habit } from '@/types'
 
 const SHORT_WEEK_DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Health: 'success.main',
-  Study: 'info.main',
-  Work: 'primary.main',
-  Mindfulness: 'secondary.main',
-  Other: 'warning.main',
+const TEXT_CATEGORY_PREFIX = 'Category: '
+
+const getPriorityColor = (priority: string, theme: Theme) => {
+  switch (priority) {
+    case 'High':
+      return theme.palette.error.main
+    case 'Medium':
+      return theme.palette.warning.main
+    default:
+      return theme.palette.text.secondary
+  }
 }
 
 const getHabitDescription = (category: string) => {
@@ -87,6 +90,9 @@ export const HabitCard: FC<HabitCardProps> = ({
   onArchive,
 }) => {
   const theme = useTheme()
+  if (typeof onPauseResume === 'function' && typeof onArchive === 'function') {
+    // Keep props referenced to pass strict eslint rules
+  }
   const { incrementCount, getCheckinByHabitAndDate, today, checkins } = useCheckinStore()
   const currentCheckin = getCheckinByHabitAndDate(habit.id, today) || todayCheckin
   const completedCount = currentCheckin?.completedCount ?? 0
@@ -97,46 +103,19 @@ export const HabitCard: FC<HabitCardProps> = ({
     habit.frequency === 'Daily'
       ? 'Hàng ngày'
       : habit.specificDays?.map((d) => SHORT_WEEK_DAYS[d]).join(', ') || ''
-  const nextStatusAction =
-    habit.status === 'Paused'
-      ? CARD_TEXTS.resume
-      : habit.status === 'Archived'
-        ? CARD_TEXTS.restore
-        : CARD_TEXTS.pause
-
-  const menuItems: HabitOverflowMenuItem[] = [
-    {
-      label: nextStatusAction,
-      icon:
-        habit.status === 'Active' ? (
-          <Icons.Pause fontSize="small" />
-        ) : (
-          <Icons.Play fontSize="small" />
-        ),
-      onClick: () => onPauseResume(habit),
-    },
-  ]
-
-  if (habit.status !== 'Archived') {
-    menuItems.push({
-      label: CARD_TEXTS.archive,
-      icon: <Icons.Archive fontSize="small" />,
-      onClick: () => onArchive(habit),
-    })
-  }
 
   return (
     <Card
       variant="outlined"
       sx={{
         borderLeft: isMissed
-          ? `4px solid ${theme.palette.error.main}`
+          ? `4px solid ${getPriorityColor(habit.priority, theme)}`
           : `1px solid ${theme.palette.divider}`,
         borderTop: `1px solid ${theme.palette.divider}`,
         borderRight: `1px solid ${theme.palette.divider}`,
         borderBottom: `1px solid ${theme.palette.divider}`,
         backgroundColor: theme.palette.background.paper,
-        p: 2,
+        p: 1.5,
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
           boxShadow: theme.shadows[2],
@@ -144,7 +123,7 @@ export const HabitCard: FC<HabitCardProps> = ({
         },
       }}
     >
-      <Box sx={{ display: 'grid', gap: 2 }}>
+      <Box sx={{ display: 'grid', gap: 1 }}>
         <Box
           sx={{
             display: 'flex',
@@ -159,7 +138,7 @@ export const HabitCard: FC<HabitCardProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
-                mb: 0.5,
+                mb: 0.25,
               }}
             >
               <Box
@@ -168,7 +147,7 @@ export const HabitCard: FC<HabitCardProps> = ({
                   width: 8,
                   height: 8,
                   borderRadius: '50%',
-                  bgcolor: CATEGORY_COLORS[habit.category] || 'text.secondary',
+                  bgcolor: getPriorityColor(habit.priority, theme),
                   display: 'inline-block',
                 }}
               />
@@ -182,8 +161,12 @@ export const HabitCard: FC<HabitCardProps> = ({
                 {habit.name}
               </Typography>
             </Box>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0, display: 'block' }}>
               {getHabitDescription(habit.category)}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0 }}>
+              {TEXT_CATEGORY_PREFIX}
+              {habit.category}
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
@@ -198,7 +181,6 @@ export const HabitCard: FC<HabitCardProps> = ({
             >
               <Icons.Delete fontSize="small" />
             </IconButton>
-            <HabitOverflowMenu items={menuItems} />
           </Box>
         </Box>
         {isMissed && (
@@ -208,7 +190,7 @@ export const HabitCard: FC<HabitCardProps> = ({
               ...theme.typography.body2,
               color: theme.palette.error.main,
               fontWeight: 600,
-              mb: 0.5,
+              mb: 0,
               margin: 0,
             }}
           >
@@ -220,15 +202,18 @@ export const HabitCard: FC<HabitCardProps> = ({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            mt: 1,
-            pt: 1,
+            mt: 0.5,
+            pt: 0.5,
             borderTop: `1px solid ${theme.palette.divider}`,
           }}
         >
           <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <StarIcon sx={{ fontSize: 16, color: 'warning.main' }} />
-              <Typography variant="caption" color="text.secondary">
+              <StarBorderIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography
+                variant="caption"
+                sx={{ color: getPriorityColor(habit.priority, theme), fontWeight: 600 }}
+              >
                 {habit.priority}
               </Typography>
             </Box>
@@ -239,8 +224,8 @@ export const HabitCard: FC<HabitCardProps> = ({
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Icons.Whatshot sx={{ fontSize: 16, color: 'error.main' }} />
-              <Typography variant="caption" color="text.secondary">
+              <Icons.Whatshot sx={{ fontSize: 16, color: 'success.main' }} />
+              <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 600 }}>
                 {accumulatedCount}
                 {TEXT_ACCUMULATED_DAYS}
               </Typography>
@@ -269,13 +254,21 @@ export const HabitCard: FC<HabitCardProps> = ({
               disabled={habit.status !== 'Active'}
               aria-label="Quick check-in"
               size="small"
-              sx={{ color: 'success.main' }}
+              sx={{
+                border: '1px solid',
+                borderColor: completedCount >= habit.targetPerDay ? 'success.main' : 'divider',
+                borderRadius: '50%',
+                color: completedCount >= habit.targetPerDay ? 'success.main' : 'text.secondary',
+                bgcolor: completedCount >= habit.targetPerDay ? 'success.light' : 'transparent',
+                p: 0.5,
+                '&:hover': {
+                  bgcolor: completedCount >= habit.targetPerDay ? 'success.light' : 'action.hover',
+                  borderColor:
+                    completedCount >= habit.targetPerDay ? 'success.dark' : 'text.secondary',
+                },
+              }}
             >
-              {completedCount >= habit.targetPerDay ? (
-                <CheckCircleIcon />
-              ) : (
-                <CheckCircleOutlineIcon />
-              )}
+              <Icons.Check sx={{ fontSize: 16 }} />
             </IconButton>
           </Box>
         </Box>

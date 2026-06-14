@@ -7,20 +7,24 @@ export interface ToastItem {
   id: string
   message: string
   severity: ToastSeverity
+  isGoalCelebration?: boolean
 }
 
 export interface ToastSlice {
   toastQueue: ToastItem[]
-  showToast: (message: string, severity: ToastSeverity) => void
+  showToast: (message: string, severity: ToastSeverity, isGoalCelebration?: boolean) => void
   dismissToast: () => void
 }
 
 export const createToastSlice: StateCreator<BoundStore, [], [], ToastSlice> = (set) => ({
   toastQueue: [],
 
-  showToast: (message, severity) =>
+  showToast: (message, severity, isGoalCelebration) =>
     set((state) => ({
-      toastQueue: [...state.toastQueue, { id: crypto.randomUUID(), message, severity }],
+      toastQueue: [
+        ...state.toastQueue,
+        { id: crypto.randomUUID(), message, severity, isGoalCelebration },
+      ],
     })),
 
   dismissToast: () =>

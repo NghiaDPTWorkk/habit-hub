@@ -64,7 +64,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             borderRadius: 1,
             p: 0.75,
             display: { xs: 'none', md: 'inline-flex' },
-            color: 'text.primary',
+            color: themeMode === 'dark' ? 'warning.main' : 'text.primary',
             '&:hover': {
               bgcolor: 'action.hover',
             },

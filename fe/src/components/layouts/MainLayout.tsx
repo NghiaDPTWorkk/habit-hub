@@ -164,7 +164,12 @@ export const MainLayout: React.FC = () => {
               {BRAND_SECOND}
             </Box>
           </Box>
-          <IconButton color="inherit" onClick={toggleThemeMode}>
+          <IconButton
+            onClick={toggleThemeMode}
+            sx={{
+              color: themeMode === 'dark' ? 'warning.main' : 'inherit',
+            }}
+          >
             {themeMode === 'light' ? <Icons.DarkMode /> : <Icons.LightMode />}
           </IconButton>
         </Box>

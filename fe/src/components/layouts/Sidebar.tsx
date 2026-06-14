@@ -73,12 +73,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
     >
       {/* Branding Section */}
       <Box
+        component={RouterLink}
+        to="/dashboard"
         sx={{
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
           px: 3,
           py: 3,
+          textDecoration: 'none',
+          color: 'inherit',
+          cursor: 'pointer',
+          '&:hover': {
+            opacity: 0.85,
+          },
         }}
       >
         <Box

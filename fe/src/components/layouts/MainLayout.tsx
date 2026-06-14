@@ -152,11 +152,17 @@ export const MainLayout: React.FC = () => {
             <Box sx={{ width: 40 }} />
           )}
           <Box
+            onClick={() => navigate('/dashboard')}
             sx={{
               fontWeight: 700,
               fontSize: pxToRem(22),
               display: 'flex',
               alignItems: 'center',
+              cursor: 'pointer',
+              userSelect: 'none',
+              '&:hover': {
+                opacity: 0.85,
+              },
             }}
           >
             {BRAND_FIRST}

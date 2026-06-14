@@ -6,6 +6,7 @@ export const makeCheckinKey = (habitId: number, date: string) => `${date}_${habi
 
 export interface CheckinSlice {
   checkins: Record<string, Checkin>
+  previousCheckins: Record<string, Checkin> | null
   addCheckin: (checkin: Checkin) => void
   updateCheckin: (
     habitId: number,
@@ -13,13 +14,16 @@ export interface CheckinSlice {
     updates: Partial<Omit<Checkin, 'habitId' | 'date'>>
   ) => void
   deleteCheckin: (habitId: number, date: string) => void
+  undoLastCheckin: () => void
 }
 
 export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> = (set) => ({
   checkins: {},
+  previousCheckins: null,
 
   addCheckin: (checkin) =>
     set((state) => ({
+      previousCheckins: state.checkins,
       checkins: {
         ...state.checkins,
         [makeCheckinKey(checkin.habitId, checkin.date)]: checkin,
@@ -31,14 +35,31 @@ export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> 
       const key = makeCheckinKey(habitId, date)
       const existing = state.checkins[key]
       if (!existing) return state
-      return { checkins: { ...state.checkins, [key]: { ...existing, ...updates } } }
+      return {
+        previousCheckins: state.checkins,
+        checkins: { ...state.checkins, [key]: { ...existing, ...updates } },
+      }
     }),
 
   deleteCheckin: (habitId, date) =>
     set((state) => {
       const key = makeCheckinKey(habitId, date)
+      const existing = state.checkins[key]
+      if (!existing) return state
       const next = { ...state.checkins }
       delete next[key]
-      return { checkins: next }
+      return {
+        previousCheckins: state.checkins,
+        checkins: next,
+      }
+    }),
+
+  undoLastCheckin: () =>
+    set((state) => {
+      if (!state.previousCheckins) return state
+      return {
+        checkins: state.previousCheckins,
+        previousCheckins: null,
+      }
     }),
 })

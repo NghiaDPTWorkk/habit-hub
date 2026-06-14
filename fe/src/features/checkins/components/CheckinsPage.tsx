@@ -28,8 +28,9 @@ export const CheckinsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [modalHabit, setModalHabit] = useState<Habit | null>(null)
   const [showDatePicker, setShowDatePicker] = useState(false)
-  const { getCheckinByHabitAndDate, checkins, today } = useCheckinStore()
+  const { getCheckinByHabitAndDate, previousCheckins, undoLastCheckin } = useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
+  const showToast = useBoundStore((state) => state.showToast)
 
   const selectedDate = useMemo(() => {
     const dateParam = searchParams.get('date')
@@ -99,13 +100,32 @@ export const CheckinsPage: React.FC = () => {
 
   return (
     <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           {LOGS_HEADER}
         </Typography>
-        <Button variant="outlined" size="small" onClick={() => setShowDatePicker((prev) => !prev)}>
-          {showDatePicker ? BTN_HIDE_PICKER : BTN_SHOW_PICKER}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          {previousCheckins && (
+            <Button
+              variant="outlined"
+              color="warning"
+              size="small"
+              onClick={() => {
+                undoLastCheckin()
+                showToast(CHECKIN_CONTENT.MESSAGES.UNDO_SUCCESS, 'warning')
+              }}
+            >
+              {CHECKIN_CONTENT.BUTTONS.UNDO}
+            </Button>
+          )}
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setShowDatePicker((prev) => !prev)}
+          >
+            {showDatePicker ? BTN_HIDE_PICKER : BTN_SHOW_PICKER}
+          </Button>
+        </Box>
       </Box>
 
       {showDatePicker && (

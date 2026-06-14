@@ -110,7 +110,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             color="success"
             startIcon={<Icons.Add />}
             component={RouterLink}
-            to="/habits"
+            to="/habits?create=true"
             sx={{
               borderRadius: 1,
               px: 3,

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Typography } from '@/components/ui'
 import { Card } from '@/components/ui'
+import { alpha } from '@mui/material/styles'
 
 export interface KpiCardProps {
   title: string
@@ -10,9 +11,22 @@ export interface KpiCardProps {
   iconBg?: string
 }
 
+type PaletteColor = 'primary' | 'secondary' | 'success' | 'warning' | 'info'
+
 export const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon, iconColor, iconBg }) => {
+  const colorPalette = (iconColor?.split('.')[0] || 'primary') as PaletteColor
+
   return (
-    <Card sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Card
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        bgcolor: (theme) => alpha(theme.palette[colorPalette].main, 0.08),
+        border: '1px solid',
+        borderColor: (theme) => alpha(theme.palette[colorPalette].main, 0.15),
+      }}
+    >
       <Box>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
           {title}

@@ -15,7 +15,8 @@ export function useHabitStore() {
   }
 
   function addHabit(data: HabitFormValues): void {
-    storeAddHabit({ ...data, status: 'Active' })
+    const { startDate, ...rest } = data
+    storeAddHabit({ ...rest, status: 'Active', createdAt: startDate })
   }
 
   function updateHabit(id: number, updates: Partial<Omit<Habit, 'id' | 'createdAt'>>): void {

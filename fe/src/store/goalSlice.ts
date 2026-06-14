@@ -1,5 +1,6 @@
 import type { StateCreator } from 'zustand'
 import type { Goal, GoalProgress, Checkin } from '@/types'
+import { currentStreak } from '@/features/dashboard/services'
 import type { BoundStore } from './types'
 
 export interface GoalSlice {
@@ -32,7 +33,6 @@ const calculateConsecutiveStreak = (habitId: number, checkins: Checkin[]): numbe
     const diffDays = (expectedDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
 
     if (streak === 0 && diffDays <= 1) {
-      // Chấp nhận hôm nay hoặc hôm qua là ngày bắt đầu
       streak++
       expectedDate = new Date(checkinDate)
       expectedDate.setDate(expectedDate.getDate() - 1)
@@ -64,7 +64,7 @@ const toLocalDateString = (date: Date): string => {
   return `${year}-${month}-${day}`
 }
 
-export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set) => ({
+export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set, get) => ({
   goals: [],
   notifiedGoals: {},
 
@@ -96,9 +96,13 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
     })),
 
   getGoalProgress: (goal, checkins) => {
+    const habits = get().habits
+    const habit = habits.find((h) => h.id === goal.habitId)
     const currentValue =
       goal.targetType === 'streak'
-        ? calculateConsecutiveStreak(goal.habitId, checkins)
+        ? habit
+          ? currentStreak(habit, checkins)
+          : calculateConsecutiveStreak(goal.habitId, checkins)
         : calculateTotalCompletions(goal.habitId, checkins)
 
     const percentage = clamp(Math.round((currentValue / goal.targetValue) * 100), 0, 100)

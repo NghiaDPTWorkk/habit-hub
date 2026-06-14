@@ -4,6 +4,12 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     dark: string
   }
+  interface SimplePaletteColorOptions {
+    border?: string
+  }
+  interface PaletteColor {
+    border?: string
+  }
 }
 
 export const getTheme = (mode: 'light' | 'dark') =>
@@ -11,9 +17,9 @@ export const getTheme = (mode: 'light' | 'dark') =>
     palette: {
       mode,
       primary: {
-        main: mode === 'light' ? '#1f883d' : '#238636',
-        light: mode === 'light' ? '#dafbe1' : 'rgba(35, 134, 54, 0.15)',
-        dark: mode === 'light' ? '#1a7f37' : '#2ea44f',
+        main: mode === 'light' ? '#27ae60' : '#34d399',
+        light: mode === 'light' ? '#e6f4ea' : 'rgba(46, 125, 50, 0.15)',
+        dark: mode === 'light' ? '#219653' : '#059669',
         contrastText: '#ffffff',
       },
       secondary: {
@@ -29,15 +35,16 @@ export const getTheme = (mode: 'light' | 'dark') =>
         contrastText: '#ffffff',
       },
       warning: {
-        main: mode === 'light' ? '#9a6700' : '#d29922',
-        light: mode === 'light' ? '#fff8c5' : 'rgba(210, 153, 34, 0.15)',
-        dark: mode === 'light' ? '#704c00' : '#9e6a00',
+        main: mode === 'light' ? '#f2994a' : '#ffb04f',
+        light: mode === 'light' ? '#fff2e0' : 'rgba(242, 153, 74, 0.15)',
+        dark: mode === 'light' ? '#e0822f' : '#f2994a',
         contrastText: '#ffffff',
+        border: mode === 'light' ? '#ffdbb3' : 'rgba(242, 153, 74, 0.25)',
       },
       success: {
-        main: mode === 'light' ? '#1f883d' : '#238636',
-        light: mode === 'light' ? '#dafbe1' : 'rgba(35, 134, 54, 0.15)',
-        dark: mode === 'light' ? '#1a7f37' : '#2ea44f',
+        main: mode === 'light' ? '#27ae60' : '#34d399',
+        light: mode === 'light' ? '#e6f4ea' : 'rgba(46, 125, 50, 0.15)',
+        dark: mode === 'light' ? '#219653' : '#059669',
         contrastText: '#ffffff',
       },
       info: {

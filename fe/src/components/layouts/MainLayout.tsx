@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
-import { Box, IconButton, Drawer } from '@/components/ui'
+import React from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Box, IconButton, BottomNavigation, BottomNavigationAction } from '@/components/ui'
 import { useBoundStore } from '@/store'
 import { pxToRem } from '@/utils'
 
@@ -11,6 +11,11 @@ import { AtRiskBanner } from './AtRiskBanner'
 
 // Icons
 import { Icons } from '@/components/ui/icons'
+import GridViewIcon from '@mui/icons-material/GridView'
+import EditIcon from '@mui/icons-material/Edit'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import TrackChangesIcon from '@mui/icons-material/TrackChanges'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const BRAND_FIRST = 'Trace'
 const BRAND_SECOND = 'X'
@@ -29,13 +34,34 @@ const MOCK_TITLE_SETTINGS = 'Settings & Backups'
 export const MainLayout: React.FC = () => {
   const currentYear = new Date().getFullYear()
   const location = useLocation()
+  const navigate = useNavigate()
   const themeMode = useBoundStore((state) => state.themeMode) || 'light'
   const toggleThemeMode = useBoundStore((state) => state.toggleThemeMode)
+  const getBottomNavValue = () => {
+    if (location.pathname.startsWith('/habits')) return 1
+    if (location.pathname.startsWith('/checkins')) return 2
+    if (location.pathname.startsWith('/goals')) return 3
+    if (location.pathname === '/settings') return -1
+    return 0
+  }
 
-  const [mobileOpen, setMobileOpen] = useState(false)
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
+  const handleBottomNavChange = (_: React.SyntheticEvent, newValue: number) => {
+    switch (newValue) {
+      case 0:
+        navigate('/dashboard')
+        break
+      case 1:
+        navigate('/habits')
+        break
+      case 2:
+        navigate('/checkins')
+        break
+      case 3:
+        navigate('/goals')
+        break
+      default:
+        break
+    }
   }
 
   const getPageHeaderInfo = (pathname: string) => {
@@ -94,29 +120,6 @@ export const MainLayout: React.FC = () => {
         <Sidebar pathname={location.pathname} currentYear={currentYear} />
       </Box>
 
-      {/* Mobile Drawer */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: pxToRem(260),
-          },
-        }}
-      >
-        <Sidebar
-          pathname={location.pathname}
-          onCloseMobile={handleDrawerToggle}
-          currentYear={currentYear}
-        />
-      </Drawer>
-
       {/* Main Content Pane */}
       <Box
         sx={{
@@ -141,15 +144,25 @@ export const MainLayout: React.FC = () => {
             bgcolor: 'background.paper',
           }}
         >
-          <IconButton color="inherit" edge="start" onClick={handleDrawerToggle}>
-            <Icons.Menu />
-          </IconButton>
+          {location.pathname === '/settings' ? (
+            <IconButton color="inherit" edge="start" onClick={() => navigate(-1)}>
+              <ArrowBackIcon />
+            </IconButton>
+          ) : (
+            <Box sx={{ width: 40 }} />
+          )}
           <Box
+            onClick={() => navigate('/dashboard')}
             sx={{
               fontWeight: 700,
               fontSize: pxToRem(22),
               display: 'flex',
               alignItems: 'center',
+              cursor: 'pointer',
+              userSelect: 'none',
+              '&:hover': {
+                opacity: 0.85,
+              },
             }}
           >
             {BRAND_FIRST}
@@ -157,7 +170,12 @@ export const MainLayout: React.FC = () => {
               {BRAND_SECOND}
             </Box>
           </Box>
-          <IconButton color="inherit" onClick={toggleThemeMode}>
+          <IconButton
+            onClick={toggleThemeMode}
+            sx={{
+              color: themeMode === 'dark' ? 'warning.main' : 'inherit',
+            }}
+          >
             {themeMode === 'light' ? <Icons.DarkMode /> : <Icons.LightMode />}
           </IconButton>
         </Box>
@@ -176,13 +194,42 @@ export const MainLayout: React.FC = () => {
             flexGrow: 1,
             px: { xs: 2, md: 4 },
             pt: 2,
-            pb: { xs: 2, md: 4 },
+            pb: { xs: 10, md: 4 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <AtRiskBanner />
-          <Outlet />
+          <Box sx={{ width: '100%', maxWidth: 'lg' }}>
+            <AtRiskBanner />
+            <Outlet />
+          </Box>
         </Box>
       </Box>
+
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation
+        value={getBottomNavValue()}
+        onChange={handleBottomNavChange}
+        showLabels
+        sx={{
+          display: { xs: 'flex', md: 'none' },
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+          height: 56,
+        }}
+      >
+        <BottomNavigationAction label="Overview" icon={<GridViewIcon />} />
+        <BottomNavigationAction label="Habits" icon={<EditIcon />} />
+        <BottomNavigationAction label="Progress" icon={<CalendarMonthIcon />} />
+        <BottomNavigationAction label="Goals" icon={<TrackChangesIcon />} />
+      </BottomNavigation>
     </Box>
   )
 }

@@ -15,7 +15,7 @@ import { MonthlyCalendar } from './MonthlyCalendar'
 
 const VARIANT_BODY1 = 'body1'
 const COLOR_TEXT_SECONDARY = 'text.secondary'
-const LOGS_HEADER = 'Check-in Logs'
+const PAGE_TITLE = 'Check-in Logs'
 const BTN_SHOW_PICKER = 'Show Monthly Calendar'
 const BTN_HIDE_PICKER = 'Hide Monthly Calendar'
 const DAILY_PROGRESS_LABEL = 'Daily Progress'
@@ -100,10 +100,10 @@ export const CheckinsPage: React.FC = () => {
   const progressPercentText = `${progressPercent}%`
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          {LOGS_HEADER}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {PAGE_TITLE}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           {previousCheckins && (

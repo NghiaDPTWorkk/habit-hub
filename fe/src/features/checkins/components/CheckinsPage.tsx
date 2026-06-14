@@ -28,7 +28,8 @@ export const CheckinsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [modalHabit, setModalHabit] = useState<Habit | null>(null)
   const [showDatePicker, setShowDatePicker] = useState(false)
-  const { getCheckinByHabitAndDate, previousCheckins, undoLastCheckin } = useCheckinStore()
+  const { getCheckinByHabitAndDate, previousCheckins, undoLastCheckin, today, checkins } =
+    useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
   const showToast = useBoundStore((state) => state.showToast)
 

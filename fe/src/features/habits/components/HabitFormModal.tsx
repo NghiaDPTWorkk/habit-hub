@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { getLocalDateString, subtractDays } from '@/utils'
 import {
   Box,
   Typography,
@@ -17,35 +18,12 @@ import {
 import { TextField } from '@/components/ui'
 import { useHabitStore } from '@/features/habits/hooks'
 import { habitFormSchema, defaultHabitFormValues } from '@/features/habits/constants/habitSchema'
-import { HABITS_CONTENT } from '@/features/habits/constants/content'
+import { HABITS_CONTENT, HABIT_FORM_CONTENT } from '@/features/habits/constants/content'
 import { useBoundStore } from '@/store/useBoundStore'
 import { SHARED_MESSAGES } from '@/constants/messages'
 import type { ZodIssue } from 'zod'
 import type { Habit, Category, Frequency, Priority } from '@/types'
 import type { HabitFormValues } from '@/features/habits/constants/habitSchema'
-
-const FORM_CONTENT = {
-  TITLE_CREATE: 'Tạo thói quen mới',
-  TITLE_EDIT: 'Chỉnh sửa thói quen',
-  SPECIFIC_DAYS_LABEL: 'Chọn ngày trong tuần',
-  DAY_LABELS: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
-  CATEGORY_OPTIONS: [
-    { value: 'Health' as Category, label: 'Health' },
-    { value: 'Study' as Category, label: 'Study' },
-    { value: 'Work' as Category, label: 'Work' },
-    { value: 'Mindfulness' as Category, label: 'Mindfulness' },
-    { value: 'Other' as Category, label: 'Other' },
-  ],
-  FREQUENCY_OPTIONS: [
-    { value: 'Daily' as Frequency, label: 'Hàng ngày' },
-    { value: 'Specific' as Frequency, label: 'Ngày cụ thể' },
-  ],
-  PRIORITY_OPTIONS: [
-    { value: 'Low' as Priority, label: 'Thấp' },
-    { value: 'Medium' as Priority, label: 'Trung bình' },
-    { value: 'High' as Priority, label: 'Cao' },
-  ],
-}
 
 export interface HabitFormModalProps {
   open: boolean
@@ -63,6 +41,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
   const [formValues, setFormValues] = useState<HabitFormValues>(() =>
     habitToEdit
       ? {
+          startDate: habitToEdit.createdAt,
           name: habitToEdit.name,
           category: habitToEdit.category,
           frequency: habitToEdit.frequency,
@@ -80,6 +59,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
         setFormValues(
           habitToEdit
             ? {
+                startDate: habitToEdit.createdAt,
                 name: habitToEdit.name,
                 category: habitToEdit.category,
                 frequency: habitToEdit.frequency,
@@ -133,7 +113,9 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm" fullScreen={isMobile}>
-      <DialogTitle>{isEditMode ? FORM_CONTENT.TITLE_EDIT : FORM_CONTENT.TITLE_CREATE}</DialogTitle>
+      <DialogTitle>
+        {isEditMode ? HABIT_FORM_CONTENT.TITLE_EDIT : HABIT_FORM_CONTENT.TITLE_CREATE}
+      </DialogTitle>
       <DialogContent dividers>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <Box>
@@ -151,6 +133,25 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
           </Box>
 
           <Box>
+            <TextField
+              label="Start date"
+              type="date"
+              value={formValues.startDate}
+              disabled={isEditMode}
+              slotProps={{
+                htmlInput: { min: subtractDays(2), max: getLocalDateString() },
+                inputLabel: { shrink: true },
+              }}
+              onChange={(e) => setFormValues((prev) => ({ ...prev, startDate: e.target.value }))}
+            />
+            {errors.startDate && (
+              <Typography variant="caption" color="error.main">
+                {errors.startDate}
+              </Typography>
+            )}
+          </Box>
+
+          <Box>
             <FormControl fullWidth size="small">
               <InputLabel>{HABITS_CONTENT.FORM.CATEGORY_LABEL}</InputLabel>
               <Select
@@ -160,7 +161,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
                   setFormValues((prev) => ({ ...prev, category: e.target.value as Category }))
                 }
               >
-                {FORM_CONTENT.CATEGORY_OPTIONS.map((opt) => (
+                {HABIT_FORM_CONTENT.CATEGORY_OPTIONS.map((opt) => (
                   <MenuItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </MenuItem>
@@ -184,7 +185,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
                   setFormValues((prev) => ({ ...prev, frequency: e.target.value as Frequency }))
                 }
               >
-                {FORM_CONTENT.FREQUENCY_OPTIONS.map((opt) => (
+                {HABIT_FORM_CONTENT.FREQUENCY_OPTIONS.map((opt) => (
                   <MenuItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </MenuItem>
@@ -201,10 +202,10 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
           {formValues.frequency === 'Specific' && (
             <Box>
               <Typography variant="body2" gutterBottom>
-                {FORM_CONTENT.SPECIFIC_DAYS_LABEL}
+                {HABIT_FORM_CONTENT.SPECIFIC_DAYS_LABEL}
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {FORM_CONTENT.DAY_LABELS.map((label, index) => {
+                {HABIT_FORM_CONTENT.DAY_LABELS.map((label, index) => {
                   const isActive = formValues.specificDays?.includes(index) ?? false
                   return (
                     <Box
@@ -269,7 +270,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({ open, onClose, h
                   setFormValues((prev) => ({ ...prev, priority: e.target.value as Priority }))
                 }
               >
-                {FORM_CONTENT.PRIORITY_OPTIONS.map((opt) => (
+                {HABIT_FORM_CONTENT.PRIORITY_OPTIONS.map((opt) => (
                   <MenuItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </MenuItem>

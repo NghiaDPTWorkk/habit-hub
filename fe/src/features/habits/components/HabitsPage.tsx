@@ -1,4 +1,5 @@
-import { type FC, useMemo, useState } from 'react'
+import { type FC, useMemo, useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   Box,
   Typography,
@@ -9,11 +10,10 @@ import {
   Select,
   MenuItem,
   useTheme,
+  Button,
+  Card,
 } from '@/components/ui'
 import Chip from '@mui/material/Chip'
-import { Button } from '@/components/ui'
-import { Card } from '@/components/ui/Card'
-import { Icons } from '@/components/ui/icons'
 import { useBoundStore } from '@/store/useBoundStore'
 import { useHabitStore } from '@/features/habits/hooks'
 import { HabitFormModal } from './HabitFormModal'
@@ -46,7 +46,6 @@ import {
   TEXT_VAL_PAUSED,
   TEXT_VAL_ARCHIVED,
   PAGE_TITLE,
-  ADD_HABIT_LABEL,
 } from '../constants/pageConstants'
 
 const TEXT_HIGH_PRIORITY = 'High Priority'
@@ -79,6 +78,21 @@ export const HabitsPage: FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [habitToDelete, setHabitToDelete] = useState<Habit | undefined>(undefined)
   const [searchTerm, setSearchTerm] = useState('')
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const triggerCreate = searchParams.get('create') === 'true'
+
+  useEffect(() => {
+    if (triggerCreate) {
+      setTimeout(() => {
+        setHabitToEdit(undefined)
+        setModalOpen(true)
+        const newParams = new URLSearchParams(searchParams)
+        newParams.delete('create')
+        setSearchParams(newParams, { replace: true })
+      }, 0)
+    }
+  }, [triggerCreate, searchParams, setSearchParams])
 
   const todayCheckinByHabit = useMemo(
     () =>
@@ -220,16 +234,6 @@ export const HabitsPage: FC = () => {
               <MenuItem value={TEXT_VAL_ARCHIVED}>{TEXT_VAL_ARCHIVED}</MenuItem>
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            startIcon={<Icons.Add />}
-            onClick={() => {
-              setHabitToEdit(undefined)
-              setModalOpen(true)
-            }}
-          >
-            {ADD_HABIT_LABEL}
-          </Button>
         </Box>
         <Box
           sx={{

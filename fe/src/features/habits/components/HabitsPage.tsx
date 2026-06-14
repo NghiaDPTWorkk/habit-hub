@@ -8,7 +8,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  useTheme,
 } from '@/components/ui'
+import Chip from '@mui/material/Chip'
 import { Button } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
 import { Icons } from '@/components/ui/icons'
@@ -21,30 +23,36 @@ import SearchIcon from '@mui/icons-material/Search'
 import InputAdornment from '@mui/material/InputAdornment'
 import type { HabitFilters } from './FilterSideBar'
 import type { Category, Frequency, HabitStatus, Habit } from '@/types'
+import { todayString, isHabitMissed as helperIsHabitMissed } from '../utils/habitHelpers'
+import {
+  TEXT_SEARCH_PLACEHOLDER,
+  TEXT_CATEGORY_LABEL,
+  TEXT_FREQUENCY_LABEL,
+  TEXT_STATUS_LABEL,
+  TEXT_ALL_CATEGORIES,
+  TEXT_ALL_FREQUENCIES,
+  TEXT_ALL_STATUSES,
+  TEXT_PRIORITY_LABEL,
+  TEXT_CLEAR_FILTERS,
+  TEXT_VAL_ALL,
+  TEXT_VAL_HEALTH,
+  TEXT_VAL_STUDY,
+  TEXT_VAL_WORK,
+  TEXT_VAL_MINDFULNESS,
+  TEXT_VAL_OTHER,
+  TEXT_VAL_DAILY,
+  TEXT_VAL_SPECIFIC,
+  TEXT_VAL_ACTIVE,
+  TEXT_VAL_PAUSED,
+  TEXT_VAL_ARCHIVED,
+  PAGE_TITLE,
+  PAGE_DESC,
+  ADD_HABIT_LABEL,
+} from '../constants/pageConstants'
 
-const TEXT_SEARCH_PLACEHOLDER = 'Tìm kiếm thói quen...'
-const TEXT_CATEGORY_LABEL = 'Category'
-const TEXT_FREQUENCY_LABEL = 'Frequency'
-const TEXT_STATUS_LABEL = 'Status'
-const TEXT_ALL_CATEGORIES = 'All Categories'
-const TEXT_ALL_FREQUENCIES = 'All Frequencies'
-const TEXT_ALL_STATUSES = 'All Status'
-
-const TEXT_VAL_ALL = 'All'
-const TEXT_VAL_HEALTH = 'Health'
-const TEXT_VAL_STUDY = 'Study'
-const TEXT_VAL_WORK = 'Work'
-const TEXT_VAL_MINDFULNESS = 'Mindfulness'
-const TEXT_VAL_OTHER = 'Other'
-const TEXT_VAL_DAILY = 'Daily'
-const TEXT_VAL_SPECIFIC = 'Specific'
-const TEXT_VAL_ACTIVE = 'Active'
-const TEXT_VAL_PAUSED = 'Paused'
-const TEXT_VAL_ARCHIVED = 'Archived'
-
-const PAGE_TITLE = 'Habits'
-const PAGE_DESC = 'Build and manage all the habits you want to track.'
-const ADD_HABIT_LABEL = 'Add Habit'
+const TEXT_HIGH_PRIORITY = 'High Priority'
+const TEXT_MEDIUM_PRIORITY = 'Medium Priority'
+const TEXT_LOW_PRIORITY = 'Low Priority'
 
 const DEFAULT_FILTERS: HabitFilters = {
   category: 'All',
@@ -53,17 +61,15 @@ const DEFAULT_FILTERS: HabitFilters = {
   status: 'All',
 }
 
-const todayString = new Date().toISOString().split('T')[0]
-const todayWeekDay = new Date().getDay()
-
-const isDueToday = (habit: Habit) => {
-  if (habit.frequency === 'Daily') {
-    return true
-  }
-  return Array.isArray(habit.specificDays) && habit.specificDays.includes(todayWeekDay)
-}
+const PRIORITY_OPTIONS = [
+  { value: 'All', label: TEXT_VAL_ALL },
+  { value: 'High', label: TEXT_HIGH_PRIORITY },
+  { value: 'Medium', label: TEXT_MEDIUM_PRIORITY },
+  { value: 'Low', label: TEXT_LOW_PRIORITY },
+] as const
 
 export const HabitsPage: FC = () => {
+  const theme = useTheme()
   const { habits, deleteHabit, pauseHabit, resumeHabit, archiveHabit } = useHabitStore()
   const checkins = useBoundStore((state) => state.checkins)
   const showToast = useBoundStore((s) => s.showToast)
@@ -86,31 +92,17 @@ export const HabitsPage: FC = () => {
     [checkins]
   )
 
-  const filteredHabits = useMemo(
-    () =>
-      habits.filter((habit) => {
-        if (
-          searchTerm.trim() !== '' &&
-          !habit.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
-        ) {
-          return false
-        }
-        if (filters.category !== 'All' && habit.category !== filters.category) {
-          return false
-        }
-        if (filters.frequency !== 'All' && habit.frequency !== filters.frequency) {
-          return false
-        }
-        if (filters.priority !== 'All' && habit.priority !== filters.priority) {
-          return false
-        }
-        if (filters.status !== 'All' && habit.status !== filters.status) {
-          return false
-        }
-        return true
-      }),
-    [habits, filters, searchTerm]
-  )
+  const filteredHabits = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase()
+    return habits.filter((h) => {
+      if (term && !h.name.toLowerCase().includes(term)) return false
+      if (filters.category !== 'All' && h.category !== filters.category) return false
+      if (filters.frequency !== 'All' && h.frequency !== filters.frequency) return false
+      if (filters.priority !== 'All' && h.priority !== filters.priority) return false
+      if (filters.status !== 'All' && h.status !== filters.status) return false
+      return true
+    })
+  }, [habits, filters, searchTerm])
 
   const handleEdit = (habit: Habit) => {
     setHabitToEdit(habit)
@@ -150,16 +142,7 @@ export const HabitsPage: FC = () => {
     showToast(SHARED_MESSAGES.SUCCESS.STATUS_CHANGE, 'success')
   }
 
-  const isHabitMissed = (habit: Habit) => {
-    if (habit.status !== 'Active') {
-      return false
-    }
-    if (!isDueToday(habit)) {
-      return false
-    }
-    const todayCheckin = todayCheckinByHabit[habit.id]
-    return !todayCheckin || todayCheckin.completedCount < habit.targetPerDay
-  }
+  const isHabitMissed = (habit: Habit) => helperIsHabitMissed(habit, todayCheckinByHabit)
 
   return (
     <Box sx={{ p: 3, maxWidth: '100vw' }}>
@@ -244,6 +227,47 @@ export const HabitsPage: FC = () => {
           >
             {ADD_HABIT_LABEL}
           </Button>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            mt: 2,
+            pt: 2,
+            borderTop: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {TEXT_PRIORITY_LABEL}
+          </Typography>
+          {PRIORITY_OPTIONS.map((opt) => (
+            <Chip
+              key={opt.value}
+              label={opt.label}
+              onClick={() => setFilters((prev) => ({ ...prev, priority: opt.value }))}
+              color={filters.priority === opt.value ? 'primary' : 'default'}
+              variant={filters.priority === opt.value ? 'filled' : 'outlined'}
+              size="small"
+            />
+          ))}
+          {(searchTerm ||
+            filters.category !== 'All' ||
+            filters.frequency !== 'All' ||
+            filters.priority !== 'All' ||
+            filters.status !== 'All') && (
+            <Button
+              size="small"
+              onClick={() => {
+                setFilters(DEFAULT_FILTERS)
+                setSearchTerm('')
+              }}
+              sx={{ ml: 'auto' }}
+            >
+              {TEXT_CLEAR_FILTERS}
+            </Button>
+          )}
         </Box>
       </Card>
 

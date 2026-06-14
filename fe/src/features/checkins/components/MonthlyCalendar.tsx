@@ -113,16 +113,17 @@ export const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
       <Box
         sx={{ display: DISPLAY_GRID, gridTemplateColumns: GRID_COLS_7, gap: { xs: 0.5, sm: 1 } }}
       >
-        {calendarDays.map((day, idx) => {
+        {calendarDays.map((day) => {
           const isCurrentMonth = day.month() === currentMonth.month()
           const isFuture = day.isAfter(dayjs(), 'day')
           const isSelected = !isFuture && day.isSame(selectedDate, 'day')
           const isToday = day.isSame(dayjs(), 'day')
           const status = getDayStatus(day, habits, getCheckinByHabitAndDate)
+          const dateStr = day.format('YYYY-MM-DD')
 
           return (
             <Box
-              key={idx}
+              key={dateStr}
               onClick={() => handleDateClick(day)}
               sx={{
                 display: 'flex',

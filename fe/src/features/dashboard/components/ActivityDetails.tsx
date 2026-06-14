@@ -85,11 +85,11 @@ export const ActivityDetails: React.FC<ActivityDetailsProps> = ({ details }) => 
             },
           }}
         >
-          {details.tasks.map((task, idx) => {
+          {details.tasks.map((task) => {
             const ratioText = `${task.completedCount}/${task.targetPerDay}`
             return (
               <Box
-                key={idx}
+                key={`${task.name}-${task.category}`}
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',

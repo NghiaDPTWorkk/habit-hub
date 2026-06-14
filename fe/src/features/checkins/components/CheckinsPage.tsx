@@ -150,10 +150,11 @@ export const CheckinsPage: React.FC = () => {
             const dateNum = day.date()
             const label = WEEK_DAY_LABELS[idx]
             const status = getDayStatus(day, habits, getCheckinByHabitAndDate)
+            const dateStr = day.format('YYYY-MM-DD')
 
             return (
               <Box
-                key={idx}
+                key={dateStr}
                 onClick={() => {
                   if (!isFuture) {
                     setSelectedDate(day)

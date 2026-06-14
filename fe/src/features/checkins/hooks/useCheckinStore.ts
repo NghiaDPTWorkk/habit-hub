@@ -23,7 +23,7 @@ export function useCheckinStore() {
 
   const getCheckinByHabitAndDate = useCallback(
     (habitId: number, date: string): Checkin | undefined =>
-      checkins[makeCheckinKey(habitId, toUTCDateString(date))],
+      checkins[makeCheckinKey(toUTCDateString(date), habitId)],
     [checkins]
   )
 

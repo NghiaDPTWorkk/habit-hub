@@ -170,7 +170,7 @@ export const useSettings = () => {
       TEXTS.seedConfirmWarning,
       () => {
         const checkinsRecord = Object.fromEntries(
-          SEED_CHECKINS.map((c) => [makeCheckinKey(c.habitId, c.date), c])
+          SEED_CHECKINS.map((c) => [makeCheckinKey(c.date, c.habitId), c])
         )
 
         useBoundStore.setState({

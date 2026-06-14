@@ -10,7 +10,7 @@ export function initStore(): void {
   if (habits.length > 0) return
 
   const checkinsRecord = Object.fromEntries(
-    SEED_CHECKINS.map((c) => [makeCheckinKey(c.habitId, c.date), c])
+    SEED_CHECKINS.map((c) => [makeCheckinKey(c.date, c.habitId), c])
   )
 
   useBoundStore.setState({

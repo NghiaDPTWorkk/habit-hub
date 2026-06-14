@@ -2,7 +2,7 @@ import type { StateCreator } from 'zustand'
 import type { Checkin } from '@/types'
 import type { BoundStore } from './types'
 
-export const makeCheckinKey = (habitId: number, date: string) => `${date}_${habitId}`
+export const makeCheckinKey = (date: string, habitId: number) => `${date}_${habitId}`
 
 export interface CheckinSlice {
   checkins: Record<string, Checkin>
@@ -26,13 +26,13 @@ export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> 
       previousCheckins: state.checkins,
       checkins: {
         ...state.checkins,
-        [makeCheckinKey(checkin.habitId, checkin.date)]: checkin,
+        [makeCheckinKey(checkin.date, checkin.habitId)]: checkin,
       },
     })),
 
   updateCheckin: (habitId, date, updates) =>
     set((state) => {
-      const key = makeCheckinKey(habitId, date)
+      const key = makeCheckinKey(date, habitId)
       const existing = state.checkins[key]
       if (!existing) return state
       return {
@@ -43,7 +43,7 @@ export const createCheckinSlice: StateCreator<BoundStore, [], [], CheckinSlice> 
 
   deleteCheckin: (habitId, date) =>
     set((state) => {
-      const key = makeCheckinKey(habitId, date)
+      const key = makeCheckinKey(date, habitId)
       const existing = state.checkins[key]
       if (!existing) return state
       const next = { ...state.checkins }

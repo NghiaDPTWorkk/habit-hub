@@ -61,18 +61,21 @@ export const GoalsPage: React.FC = () => {
           title={KPI_COMPLETED}
           value={completedCount}
           icon={<Icons.Check />}
+          iconColor="success.main"
           sx={{ borderLeft: '4px solid', borderColor: 'success.main' }}
         />
         <StatCard
           title={KPI_ACTIVE}
           value={activeCount}
           icon={<Icons.TrendingUp />}
-          sx={{ borderLeft: '4px solid', borderColor: 'primary.main' }}
+          iconColor="info.main"
+          sx={{ borderLeft: '4px solid', borderColor: 'info.main' }}
         />
         <StatCard
           title={KPI_SUCCESS_RATE}
           value={`${successRate}%`}
           icon={<Icons.EmojiEvents />}
+          iconColor="secondary.main"
           sx={{ borderLeft: '4px solid', borderColor: 'secondary.main' }}
         />
       </Box>

@@ -1,18 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import { useBoundStore } from '@/store'
 import { makeCheckinKey } from '@/store/checkinSlice'
+import { getLocalDateString } from '@/utils'
 import type { Checkin, CheckinStatus } from '@/types'
 
 function computeStatus(completedCount: number, targetPerDay: number): CheckinStatus {
   if (completedCount === 0) return 'Not Started'
   if (completedCount >= targetPerDay) return 'Completed'
   return 'In Progress'
-}
-
-function getLocalDateString(date = new Date()): string {
-  const offset = date.getTimezoneOffset()
-  const localDate = new Date(date.getTime() - offset * 60 * 1000)
-  return localDate.toISOString().split('T')[0]
 }
 
 export function useCheckinStore() {

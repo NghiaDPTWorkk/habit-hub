@@ -9,6 +9,7 @@ import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
 import { FilterSideBar } from './FilterSideBar'
 import { SHARED_MESSAGES } from '@/constants/messages'
+import { getLocalDateString } from '@/utils'
 import type { HabitFilters } from './FilterSideBar'
 import type { Habit } from '@/types'
 import { ShareProgressButton } from './ShareProgressButton'
@@ -24,7 +25,7 @@ const DEFAULT_FILTERS: HabitFilters = {
   status: 'All',
 }
 
-const todayString = new Date().toISOString().split('T')[0]
+const todayString = getLocalDateString()
 const todayWeekDay = new Date().getDay()
 
 const isDueToday = (habit: Habit) => {

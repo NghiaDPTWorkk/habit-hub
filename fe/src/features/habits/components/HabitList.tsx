@@ -1,6 +1,5 @@
 import { type FC } from 'react'
-import Box from '@mui/material/Box'
-import { Button } from '@/components/ui/Button'
+import { Box, Button } from '@/components/ui'
 import { HabitCard } from './HabitCard'
 import type { Habit } from '@/types'
 

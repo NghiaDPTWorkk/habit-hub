@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
-import { Dialog, IconButton, LinearProgress, Typography, Box, alpha } from '@/components/ui'
+import { Dialog, IconButton, LinearProgress, Typography, Box } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { useBoundStore } from '@/store/useBoundStore'
 import { Icons } from '@/components/ui/icons'
 import { keyframes } from '@mui/system'
 import type { ToastItem } from '@/store/toastSlice'
 import { pxToRem } from '@/utils'
+import { alpha } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
 
 const TOAST_DURATION_MS = 5000
@@ -229,15 +230,43 @@ export const Toast: React.FC = () => {
     >
       <Alert
         severity={current.severity}
-        variant="filled"
         onClose={dismissToast}
         sx={{
-          borderRadius: 2,
-          minWidth: { xs: '100%', sm: 300 },
+          borderRadius: 1,
+          minWidth: { xs: '100%', sm: 320 },
           maxWidth: { xs: '100%', sm: 480 },
           alignItems: 'center',
-          '& .MuiAlert-icon': { fontSize: 22 },
-          '& .MuiAlert-message': { fontWeight: 500 },
+          backdropFilter: 'blur(12px)',
+          boxShadow: 3,
+          border: '1px solid',
+          bgcolor: (theme: Theme) => {
+            const color = theme.palette[current.severity ?? 'info'].main
+            return alpha(color, 0.08)
+          },
+          color: (theme: Theme) => {
+            const color = theme.palette[current.severity ?? 'info'].main
+            return theme.palette.mode === 'dark' ? theme.palette.text.primary : color
+          },
+          borderColor: (theme: Theme) => {
+            const color = theme.palette[current.severity ?? 'info'].main
+            return alpha(color, 0.25)
+          },
+          '& .MuiAlert-icon': {
+            fontSize: 22,
+            color: (theme: Theme) => theme.palette[current.severity ?? 'info'].main,
+          },
+          '& .MuiAlert-message': {
+            fontWeight: 600,
+            fontSize: pxToRem(14),
+            lineHeight: 1.4,
+          },
+          '& .MuiAlert-action': {
+            color: 'text.secondary',
+            opacity: 0.8,
+            '&:hover': {
+              opacity: 1,
+            },
+          },
         }}
       >
         {current.message}

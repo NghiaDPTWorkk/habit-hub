@@ -28,7 +28,7 @@ export const useGoalMilestoneNotifications = (): void => {
         showToast(SHARED_MESSAGES.GOALS.COMPLETED(habitName), 'success')
       } else if (progress.isAt80Percent && !notifiedGoals[at80Key]) {
         markGoalNotified(at80Key)
-        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT(habitName), 'info')
+        showToast(SHARED_MESSAGES.GOALS.AT_80_PERCENT(habitName), 'warning')
       }
     })
   }, [goals, checkins, habits, getGoalProgress, notifiedGoals, markGoalNotified, showToast])

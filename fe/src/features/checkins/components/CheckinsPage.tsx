@@ -10,11 +10,12 @@ import type { Habit } from '@/types'
 import { CheckinItemCard } from './CheckinItemCard'
 import { MultiCountModal } from './MultiCountModal'
 import { getDayStatus, getActiveHabitsForDay } from '../utils'
+import { isAtRisk } from '@/features/dashboard/services'
 import { MonthlyCalendar } from './MonthlyCalendar'
 
 const VARIANT_BODY1 = 'body1'
 const COLOR_TEXT_SECONDARY = 'text.secondary'
-const LOGS_HEADER = 'Check-in Logs'
+const PAGE_TITLE = 'Check-in Logs'
 const BTN_SHOW_PICKER = 'Show Monthly Calendar'
 const BTN_HIDE_PICKER = 'Hide Monthly Calendar'
 const DAILY_PROGRESS_LABEL = 'Daily Progress'
@@ -27,8 +28,10 @@ export const CheckinsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [modalHabit, setModalHabit] = useState<Habit | null>(null)
   const [showDatePicker, setShowDatePicker] = useState(false)
-  const { getCheckinByHabitAndDate } = useCheckinStore()
+  const { getCheckinByHabitAndDate, previousCheckins, undoLastCheckin, today, checkins } =
+    useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
+  const showToast = useBoundStore((state) => state.showToast)
 
   const selectedDate = useMemo(() => {
     const dateParam = searchParams.get('date')
@@ -51,6 +54,24 @@ export const CheckinsPage: React.FC = () => {
   const activeHabits = useMemo(() => {
     return getActiveHabitsForDay(habits, selectedDate)
   }, [habits, selectedDate])
+
+  const isToday = dateStr === today
+
+  const atRiskIds = useMemo(() => {
+    if (!isToday) return new Set<number>()
+    const arr = Object.values(checkins)
+    return new Set(activeHabits.filter((h) => isAtRisk(h, arr)).map((h) => h.id))
+  }, [activeHabits, checkins, isToday])
+
+  const sortedHabits = useMemo(() => {
+    return [...activeHabits].sort((a, b) => {
+      const rank = (h: typeof a): number => {
+        if (getCheckinByHabitAndDate(h.id, dateStr)?.status === 'Completed') return 2
+        return atRiskIds.has(h.id) ? 0 : 1
+      }
+      return rank(a) - rank(b)
+    })
+  }, [activeHabits, atRiskIds, getCheckinByHabitAndDate, dateStr])
 
   const weekDays = useMemo(() => {
     const start =
@@ -79,14 +100,33 @@ export const CheckinsPage: React.FC = () => {
   const progressPercentText = `${progressPercent}%`
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          {LOGS_HEADER}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {PAGE_TITLE}
         </Typography>
-        <Button variant="outlined" size="small" onClick={() => setShowDatePicker((prev) => !prev)}>
-          {showDatePicker ? BTN_HIDE_PICKER : BTN_SHOW_PICKER}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          {previousCheckins && (
+            <Button
+              variant="outlined"
+              color="warning"
+              size="small"
+              onClick={() => {
+                undoLastCheckin()
+                showToast(CHECKIN_CONTENT.MESSAGES.UNDO_SUCCESS, 'warning')
+              }}
+            >
+              {CHECKIN_CONTENT.BUTTONS.UNDO}
+            </Button>
+          )}
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setShowDatePicker((prev) => !prev)}
+          >
+            {showDatePicker ? BTN_HIDE_PICKER : BTN_SHOW_PICKER}
+          </Button>
+        </Box>
       </Box>
 
       {showDatePicker && (
@@ -225,13 +265,14 @@ export const CheckinsPage: React.FC = () => {
           </Typography>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {activeHabits.map((habit) => (
+            {sortedHabits.map((habit) => (
               <CheckinItemCard
                 key={habit.id}
                 habit={habit}
                 checkin={getCheckinByHabitAndDate(habit.id, dateStr)}
                 today={dateStr}
                 onOpenModal={() => setModalHabit(habit)}
+                isAtRisk={atRiskIds.has(habit.id)}
               />
             ))}
           </Box>

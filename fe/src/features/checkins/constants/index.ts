@@ -15,9 +15,13 @@ export const CHECKIN_CONTENT = {
     INCREMENT: 'Increase',
     DECREMENT: 'Decrease',
     EDIT: 'Edit',
+    UNDO: 'Undo',
   },
   PLACEHOLDERS: {
     NO_HABITS: 'No habits found. Create a habit first!',
     NO_CHECKINS: 'No check-ins for this date.',
+  },
+  MESSAGES: {
+    UNDO_SUCCESS: 'Last check-in action undone.',
   },
 }

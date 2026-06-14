@@ -16,6 +16,7 @@ export interface StatCardProps extends CardProps {
   trend?: string
   trendDirection?: 'up' | 'down'
   icon?: React.ReactNode
+  iconColor?: string
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -24,6 +25,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   trend,
   trendDirection = 'up',
   icon,
+  iconColor = 'primary.main',
   sx,
   ...props
 }) => {
@@ -53,7 +55,7 @@ export const StatCard: React.FC<StatCardProps> = ({
           </Typography>
         )}
       </Box>
-      {icon && <Box sx={{ display: 'flex', color: 'primary.main', opacity: 0.8 }}>{icon}</Box>}
+      {icon && <Box sx={{ display: 'flex', color: iconColor, opacity: 0.8 }}>{icon}</Box>}
     </Card>
   )
 }

@@ -66,9 +66,12 @@ const CARD_TEXTS = {
   save: 'Save',
 }
 
-const TEXT_ACCUMULATED_DAYS = ' ngày'
-const TEXT_TARGET_PREFIX = 'Mục tiêu: '
-const TEXT_SLASH = '/'
+const WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+const WEEK_DAYS_MAP = WEEK_DAYS.map((label, index) => ({
+  value: index,
+  label,
+}))
 
 export interface HabitCardProps {
   habit: Habit
@@ -90,8 +93,44 @@ export const HabitCard: FC<HabitCardProps> = ({
   onArchive,
 }) => {
   const theme = useTheme()
-  if (typeof onPauseResume === 'function' && typeof onArchive === 'function') {
-    // Keep props referenced to pass strict eslint rules
+  const dueToday =
+    habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
+  const nextStatusAction =
+    habit.status === 'Paused'
+      ? CARD_TEXTS.resume
+      : habit.status === 'Archived'
+        ? CARD_TEXTS.restore
+        : CARD_TEXTS.pause
+
+  const menuItems: HabitOverflowMenuItem[] = [
+    {
+      label: CARD_TEXTS.edit,
+      icon: <Icons.Edit fontSize="small" />,
+      onClick: () => onEdit(habit),
+    },
+    {
+      label: CARD_TEXTS.delete,
+      icon: <Icons.Delete fontSize="small" color="error" />,
+      onClick: () => onDelete(habit),
+    },
+    {
+      label: nextStatusAction,
+      icon:
+        habit.status === 'Active' ? (
+          <Icons.Pause fontSize="small" />
+        ) : (
+          <Icons.Play fontSize="small" />
+        ),
+      onClick: () => onPauseResume(habit),
+    },
+  ]
+
+  if (habit.status !== 'Archived') {
+    menuItems.push({
+      label: CARD_TEXTS.archive,
+      icon: <Icons.Archive fontSize="small" />,
+      onClick: () => onArchive(habit),
+    })
   }
   const { incrementCount, getCheckinByHabitAndDate, today, checkins } = useCheckinStore()
   const currentCheckin = getCheckinByHabitAndDate(habit.id, today) || todayCheckin
@@ -169,18 +208,37 @@ export const HabitCard: FC<HabitCardProps> = ({
               {habit.category}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-            <IconButton size="small" onClick={() => onEdit(habit)} aria-label="Edit habit">
-              <Icons.Edit fontSize="small" />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => onDelete(habit)}
-              aria-label="Delete habit"
-              color="error"
-            >
-              <Icons.Delete fontSize="small" />
-            </IconButton>
+          <HabitOverflowMenu items={menuItems} />
+        </Box>
+        {habit.frequency === 'Specific' && habit.specificDays?.length ? (
+          <Box
+            component="p"
+            sx={{
+              ...theme.typography.body2,
+              color: theme.palette.text.secondary,
+              mb: 1,
+              margin: 0,
+            }}
+          >
+            {CARD_TEXTS.scheduled}{' '}
+            {habit.specificDays
+              .map((day) => WEEK_DAYS_MAP.find((item) => item.value === day)?.label)
+              .filter(Boolean)
+              .join(', ')}
+            {CARD_TEXTS.dot}
+          </Box>
+        ) : null}
+        {dueToday && (
+          <Box
+            component="p"
+            sx={{
+              ...theme.typography.body2,
+              color: theme.palette.text.secondary,
+              mb: 0.5,
+              margin: 0,
+            }}
+          >
+            {CARD_TEXTS.dueToday}
           </Box>
         </Box>
         {isMissed && (

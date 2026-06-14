@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  Container,
   Stack,
   Typography,
   Box,
@@ -12,6 +11,7 @@ import {
 import { Icons } from '@/components/ui/icons'
 import { GoalForm } from './GoalForm'
 import { GoalPanel } from './GoalPanel'
+import { GoalEditDialog } from './GoalEditDialog'
 import { GOALS_CONTENT } from '../constants/content'
 import { useBoundStore } from '@/store/useBoundStore'
 import type { Goal } from '@/types'
@@ -26,8 +26,9 @@ const KPI_SUCCESS_RATE = GOALS_CONTENT.KPI.SUCCESS_RATE
 const ACCORDION_LABEL = GOALS_CONTENT.ACCORDION_LABEL
 
 export const GoalsPage: React.FC = () => {
-  const [editingGoal, setEditingGoal] = useState<Goal | undefined>()
   const [accordionOpen, setAccordionOpen] = useState(false)
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const { goals, checkins, getGoalProgress } = useBoundStore()
 
   const completedCount = goals.filter(
@@ -38,16 +39,16 @@ export const GoalsPage: React.FC = () => {
 
   const handleEditGoal = (goal: Goal): void => {
     setEditingGoal(goal)
-    setAccordionOpen(true)
+    setDialogOpen(true)
   }
 
-  const handleFormSuccess = (): void => {
-    setEditingGoal(undefined)
-    setAccordionOpen(false)
+  const handleDialogClose = (): void => {
+    setEditingGoal(null)
+    setDialogOpen(false)
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Stack spacing={4}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -103,20 +104,20 @@ export const GoalsPage: React.FC = () => {
               >
                 <AccordionSummary expandIcon={<Icons.ExpandMore />}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {editingGoal ? GOALS_CONTENT.FORM_TITLE_EDIT : ACCORDION_LABEL}
+                    {ACCORDION_LABEL}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <GoalForm existingGoal={editingGoal} onSuccess={handleFormSuccess} />
+                  <GoalForm onSuccess={() => setAccordionOpen(false)} />
                 </AccordionDetails>
               </Accordion>
             </Box>
 
             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-                {editingGoal ? GOALS_CONTENT.FORM_TITLE_EDIT : FORM_SECTION_TITLE}
+                {FORM_SECTION_TITLE}
               </Typography>
-              <GoalForm existingGoal={editingGoal} onSuccess={handleFormSuccess} />
+              <GoalForm />
             </Box>
           </Box>
 
@@ -128,6 +129,13 @@ export const GoalsPage: React.FC = () => {
           </Box>
         </Box>
       </Stack>
-    </Container>
+
+      <GoalEditDialog
+        key={editingGoal?.id}
+        goal={editingGoal}
+        open={dialogOpen}
+        onClose={handleDialogClose}
+      />
+    </Box>
   )
 }

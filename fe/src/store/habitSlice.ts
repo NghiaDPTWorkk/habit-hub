@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils'
 import type { StateCreator } from 'zustand'
 import type { Habit } from '@/types'
 import type { BoundStore } from './types'
@@ -31,7 +32,7 @@ export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (s
         {
           ...habit,
           id: state.habits.length > 0 ? Math.max(...state.habits.map((h) => h.id)) + 1 : 1,
-          createdAt: new Date().toISOString().split('T')[0],
+          createdAt: habit.createdAt ?? getLocalDateString(),
         },
       ],
     })),

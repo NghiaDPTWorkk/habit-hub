@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils'
 import type { Habit } from '@/types'
 
 /**
@@ -22,7 +23,7 @@ export function isScheduledForDate(habit: Habit, date: string): boolean {
 export function getScheduledDatesInRange(
   habit: Habit,
   startDate: string,
-  endDate: string,
+  endDate: string
 ): string[] {
   const result: string[] = []
   const current = new Date(startDate)
@@ -43,8 +44,7 @@ export function getScheduledDatesInRange(
  * Returns true if the habit is scheduled for today.
  */
 export function isScheduledToday(habit: Habit): boolean {
-  const today = new Date().toISOString().split('T')[0]
-  return isScheduledForDate(habit, today)
+  return isScheduledForDate(habit, getLocalDateString())
 }
 
 /**

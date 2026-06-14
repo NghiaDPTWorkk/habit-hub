@@ -34,6 +34,7 @@ export {
   Tooltip,
   Typography,
   useTheme,
+  useMediaQuery,
 } from '@mui/material'
 export * from './Button'
 export * from './StatusPill'

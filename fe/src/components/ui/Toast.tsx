@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
-import { Dialog, IconButton, LinearProgress, Typography, Box, alpha } from '@/components/ui'
+import { Dialog, IconButton, LinearProgress, Typography, Box } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { useBoundStore } from '@/store/useBoundStore'
-import { alpha } from '@mui/material/styles'
+import { Icons } from '@/components/ui/icons'
+import { keyframes } from '@mui/system'
+import type { ToastItem } from '@/store/toastSlice'
 import { pxToRem } from '@/utils'
+import { alpha } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
 
 const TOAST_DURATION_MS = 5000

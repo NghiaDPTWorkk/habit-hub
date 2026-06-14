@@ -94,7 +94,7 @@ export const HabitsPage: FC = () => {
 
   const filteredHabits = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
-    return habits.filter((h) => {
+    const filtered = habits.filter((h) => {
       if (term && !h.name.toLowerCase().includes(term)) return false
       if (filters.category !== 'All' && h.category !== filters.category) return false
       if (filters.frequency !== 'All' && h.frequency !== filters.frequency) return false
@@ -102,7 +102,12 @@ export const HabitsPage: FC = () => {
       if (filters.status !== 'All' && h.status !== filters.status) return false
       return true
     })
-  }, [habits, filters, searchTerm])
+    return [...filtered].sort((a, b) => {
+      const aMissed = helperIsHabitMissed(a, todayCheckinByHabit) ? 1 : 0
+      const bMissed = helperIsHabitMissed(b, todayCheckinByHabit) ? 1 : 0
+      return bMissed - aMissed
+    })
+  }, [habits, filters, searchTerm, todayCheckinByHabit])
 
   const handleEdit = (habit: Habit) => {
     setHabitToEdit(habit)

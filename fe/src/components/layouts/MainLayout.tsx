@@ -189,10 +189,15 @@ export const MainLayout: React.FC = () => {
             px: { xs: 2, md: 4 },
             pt: 2,
             pb: { xs: 10, md: 4 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <AtRiskBanner />
-          <Outlet />
+          <Box sx={{ width: '100%', maxWidth: 'lg' }}>
+            <AtRiskBanner />
+            <Outlet />
+          </Box>
         </Box>
       </Box>
 

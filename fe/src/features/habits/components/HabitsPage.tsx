@@ -150,13 +150,15 @@ export const HabitsPage: FC = () => {
   const isHabitMissed = (habit: Habit) => helperIsHabitMissed(habit, todayCheckinByHabit)
 
   return (
-    <Box sx={{ p: 3, maxWidth: '100vw' }}>
-      <Typography variant="h4" gutterBottom>
-        {PAGE_TITLE}
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 3 }}>
-        {PAGE_DESC}
-      </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {PAGE_TITLE}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+          {PAGE_DESC}
+        </Typography>
+      </Box>
 
       <Card sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>

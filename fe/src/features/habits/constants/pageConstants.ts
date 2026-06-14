@@ -22,5 +22,5 @@ export const TEXT_VAL_PAUSED = 'Paused'
 export const TEXT_VAL_ARCHIVED = 'Archived'
 
 export const PAGE_TITLE = 'Habits'
-export const PAGE_DESC = 'Build and manage all the habits you want to track.'
+export const PAGE_DESC = 'Habit Personal'
 export const ADD_HABIT_LABEL = 'Add Habit'

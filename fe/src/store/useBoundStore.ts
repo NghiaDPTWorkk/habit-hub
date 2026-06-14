@@ -25,6 +25,7 @@ export const useBoundStore = create<BoundStore>()(
         habits: state.habits,
         checkins: state.checkins,
         goals: state.goals,
+        notes: state.notes,
         notifiedGoals: state.notifiedGoals,
       }),
     }

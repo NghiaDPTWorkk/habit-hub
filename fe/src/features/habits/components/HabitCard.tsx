@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { useTheme, alpha } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { Box, Typography, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
@@ -129,11 +129,19 @@ export const HabitCard: FC<HabitCardProps> = ({
     <Card
       variant="outlined"
       sx={{
-        borderColor: isMissed ? theme.palette.error.main : theme.palette.divider,
-        backgroundColor: isMissed
-          ? alpha(theme.palette.error.main, 0.08)
-          : theme.palette.background.paper,
+        borderLeft: isMissed
+          ? `4px solid ${theme.palette.error.main}`
+          : `1px solid ${theme.palette.divider}`,
+        borderTop: `1px solid ${theme.palette.divider}`,
+        borderRight: `1px solid ${theme.palette.divider}`,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.background.paper,
         p: 2,
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': {
+          boxShadow: theme.shadows[2],
+          transform: 'translateY(-2px)',
+        },
       }}
     >
       <Box sx={{ display: 'grid', gap: 2 }}>

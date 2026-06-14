@@ -6,6 +6,8 @@ import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
 import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
 import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined'
 import type { Habit } from '@/types'
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -88,10 +90,6 @@ export const HabitCard: FC<HabitCardProps> = ({
   const { incrementCount, getCheckinByHabitAndDate, today } = useCheckinStore()
   const currentCheckin = getCheckinByHabitAndDate(habit.id, today) || todayCheckin
   const completedCount = currentCheckin?.completedCount ?? 0
-  if (habit.id < 0) {
-    incrementCount(habit.id, today)
-    console.log(completedCount)
-  }
   const dueToday =
     habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
   const nextStatusAction =
@@ -259,6 +257,35 @@ export const HabitCard: FC<HabitCardProps> = ({
             {habit.targetPerDay} {CARD_TEXTS.today}
           </Box>
         )}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+          <Box />
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <IconButton
+              onClick={() => onEdit(habit)}
+              aria-label="Edit habit"
+              size="small"
+              sx={{ color: 'text.secondary' }}
+            >
+              <Icons.Edit fontSize="small" />
+            </IconButton>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation()
+                incrementCount(habit.id, today)
+              }}
+              disabled={habit.status !== 'Active'}
+              aria-label="Quick check-in"
+              size="small"
+              sx={{ color: 'success.main' }}
+            >
+              {completedCount >= habit.targetPerDay ? (
+                <CheckCircleIcon />
+              ) : (
+                <CheckCircleOutlineIcon />
+              )}
+            </IconButton>
+          </Box>
+        </Box>
       </Box>
     </Card>
   )

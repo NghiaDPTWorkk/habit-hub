@@ -28,7 +28,7 @@ export const CheckinsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [modalHabit, setModalHabit] = useState<Habit | null>(null)
   const [showDatePicker, setShowDatePicker] = useState(false)
-  const { getCheckinByHabitAndDate, checkins } = useCheckinStore()
+  const { getCheckinByHabitAndDate, checkins, today } = useCheckinStore()
   const habits = useBoundStore((state) => state.habits)
 
   const selectedDate = useMemo(() => {
@@ -53,7 +53,7 @@ export const CheckinsPage: React.FC = () => {
     return getActiveHabitsForDay(habits, selectedDate)
   }, [habits, selectedDate])
 
-  const isToday = dateStr === dayjs().format('YYYY-MM-DD')
+  const isToday = dateStr === today
 
   const atRiskIds = useMemo(() => {
     if (!isToday) return new Set<number>()
@@ -62,7 +62,6 @@ export const CheckinsPage: React.FC = () => {
   }, [activeHabits, checkins, isToday])
 
   const sortedHabits = useMemo(() => {
-    if (!isToday) return activeHabits
     return [...activeHabits].sort((a, b) => {
       const rank = (h: typeof a): number => {
         if (getCheckinByHabitAndDate(h.id, dateStr)?.status === 'Completed') return 2
@@ -70,7 +69,7 @@ export const CheckinsPage: React.FC = () => {
       }
       return rank(a) - rank(b)
     })
-  }, [activeHabits, atRiskIds, isToday, getCheckinByHabitAndDate, dateStr])
+  }, [activeHabits, atRiskIds, getCheckinByHabitAndDate, dateStr])
 
   const weekDays = useMemo(() => {
     const start =

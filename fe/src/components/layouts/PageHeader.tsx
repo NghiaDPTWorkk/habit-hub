@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { pxToRem } from '@/utils'
 import { Box, Typography, Button, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
@@ -19,6 +19,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   themeMode,
   toggleThemeMode,
 }) => {
+  const location = useLocation()
+  const isSettingsActive = location.pathname === '/settings'
   return (
     <Box
       sx={{
@@ -79,16 +81,21 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           to="/settings"
           sx={{
             border: '1px solid',
-            borderColor: 'divider',
+            borderColor: isSettingsActive ? 'primary.main' : 'divider',
             borderRadius: 1,
             p: 0.75,
-            color: 'text.primary',
+            color: isSettingsActive ? 'primary.main' : 'text.primary',
+            bgcolor: isSettingsActive ? 'primary.light' : 'transparent',
             '&:hover': {
-              bgcolor: 'action.hover',
+              bgcolor: isSettingsActive ? 'primary.light' : 'action.hover',
             },
           }}
         >
-          <Icons.SettingsOutlined fontSize="small" />
+          {isSettingsActive ? (
+            <Icons.Settings fontSize="small" />
+          ) : (
+            <Icons.SettingsOutlined fontSize="small" />
+          )}
         </IconButton>
         <Button
           variant="contained"

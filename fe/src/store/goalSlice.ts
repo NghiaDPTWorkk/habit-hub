@@ -1,6 +1,7 @@
 import type { StateCreator } from 'zustand'
 import type { Goal, GoalProgress, Checkin } from '@/types'
-import { currentStreak } from '@/features/dashboard/services'
+import { currentStreak, totalCompletions } from '@/features/dashboard/services'
+import { getLocalDateString } from '@/utils'
 import type { BoundStore } from './types'
 
 export interface GoalSlice {
@@ -13,56 +14,8 @@ export interface GoalSlice {
   getGoalProgress: (goal: Goal, checkins: Checkin[]) => GoalProgress
 }
 
-const calculateConsecutiveStreak = (habitId: number, checkins: Checkin[]): number => {
-  if (checkins.length === 0) return 0
-
-  const filteredCheckins = checkins
-    .filter((c) => c.habitId === habitId && c.status === 'Completed')
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  if (filteredCheckins.length === 0) return 0
-
-  let streak = 0
-  let expectedDate = new Date()
-  expectedDate.setHours(0, 0, 0, 0)
-
-  for (const checkin of filteredCheckins) {
-    const checkinDate = new Date(checkin.date)
-    checkinDate.setHours(0, 0, 0, 0)
-
-    const diffDays = (expectedDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
-
-    if (streak === 0 && diffDays <= 1) {
-      streak++
-      expectedDate = new Date(checkinDate)
-      expectedDate.setDate(expectedDate.getDate() - 1)
-    } else if (streak > 0 && diffDays === 0) {
-      streak++
-      expectedDate.setDate(expectedDate.getDate() - 1)
-    } else {
-      break
-    }
-  }
-
-  return streak
-}
-
-const calculateTotalCompletions = (habitId: number, checkins: Checkin[]): number => {
-  return checkins
-    .filter((c) => c.habitId === habitId && c.status === 'Completed')
-    .reduce((sum, c) => sum + c.completedCount, 0)
-}
-
-const clamp = (value: number, min: number, max: number): number => {
-  return Math.max(min, Math.min(max, value))
-}
-
-const toLocalDateString = (date: Date): string => {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
+const clamp = (value: number, min: number, max: number): number =>
+  Math.max(min, Math.min(max, value))
 
 export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set, get) => ({
   goals: [],
@@ -80,7 +33,7 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
         {
           ...goal,
           id: Date.now().toString(),
-          createdAt: toLocalDateString(new Date()),
+          createdAt: getLocalDateString(),
         },
       ],
     })),
@@ -96,25 +49,22 @@ export const createGoalSlice: StateCreator<BoundStore, [], [], GoalSlice> = (set
     })),
 
   getGoalProgress: (goal, checkins) => {
-    const habits = get().habits
-    const habit = habits.find((h) => h.id === goal.habitId)
-    const currentValue =
-      goal.targetType === 'streak'
-        ? habit
-          ? currentStreak(habit, checkins)
-          : calculateConsecutiveStreak(goal.habitId, checkins)
-        : calculateTotalCompletions(goal.habitId, checkins)
+    const habit = get().habits.find((h) => h.id === goal.habitId)
+    const currentValue = (() => {
+      if (!habit) return 0
+      return goal.targetType === 'streak'
+        ? currentStreak(habit, checkins)
+        : totalCompletions(habit, checkins)
+    })()
 
     const percentage = clamp(Math.round((currentValue / goal.targetValue) * 100), 0, 100)
-    const isAt80Percent = percentage >= 80 && percentage < 100
-    const isCompleted = percentage >= 100
 
     return {
       goalId: goal.id,
       currentValue,
       percentage,
-      isAt80Percent,
-      isCompleted,
+      isAt80Percent: percentage >= 80 && percentage < 100,
+      isCompleted: percentage >= 100,
     }
   },
 })

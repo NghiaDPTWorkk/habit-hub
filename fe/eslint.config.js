@@ -43,6 +43,15 @@ export default defineConfig([
             "Không được sử dụng đơn vị 'px' hoặc 'em' trong prop 'sx'. Hãy sử dụng giá trị số (number) hoặc dùng helper 'pxToRem' / đơn vị 'rem' để quy đổi đồng bộ thiết kế.",
         },
       ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+        },
+      ],
     },
   },
   {

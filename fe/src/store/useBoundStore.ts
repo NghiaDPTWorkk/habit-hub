@@ -17,6 +17,18 @@ export const useBoundStore = create<BoundStore>()(
       ...createGoalSlice(...a),
       ...createThemeSlice(...a),
       ...createToastSlice(...a),
+
+      cascadeDeleteHabit: (id) => {
+        const [set] = a
+        set((state) => ({
+          habits: state.habits.filter((h) => h.id !== id),
+          notes: state.notes.filter((n) => n.habitId !== id),
+          checkins: Object.fromEntries(
+            Object.entries(state.checkins).filter(([, c]) => c.habitId !== id)
+          ),
+          goals: state.goals.filter((g) => g.habitId !== id),
+        }))
+      },
     }),
     {
       name: 'habit-hub-storage',

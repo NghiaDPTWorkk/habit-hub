@@ -237,11 +237,13 @@ export const HabitCard: FC<HabitCardProps> = ({
         noteText={noteText}
         onNoteTextChange={setNoteText}
         existingNote={!!todayNote}
-        title={CARD_TEXTS.noteLabel}
-        cancelLabel={CARD_TEXTS.cancel}
-        saveLabel={CARD_TEXTS.save}
-        deleteLabel={CARD_TEXTS.delete}
-        placeholder={CARD_TEXTS.notePlaceholder}
+        title="Daily Journal & Notes"
+        cancelLabel="Cancel"
+        saveLabel="Save Note"
+        deleteLabel="Delete Note"
+        placeholder="Read 15 pages/day ..."
+        habitName={habit.name}
+        date={today}
       />
     </Card>
   )

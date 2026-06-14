@@ -193,11 +193,13 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
         onSave={handleSaveNote}
         onDelete={noteId ? handleDeleteNote : undefined}
         onClose={() => setNoteOpen(false)}
-        title={`${habit.name} - Note (${today})`}
-        placeholder="Write your note here..."
-        saveLabel="Save"
+        title="Daily Journal & Notes"
+        placeholder="Read 15 pages/day ..."
+        saveLabel="Save Note"
         cancelLabel="Cancel"
-        deleteLabel="Delete"
+        deleteLabel="Delete Note"
+        habitName={habit.name}
+        date={today}
       />
     </Card>
   )

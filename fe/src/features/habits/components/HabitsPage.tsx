@@ -12,6 +12,7 @@ import { SHARED_MESSAGES } from '@/constants/messages'
 import { getLocalDateString } from '@/utils'
 import type { HabitFilters } from './FilterSideBar'
 import type { Habit } from '@/types'
+import { ShareProgressButton } from './ShareProgressButton'
 
 const PAGE_TITLE = 'Habits'
 const PAGE_DESC = 'Build and manage all the habits you want to track.'
@@ -166,6 +167,7 @@ export const HabitsPage: FC = () => {
               >
                 {ADD_HABIT_LABEL}
               </Button>
+              <ShareProgressButton />
               <IconButton
                 sx={{ display: { xs: 'flex', md: 'none' } }}
                 onClick={() => setFilterDrawerOpen(true)}

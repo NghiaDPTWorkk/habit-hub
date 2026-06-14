@@ -16,6 +16,8 @@ export function useCheckinStore() {
   const updateCheckin = useBoundStore((state) => state.updateCheckin)
   const deleteCheckin = useBoundStore((state) => state.deleteCheckin)
   const habits = useBoundStore((state) => state.habits)
+  const previousCheckins = useBoundStore((state) => state.previousCheckins)
+  const undoLastCheckin = useBoundStore((state) => state.undoLastCheckin)
 
   const today = getLocalDateString()
 
@@ -118,11 +120,13 @@ export function useCheckinStore() {
     todayCheckins,
     checkinsByDate,
     todayProgress,
+    previousCheckins,
     getCheckinByHabitAndDate,
     upsertCheckin,
     markComplete,
     incrementCount,
     decrementCount,
     deleteCheckin,
+    undoLastCheckin,
   }
 }

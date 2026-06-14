@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import Chip from '@mui/material/Chip'
 import { useTheme, alpha } from '@mui/material/styles'
-import { Box, Typography } from '@/components/ui'
+import { Box, Typography, IconButton } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
 import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
@@ -95,16 +95,6 @@ export const HabitCard: FC<HabitCardProps> = ({
 
   const menuItems: HabitOverflowMenuItem[] = [
     {
-      label: CARD_TEXTS.edit,
-      icon: <Icons.Edit fontSize="small" />,
-      onClick: () => onEdit(habit),
-    },
-    {
-      label: CARD_TEXTS.delete,
-      icon: <Icons.Delete fontSize="small" color="error" />,
-      onClick: () => onDelete(habit),
-    },
-    {
       label: nextStatusAction,
       icon:
         habit.status === 'Active' ? (
@@ -187,7 +177,20 @@ export const HabitCard: FC<HabitCardProps> = ({
               <Chip label={`${CARD_TEXTS.statusLabel} ${habit.status}`} size="small" />
             </Box>
           </Box>
-          <HabitOverflowMenu items={menuItems} />
+          <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+            <IconButton size="small" onClick={() => onEdit(habit)} aria-label="Edit habit">
+              <Icons.Edit fontSize="small" />
+            </IconButton>
+            <IconButton
+              size="small"
+              onClick={() => onDelete(habit)}
+              aria-label="Delete habit"
+              color="error"
+            >
+              <Icons.Delete fontSize="small" />
+            </IconButton>
+            <HabitOverflowMenu items={menuItems} />
+          </Box>
         </Box>
         {habit.frequency === 'Specific' && habit.specificDays?.length ? (
           <Box

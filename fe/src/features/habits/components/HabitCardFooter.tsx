@@ -7,22 +7,13 @@ import { pxToRem } from '@/utils'
 import type { Habit } from '@/types'
 import { getPriorityColor } from '../utils/habitHelpers'
 
-const TEXT_DAY_SINGULAR = ' day'
-const TEXT_DAYS_PLURAL = ' days'
-
 export interface HabitCardFooterProps {
   habit: Habit
-  accumulatedCount: number
   scheduledText: string
   onEditNote: () => void
 }
 
-export const HabitCardFooter: FC<HabitCardFooterProps> = ({
-  habit,
-  accumulatedCount,
-  scheduledText,
-  onEditNote,
-}) => {
+export const HabitCardFooter: FC<HabitCardFooterProps> = ({ habit, scheduledText, onEditNote }) => {
   const theme = useTheme()
   const priorityColor = getPriorityColor(habit.priority, theme)
 
@@ -67,22 +58,6 @@ export const HabitCardFooter: FC<HabitCardFooterProps> = ({
             sx={{ color: 'text.secondary', fontSize: { xs: pxToRem(11), sm: pxToRem(12) } }}
           >
             {scheduledText}
-          </Typography>
-        </Box>
-
-        {/* Streak */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.25, sm: 0.5 } }}>
-          <Icons.Whatshot sx={{ fontSize: { xs: 14, sm: 16 }, color: 'success.main' }} />
-          <Typography
-            variant="caption"
-            sx={{
-              color: 'success.main',
-              fontWeight: 600,
-              fontSize: { xs: pxToRem(11), sm: pxToRem(12) },
-            }}
-          >
-            {accumulatedCount}
-            {accumulatedCount === 1 ? TEXT_DAY_SINGULAR : TEXT_DAYS_PLURAL}
           </Typography>
         </Box>
       </Box>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Stack,
   Typography,
   Box,
   StatCard,
@@ -16,6 +17,7 @@ import { useBoundStore } from '@/store/useBoundStore'
 import type { Goal } from '@/types'
 
 const PAGE_TITLE = GOALS_CONTENT.PAGE_TITLE
+const PAGE_DESC = GOALS_CONTENT.PAGE_DESC
 const FORM_SECTION_TITLE = GOALS_CONTENT.FORM_TITLE_ADD
 const PANEL_SECTION_TITLE = GOALS_CONTENT.PANEL_TITLE
 const KPI_COMPLETED = GOALS_CONTENT.KPI.COMPLETED
@@ -46,82 +48,87 @@ export const GoalsPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
-          {PAGE_TITLE}
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-          gap: 2,
-        }}
-      >
-        <StatCard
-          title={KPI_COMPLETED}
-          value={completedCount}
-          icon={<Icons.Check />}
-          iconColor="success.main"
-          sx={{ borderLeft: '4px solid', borderColor: 'success.main' }}
-        />
-        <StatCard
-          title={KPI_ACTIVE}
-          value={activeCount}
-          icon={<Icons.TrendingUp />}
-          iconColor="info.main"
-          sx={{ borderLeft: '4px solid', borderColor: 'info.main' }}
-        />
-        <StatCard
-          title={KPI_SUCCESS_RATE}
-          value={`${successRate}%`}
-          icon={<Icons.EmojiEvents />}
-          iconColor="secondary.main"
-          sx={{ borderLeft: '4px solid', borderColor: 'secondary.main' }}
-        />
-      </Box>
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' },
-          gap: 3,
-          alignItems: 'start',
-        }}
-      >
+    <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Stack spacing={4}>
         <Box>
-          <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-            <Accordion
-              expanded={accordionOpen}
-              onChange={(_: React.SyntheticEvent, expanded: boolean) => setAccordionOpen(expanded)}
-            >
-              <AccordionSummary expandIcon={<Icons.ExpandMore />}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {ACCORDION_LABEL}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <GoalForm onSuccess={() => setAccordionOpen(false)} />
-              </AccordionDetails>
-            </Accordion>
-          </Box>
-
-          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-              {FORM_SECTION_TITLE}
-            </Typography>
-            <GoalForm />
-          </Box>
-        </Box>
-
-        <Box>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            {PANEL_SECTION_TITLE}
+          <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+            {PAGE_TITLE}
           </Typography>
-          <GoalPanel onEditGoal={handleEditGoal} />
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {PAGE_DESC}
+          </Typography>
         </Box>
-      </Box>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
+            gap: 2,
+          }}
+        >
+          <StatCard
+            title={KPI_COMPLETED}
+            value={completedCount}
+            icon={<Icons.Check />}
+            sx={{ borderLeft: '4px solid', borderColor: 'success.main' }}
+          />
+          <StatCard
+            title={KPI_ACTIVE}
+            value={activeCount}
+            icon={<Icons.TrendingUp />}
+            sx={{ borderLeft: '4px solid', borderColor: 'primary.main' }}
+          />
+          <StatCard
+            title={KPI_SUCCESS_RATE}
+            value={`${successRate}%`}
+            icon={<Icons.EmojiEvents />}
+            sx={{ borderLeft: '4px solid', borderColor: 'secondary.main' }}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1.5fr' },
+            gap: 3,
+            alignItems: 'start',
+          }}
+        >
+          <Box>
+            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+              <Accordion
+                expanded={accordionOpen}
+                onChange={(_: React.SyntheticEvent, expanded: boolean) =>
+                  setAccordionOpen(expanded)
+                }
+              >
+                <AccordionSummary expandIcon={<Icons.ExpandMore />}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {ACCORDION_LABEL}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <GoalForm onSuccess={() => setAccordionOpen(false)} />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                {FORM_SECTION_TITLE}
+              </Typography>
+              <GoalForm />
+            </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+              {PANEL_SECTION_TITLE}
+            </Typography>
+            <GoalPanel onEditGoal={handleEditGoal} />
+          </Box>
+        </Box>
+      </Stack>
 
       <GoalEditDialog
         key={editingGoal?.id}

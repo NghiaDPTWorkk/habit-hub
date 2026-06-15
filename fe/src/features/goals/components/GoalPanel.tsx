@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, Button, Card, IconButton, Stack, Typography, ConfirmDialog } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
+import { GoalCompletedDialog } from './GoalCompletedDialog'
 import { useBoundStore } from '@/store/useBoundStore'
 import { GOALS_CONTENT } from '../constants/content'
 import { useGoalMilestoneNotifications } from '../hooks'
@@ -23,10 +24,14 @@ const FILTER_EMPTY = GOALS_CONTENT.FILTER_EMPTY_STATE
 export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [milestone, setMilestone] = useState<{ habitName: string; type: '80' | '100' } | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [goalIdToDelete, setGoalIdToDelete] = useState<string | null>(null)
 
-  useGoalMilestoneNotifications()
+  useGoalMilestoneNotifications(
+    (habitName) => setMilestone({ habitName, type: '80' }),
+    (habitName) => setMilestone({ habitName, type: '100' })
+  )
 
   const handleDeleteClick = (goalId: string): void => {
     setGoalIdToDelete(goalId)
@@ -66,94 +71,12 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   })
 
   return (
-    <Stack spacing={2}>
-      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-        <Button
-          variant={filter === 'all' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => setFilter('all')}
-        >
-          {FILTER_ALL}
-        </Button>
-        <Button
-          variant={filter === 'active' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => setFilter('active')}
-        >
-          {FILTER_ACTIVE}
-        </Button>
-        <Button
-          variant={filter === 'completed' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => setFilter('completed')}
-        >
-          {FILTER_COMPLETED}
-        </Button>
-      </Stack>
-
-      {filteredGoals.length === 0 ? (
-        <Card sx={{ p: 6, textAlign: 'center', backgroundColor: 'background.paper' }}>
-          <Typography sx={{ fontSize: 48, mb: 2 }}>{EMPTY_STATE_ICON}</Typography>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-            {goals.length === 0 ? GOALS_CONTENT.EMPTY_STATE : FILTER_EMPTY}
-          </Typography>
-        </Card>
-      ) : (
-        filteredGoals.map((goal) => {
-          const progress = getGoalProgress(goal, Object.values(checkins))
-          const habitName = getHabitName(goal.habitId)
-          const targetLabel = getTargetLabel(goal)
-
-          return (
-            <Card key={goal.id} sx={{ p: 3, borderRadius: 2 }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                  mb: 2,
-                }}
-              >
-                <Box sx={{ minWidth: 0 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                    {habitName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {targetLabel}
-                    {COLON_SEPARATOR}
-                    {goal.targetValue}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 1, flexShrink: 0, ml: 1 }}>
-                  <IconButton
-                    size="small"
-                    onClick={() => onEditGoal?.(goal)}
-                    sx={{ color: 'primary.main' }}
-                  >
-                    <Icons.Edit fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteClick(goal.id)}
-                    sx={{ color: 'error.main' }}
-                  >
-                    <Icons.Delete fontSize="small" />
-                  </IconButton>
-                </Box>
-              </Box>
-              <ProgressBar value={progress.percentage} />
-              <Typography
-                variant="caption"
-                sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
-              >
-                {progress.currentValue}
-                {DATE_SEPARATOR}
-                {goal.targetValue}
-              </Typography>
-            </Card>
-          )
-        })
-      )}
+    <>
+      <GoalCompletedDialog
+        habitName={milestone?.habitName ?? null}
+        type={milestone?.type ?? '100'}
+        onClose={() => setMilestone(null)}
+      />
       <ConfirmDialog
         open={deleteDialogOpen}
         onClose={handleCancelDelete}
@@ -164,7 +87,96 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
         onConfirm={handleConfirmDelete}
         severity="error"
       />
-    </Stack>
+      <Stack spacing={2}>
+        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+          <Button
+            variant={filter === 'all' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => setFilter('all')}
+          >
+            {FILTER_ALL}
+          </Button>
+          <Button
+            variant={filter === 'active' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => setFilter('active')}
+          >
+            {FILTER_ACTIVE}
+          </Button>
+          <Button
+            variant={filter === 'completed' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => setFilter('completed')}
+          >
+            {FILTER_COMPLETED}
+          </Button>
+        </Stack>
+
+        {filteredGoals.length === 0 ? (
+          <Card sx={{ p: 6, textAlign: 'center', backgroundColor: 'background.paper' }}>
+            <Typography sx={{ fontSize: 48, mb: 2 }}>{EMPTY_STATE_ICON}</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+              {goals.length === 0 ? GOALS_CONTENT.EMPTY_STATE : FILTER_EMPTY}
+            </Typography>
+          </Card>
+        ) : (
+          filteredGoals.map((goal) => {
+            const progress = getGoalProgress(goal, Object.values(checkins))
+            const habitName = getHabitName(goal.habitId)
+            const targetLabel = getTargetLabel(goal)
+
+            return (
+              <Card key={goal.id} sx={{ p: 3, borderRadius: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between',
+                    mb: 2,
+                  }}
+                >
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                      {habitName}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {targetLabel}
+                      {COLON_SEPARATOR}
+                      {goal.targetValue}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 1, flexShrink: 0, ml: 1 }}>
+                    <IconButton
+                      size="small"
+                      onClick={() => onEditGoal?.(goal)}
+                      sx={{ color: 'primary.main' }}
+                    >
+                      <Icons.Edit fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteClick(goal.id)}
+                      sx={{ color: 'error.main' }}
+                    >
+                      <Icons.Delete fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Box>
+                <ProgressBar value={progress.percentage} />
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', mt: 1, display: 'block' }}
+                >
+                  {progress.currentValue}
+                  {DATE_SEPARATOR}
+                  {goal.targetValue}
+                </Typography>
+              </Card>
+            )
+          })
+        )}
+      </Stack>
+    </>
   )
 }
 

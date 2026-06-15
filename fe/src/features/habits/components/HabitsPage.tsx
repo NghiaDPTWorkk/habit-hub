@@ -18,6 +18,7 @@ import { useBoundStore } from '@/store/useBoundStore'
 import { useHabitStore } from '@/features/habits/hooks'
 import { HabitFormModal } from './HabitFormModal'
 import { HabitList } from './HabitList'
+import { ShareProgressButton } from './ShareProgressButton'
 import { SHARED_MESSAGES } from '@/constants/messages'
 import SearchIcon from '@mui/icons-material/Search'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -164,10 +165,11 @@ export const HabitsPage: FC = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h5" sx={{ fontWeight: 700 }}>
           {PAGE_TITLE}
         </Typography>
+        <ShareProgressButton />
       </Box>
 
       <Card sx={{ p: 2 }}>

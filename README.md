@@ -26,7 +26,7 @@ After completing this capstone, participants should be able to:
 ### Team Members & Roles
 | Member Name | Role / Responsibility | Assigned Features |
 | :--- | :--- | :--- |
-| Duong Pham Trong Nghia | Leader / BA | * Export Habit Data to JSON File |
+| Duong Pham Trong Nghia | Leader & BA | * Export Habit Data to JSON File |
 | Le Ngoc Minh Phuong | Tester & DevOps | * Read-Only Summary Mode & Progress Charts |
 | Nguyen Thi Bao Nhu | Developer | * Streaks & Statistics Dashboard<br>* Calendar Heatmap View of Check-ins |
 | Arlene Phuong Brown | Developer | * Habit Management |

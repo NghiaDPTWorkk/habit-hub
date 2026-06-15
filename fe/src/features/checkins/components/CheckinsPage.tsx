@@ -8,13 +8,12 @@ import { useCheckinStore } from '../hooks'
 import { CHECKIN_CONTENT } from '../constants'
 import type { Habit } from '@/types'
 import { CheckinItemCard } from './CheckinItemCard'
+import { CheckinsEmptyState } from './CheckinsEmptyState'
 import { MultiCountModal } from './MultiCountModal'
 import { getDayStatus, getActiveHabitsForDay } from '../utils'
 import { isAtRisk } from '@/features/dashboard/services'
 import { MonthlyCalendar } from './MonthlyCalendar'
 
-const VARIANT_BODY1 = 'body1'
-const COLOR_TEXT_SECONDARY = 'text.secondary'
 const PAGE_TITLE = 'Check-in Logs'
 const BTN_SHOW_PICKER = 'Show Monthly Calendar'
 const BTN_HIDE_PICKER = 'Hide Monthly Calendar'
@@ -259,10 +258,8 @@ export const CheckinsPage: React.FC = () => {
           {PROGRESS_SUBTITLE}
         </Typography>
 
-        {activeHabits.length === 0 ? (
-          <Typography variant={VARIANT_BODY1} color={COLOR_TEXT_SECONDARY}>
-            {CHECKIN_CONTENT.PLACEHOLDERS.NO_HABITS}
-          </Typography>
+        {habits.length === 0 || activeHabits.length === 0 ? (
+          <CheckinsEmptyState hasHabits={habits.length > 0} />
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {sortedHabits.map((habit) => (

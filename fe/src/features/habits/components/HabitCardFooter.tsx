@@ -14,8 +14,6 @@ export interface HabitCardFooterProps {
   habit: Habit
   accumulatedCount: number
   scheduledText: string
-  isGoalReached: boolean
-  onCheckIn: () => void
   onEditNote: () => void
 }
 
@@ -23,8 +21,6 @@ export const HabitCardFooter: FC<HabitCardFooterProps> = ({
   habit,
   accumulatedCount,
   scheduledText,
-  isGoalReached,
-  onCheckIn,
   onEditNote,
 }) => {
   const theme = useTheme()
@@ -102,35 +98,6 @@ export const HabitCardFooter: FC<HabitCardFooterProps> = ({
           sx={{ color: 'text.secondary' }}
         >
           <Icons.Edit sx={{ fontSize: { xs: 14, sm: 16 } }} />
-        </IconButton>
-
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation()
-            onCheckIn()
-          }}
-          disabled={habit.status !== 'Active'}
-          aria-label="Quick check-in"
-          size="small"
-          sx={{
-            border: '1px solid',
-            borderColor: isGoalReached ? 'success.main' : 'divider',
-            borderRadius: '50%',
-            color: isGoalReached ? 'common.white' : 'text.secondary',
-            bgcolor: isGoalReached ? 'success.main' : 'action.hover',
-            p: { xs: 0.4, sm: 0.5 },
-            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            '&:hover': {
-              bgcolor: isGoalReached ? 'success.dark' : 'action.selected',
-              borderColor: isGoalReached ? 'success.dark' : 'text.primary',
-              transform: 'scale(1.08)',
-            },
-            '&:active': {
-              transform: 'scale(0.95)',
-            },
-          }}
-        >
-          <Icons.Check sx={{ fontSize: { xs: 14, sm: 16 } }} />
         </IconButton>
       </Box>
     </Box>

@@ -6,6 +6,7 @@ import { StatusPill } from '@/components/ui/StatusPill'
 import { pxToRem } from '@/utils'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import { Icons } from '@/components/ui/icons'
 
 import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
 import { useBoundStore } from '@/store'
@@ -15,6 +16,7 @@ import { HABIT_CARD_CONTENT } from '../constants/content'
 import { getPriorityColor } from '../utils/habitHelpers'
 import { HabitCardFooter } from './HabitCardFooter'
 import { HabitNoteModal } from './HabitNoteModal'
+import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
 
 const { SHORT_WEEK_DAYS, CARD_TEXTS } = HABIT_CARD_CONTENT
 
@@ -32,23 +34,22 @@ export interface HabitCardProps {
 
 export const HabitCard: FC<HabitCardProps> = ({
   habit,
-  todayCheckin,
   isMissed,
   onEdit,
   onDelete,
+  onPauseResume,
+  onArchive,
 }) => {
   const theme = useTheme()
   const dueToday =
     habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
 
-  const { incrementCount, getCheckinByHabitAndDate, today, checkins } = useCheckinStore()
+  const { today, checkins } = useCheckinStore()
   const notes = useBoundStore((s) => s.notes)
   const addNote = useBoundStore((s) => s.addNote)
   const updateNote = useBoundStore((s) => s.updateNote)
   const deleteNote = useBoundStore((s) => s.deleteNote)
 
-  const currentCheckin = getCheckinByHabitAndDate(habit.id, today) || todayCheckin
-  const completedCount = currentCheckin?.completedCount ?? 0
   const accumulatedCount = Object.values(checkins || {}).filter(
     (c) => c.habitId === habit.id && c.completedCount > 0
   ).length
@@ -58,7 +59,6 @@ export const HabitCard: FC<HabitCardProps> = ({
       : habit.specificDays?.map((d) => SHORT_WEEK_DAYS[d]).join(', ') || ''
 
   const priorityColor = getPriorityColor(habit.priority, theme)
-  const isGoalReached = completedCount >= habit.targetPerDay
 
   const todayNote = notes.find((n) => n.habitId === habit.id && n.date === today)
   const [noteModalOpen, setNoteModalOpen] = useState(false)
@@ -83,6 +83,38 @@ export const HabitCard: FC<HabitCardProps> = ({
       deleteNote(todayNote.id)
     }
     setNoteModalOpen(false)
+  }
+
+  const menuItems: HabitOverflowMenuItem[] = []
+
+  if (habit.status === 'Active') {
+    menuItems.push({
+      label: CARD_TEXTS.pause,
+      onClick: () => onPauseResume(habit),
+      icon: <Icons.Pause sx={{ fontSize: pxToRem(18) }} />,
+    })
+    menuItems.push({
+      label: CARD_TEXTS.archive,
+      onClick: () => onArchive(habit),
+      icon: <Icons.Archive sx={{ fontSize: pxToRem(18) }} />,
+    })
+  } else if (habit.status === 'Paused') {
+    menuItems.push({
+      label: CARD_TEXTS.resume,
+      onClick: () => onPauseResume(habit),
+      icon: <Icons.Play sx={{ fontSize: pxToRem(18) }} />,
+    })
+    menuItems.push({
+      label: CARD_TEXTS.archive,
+      onClick: () => onArchive(habit),
+      icon: <Icons.Archive sx={{ fontSize: pxToRem(18) }} />,
+    })
+  } else if (habit.status === 'Archived') {
+    menuItems.push({
+      label: CARD_TEXTS.restore,
+      onClick: () => onPauseResume(habit),
+      icon: <Icons.Play sx={{ fontSize: pxToRem(18) }} />,
+    })
   }
 
   return (
@@ -118,13 +150,14 @@ export const HabitCard: FC<HabitCardProps> = ({
               {habit.name}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
             <IconButton onClick={() => onEdit(habit)} size="small" sx={{ color: 'text.secondary' }}>
               <EditNoteIcon />
             </IconButton>
             <IconButton onClick={() => onDelete(habit)} size="small" sx={{ color: 'error.main' }}>
               <DeleteOutlinedIcon />
             </IconButton>
+            <HabitOverflowMenu items={menuItems} />
           </Box>
         </Box>
 
@@ -217,13 +250,11 @@ export const HabitCard: FC<HabitCardProps> = ({
           )}
         </Box>
 
-        {/* Footer Info & Quick Check-in Button */}
+        {/* Footer Info */}
         <HabitCardFooter
           habit={habit}
           accumulatedCount={accumulatedCount}
           scheduledText={scheduledText}
-          isGoalReached={isGoalReached}
-          onCheckIn={() => incrementCount(habit.id, today)}
           onEditNote={handleOpenNote}
         />
       </Box>

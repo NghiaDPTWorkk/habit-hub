@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Card, IconButton, Stack, Typography } from '@/components/ui'
+import { Box, Button, Card, IconButton, Stack, Typography, ConfirmDialog } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { GoalCompletedDialog } from './GoalCompletedDialog'
@@ -25,15 +25,31 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   const { goals, checkins, deleteGoal, getGoalProgress, habits, showToast } = useBoundStore()
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
   const [milestone, setMilestone] = useState<{ habitName: string; type: '80' | '100' } | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [goalIdToDelete, setGoalIdToDelete] = useState<string | null>(null)
 
   useGoalMilestoneNotifications(
     (habitName) => setMilestone({ habitName, type: '80' }),
     (habitName) => setMilestone({ habitName, type: '100' })
   )
 
-  const handleDeleteGoal = (goalId: string): void => {
-    deleteGoal(goalId)
-    showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+  const handleDeleteClick = (goalId: string): void => {
+    setGoalIdToDelete(goalId)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleCancelDelete = (): void => {
+    setDeleteDialogOpen(false)
+    setGoalIdToDelete(null)
+  }
+
+  const handleConfirmDelete = (): void => {
+    if (goalIdToDelete) {
+      deleteGoal(goalIdToDelete)
+      showToast(SHARED_MESSAGES.SUCCESS.DELETE, 'success')
+    }
+    setDeleteDialogOpen(false)
+    setGoalIdToDelete(null)
   }
 
   const getHabitName = (habitId: number): string => {
@@ -60,6 +76,16 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
         habitName={milestone?.habitName ?? null}
         type={milestone?.type ?? '100'}
         onClose={() => setMilestone(null)}
+      />
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+        title="Confirm Delete"
+        content="Deleting this goal will remove it permanently. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        severity="error"
       />
       <Stack spacing={2}>
         <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
@@ -129,7 +155,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
                     </IconButton>
                     <IconButton
                       size="small"
-                      onClick={() => handleDeleteGoal(goal.id)}
+                      onClick={() => handleDeleteClick(goal.id)}
                       sx={{ color: 'error.main' }}
                     >
                       <Icons.Delete fontSize="small" />

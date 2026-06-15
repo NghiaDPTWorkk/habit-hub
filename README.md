@@ -1,155 +1,160 @@
-# HƯỚNG DẪN BÀN GIAO VÀ HƯỚNG DẪN PHÁT TRIỂN DỰ ÁN FRONTEND
+# CAPSTONE PROJECT REPORT - WECAMP BATCH 11
 
-Báo cáo này tài liệu hóa toàn bộ quy trình nhận bàn giao dự án, các quy chuẩn bắt buộc cần tuân thủ trong suốt quá trình phát triển mã nguồn, và hướng dẫn chi tiết các bước tạo mới một tính năng trong hệ thống.
-
----
-
-## 1. QUY TRÌNH BÀN GIAO VÀ NHẬN DỰ ÁN (ONBOARDING WORKFLOW)
-
-Khi nhận bàn giao dự án, lập trình viên cần thực hiện tuần tự các bước thiết lập môi trường phát triển ban đầu dưới đây:
-
-### Bước 1.1: Chuẩn bị môi trường
-
-Yêu cầu hệ thống cần cài đặt sẵn Node.js phiên bản LTS (khuyến nghị phiên bản 18 trở lên hoặc phiên bản 20).
-
-### Bước 1.2: Di chuyển vào thư mục dự án frontend
-
-Mở terminal và di chuyển vào thư mục phát triển frontend:
-
-```bash
-cd fe
-```
-
-### Bước 1.3: Cài đặt các gói thư viện phụ thuộc
-
-Thực hiện cài đặt các thư viện được định nghĩa trong package.json:
-
-```bash
-npm install
-```
-
-### Bước 1.4: Khởi tạo cấu hình Husky
-
-Đảm bảo Husky hooks được kích hoạt và liên kết với thư mục gốc của repository:
-
-```bash
-npm run prepare
-```
-
-### Bước 1.5: Khởi động môi trường phát triển cục bộ
-
-Chạy lệnh khởi động máy chủ phát triển (dev server) của Vite:
-
-```bash
-npm run dev
-```
-
-Truy cập vào địa chỉ hiển thị trên terminal (mặc định cấu hình cổng 3000) để kiểm tra hoạt động của giao diện.
+**Project Name:** TraceX
+**Prepared by:** ByteBuilders
 
 ---
 
-## 2. CÁC LƯU Ý QUAN TRỌNG KHI BÀN GIAO VÀ PHÁT TRIỂN
+## 1. Overview
+TraceX is a web application that helps users build, track, and analyze their daily habits and personal goals. This capstone focuses on real-life business logic, state management, derived data, and user experience.
 
-Hệ thống mã nguồn gốc đã được cấu hình chặt chẽ để đảm bảo tính nhất quán và chất lượng mã nguồn thông qua Eslint, Prettier và các Git Hooks. Lập trình viên bắt buộc phải tuân thủ các quy tắc sau:
-
-### 2.1. Quy tắc đặt tên nhánh (Branch Naming Convention)
-
-Mọi commit trên nhánh không hợp lệ sẽ bị từ chối bởi Husky hook.
-
-- **Cú pháp quy định**: `loại-nhánh/HH-[Id_Task]-tên-ngắn-tiếng-anh`
-- **Các loại nhánh hợp lệ**:
-  - `feature/`: Sử dụng khi phát triển tính năng mới. Ví dụ: `feature/HH-12-login-api`
-  - `bugfix/`: Sử dụng khi sửa lỗi trong các Sprint. Ví dụ: `bugfix/HH-45-fix-avatar-upload`
-  - `hotfix/`: Sử dụng khi cần sửa lỗi khẩn cấp trên môi trường Production. Ví dụ: `hotfix/HH-99-critical-payment-error`
-- **Nhánh ngoại lệ**: Nhánh `main`, `develop` và các nhánh bắt đầu bằng `backup/` sẽ được hệ thống bỏ qua bước kiểm tra tên nhánh này.
-
-### 2.2. Quy tắc viết thông điệp Commit (Commit Message Convention)
-
-Khi thực hiện commit, Husky hook sẽ kiểm tra định dạng và độ dài của tin nhắn:
-
-- **Giới hạn độ dài**: Tin nhắn commit không được vượt quá 75 ký tự.
-- **Quy tắc định dạng**:
-  - Đối với loại `feat` và `fix`: Bắt buộc phải chứa Task ID dạng `HH-[số]` và nội dung viết thường hoàn toàn. Được phép đính kèm ID Issue (ví dụ: `#29` hoặc `(#29)`) ở cuối. Ví dụ: `feat(auth): HH-12 - add google login api (#29)`.
-  - Đối với các loại khác (`docs`, `chore`, `style`, `refactor`, `perf`, `test`, `ci`): Task ID `HH-[số]` là tùy chọn nhưng nội dung vẫn bắt buộc viết thường hoàn toàn và có thể kèm ID Issue ở cuối. Ví dụ: `chore(git): HH-1 - add branch name validation hook (#29)`.
-
-### 2.3. Các quy tắc kiểm tra mã nguồn (ESLint Rules)
-
-Khi chạy lệnh build hoặc lint, hệ thống sẽ kiểm tra nghiêm ngặt các quy tắc sau:
-
-- **Hạn chế dùng chuỗi thô trong JSX (react/jsx-no-literals)**: Không được viết trực tiếp văn bản dạng chuỗi trong JSX (ví dụ: không viết `<h2>Goals Page</h2>`). Phải đưa chuỗi văn bản vào các hằng số, biến hoặc thông qua cấu hình đa ngôn ngữ để đảm bảo cấu trúc dự án.
-- **Không hardcode mã màu**: Không được sử dụng mã màu trực tiếp dạng Hex (`#ffffff`) hoặc RGB/RGBA trong prop `sx` của các component Material UI. Bắt buộc phải gọi màu từ Theme (ví dụ: `primary.main`, `background.paper`, `text.primary`).
-- **Không dùng đơn vị px hoặc em**: Không được sử dụng đơn vị `px` hoặc `em` trong prop `sx`. Bắt buộc dùng giá trị số (number, hệ thống sẽ tự quy đổi) hoặc dùng đơn vị `rem` / helper `pxToRem`.
-- **Hạn chế import trực tiếp từ @mui/material**: Cấm import trực tiếp component từ thư viện MUI (ngoại trừ các file trong `@/components/ui` và file `src/main.tsx`). Phải sử dụng các component tùy biến dùng chung đã được cấu hình tại thư mục `@/components/ui`.
-- **Hạn chế import trực tiếp từ @mui/icons-material**: Cấm import trực tiếp icon từ thư viện MUI. Phải sử dụng các icon đã được tái xuất thông qua file dùng chung `@/components/ui/icons`.
+### Learning Objectives
+After completing this capstone, participants should be able to:
+* Model complex application state.
+* Manage multiple related data domains.
+* Implement derived data and calculations.
+* Build clear, structured, and scalable React components.
+* Explain trade-offs and design decisions.
 
 ---
 
-## 3. HƯỚNG DẪN CHI TIẾT TẠO MỚI MỘT TÍNH NĂNG (CREATING A FEATURE)
+## 2. Team & Project Introduction
 
-Để thêm mới một phân hệ tính năng vào hệ thống (ví dụ tính năng quản lý hồ sơ cá nhân có tên là `profile`), lập trình viên cần đi qua các bước kỹ thuật và các thư mục tương ứng như sau:
+* **Team Name:** ByteBuilders
+* **Project Name:** TraceX
 
-### Bước 3.1: Tạo thư mục cấu trúc tính năng
+### Team Members & Roles
+| Member Name | Role / Responsibility | Assigned Features |
+| :--- | :--- | :--- |
+| Duong Pham Trong Nghia | Leader / BA | * Export Habit Data to JSON File |
+| Le Ngoc Minh Phuong | Tester & DevOps | * Read-Only Summary Mode & Progress Charts |
+| Nguyen Thi Bao Nhu | Developer | * Streaks & Statistics Dashboard<br>* Calendar Heatmap View of Check-ins |
+| Arlene Phuong Brown | Developer | * Habit Management |
+| Le Xuan Ny | Developer | * Habit Management<br>* Undo / Reset Logic<br>* Habit Reminder Notes Per Day |
+| Tran Thi Hanh | Developer | * Daily Check-in Tracking |
+| Nguyen Ngoc Truc Quynh | Developer | * Goals & Progress Rules |
+| **All Members** | **Team** | * UX & Error Handling + Derived State & Data Persistence<br>* Responsive Mobile-First Design |
 
-Tạo thư mục `fe/src/features/profile` với cấu trúc chuẩn hóa như sau:
+---
 
-- `fe/src/features/profile/components/`: Nơi chứa các component giao diện. Thành phần trang chính của tính năng đặt tên dạng `ProfilePage.tsx`.
-- `fe/src/features/profile/services/`: Nơi chứa các hàm xử lý logic nghiệp vụ độc lập (pure functions), ví dụ `ProfileService.ts`.
-- `fe/src/features/profile/hooks/`: Chứa các custom React Hook riêng của tính năng (nếu có).
-- `fe/src/features/profile/constants/`: Chứa các định nghĩa hằng số dùng riêng trong nội bộ tính năng.
-- `fe/src/features/profile/routes.tsx`: Định nghĩa cấu hình định tuyến cho tính năng.
-- `fe/src/features/profile/index.ts`: File đóng gói chính của tính năng.
+## 3. Core Features (Mandatory)
 
-### Bước 3.2: Khai báo định tuyến cho tính năng mới
+### 3.1 Habit Management
+**Assigned to:** Arlene Phuong Brown + Le Xuan Ny
 
-Trong file `fe/src/features/profile/routes.tsx`, định nghĩa mảng định tuyến dạng `RouteObject[]`:
+Users can manage all the habits they want to build. Each habit includes:
+* **Habit name**
+* **Category:** Health, Study, Work, Mindfulness, Other
+* **Frequency:** Daily, Specific days of the week
+* **Target per day:** (for example: drink water 8 times)
+* **Priority:** Low, Medium, High
+* **Status:** Active, Paused, Archived
+* **Actions:** Add, edit, delete, pause, resume, archive, and filter habits by category, frequency, priority, or status.
 
-```tsx
-import type { RouteObject } from "react-router-dom";
-import { ProfilePage } from "./components/ProfilePage";
+<img width="8192" height="6725" alt="Habit Actions Sequence Diagram" src="https://github.com/user-attachments/assets/29176f1f-316b-4cb6-8cdb-4ed36e38a434" />
+<p align="center"><em>(Habit Actions Sequence Diagram)</em></p>
 
-export const profileRoutes: RouteObject[] = [
-  {
-    path: "profile",
-    element: <ProfilePage />,
-  },
-];
-```
+### 3.2 Daily Check-in Tracking
+**Assigned to:** Tran Thi Hanh
 
-Trong file `fe/src/features/profile/index.ts`, xuất các thành phần ra ngoài để các module khác sử dụng:
+* Users can record progress for each habit on each day.
+* Each check-in includes habit reference, date, completed count, and completion status (Not Started, In Progress, Completed).
+* Users can mark a habit as done, increase/decrease the count, edit check-ins for the current day, and view check-ins grouped by date.
+* Habits with a missed check-in for the current day must be visually highlighted.
+* The system must show daily completion progress in real time.
 
-```typescript
-export * from "./components/ProfilePage";
-export * from "./routes";
-```
+<img width="13644" height="13796" alt="Check-ins Actions Sequence Diagram" src="https://github.com/user-attachments/assets/29f76652-1796-4c18-8311-3fa12041d3b6" />
+<p align="center"><em>(Check-ins Actions Sequence Diagram)</em></p>
 
-### Bước 3.3: Tích hợp định tuyến toàn cục
+### 3.3 Goals & Progress Rules
+**Assigned to:** Nguyen Truc Quynh
 
-Mở file định tuyến chính toàn dự án [routes.tsx](file:///d:/FOR_LEARN/TU_HOC/habit-tracer/fe/src/routes.tsx), tiến hành import mảng định tuyến của tính năng mới và đưa vào mảng `children` của `MainLayout`:
+* Users can set a measurable goal for each habit (Streak target or Total completions target).
+* At 80% of the target: show an encouragement message.
+* At 100% of the target: show a goal-achieved alert.
+* UI must clearly indicate goal status.
 
-```diff
- import { checkinsRoutes } from '@/features/checkins'
-+import { profileRoutes } from '@/features/profile'
+<img width="5636" height="7404" alt="Goal Actions Sequence Diagram" src="https://github.com/user-attachments/assets/aaeef25e-78fd-4329-bf9f-0d8d619f9449" />
+<p align="center"><em>(Goal Actions Sequence Diagram)</em></p>
 
- export const router = createBrowserRouter([
-   {
-     path: '/',
-     element: <MainLayout />,
--    children: [...dashboardRoutes, ...habitsRoutes, ...goalsRoutes, ...checkinsRoutes],
-+    children: [...dashboardRoutes, ...habitsRoutes, ...goalsRoutes, ...checkinsRoutes, ...profileRoutes],
-   },
- ])
-```
+<img width="6528" height="8588" alt="Goals Progress Sequence Diagram" src="https://github.com/user-attachments/assets/93879364-31da-4998-abb7-e760c92445ce" />
+<p align="center"><em>(Goals Progress Sequence Diagram)</em></p>
 
-### Bước 3.4: Định nghĩa và quản lý State (Zustand Slices)
+### 3.4 Streaks & Statistics Dashboard
+**Assigned to:** Nguyen Thi Bao Nhu
 
-Nếu tính năng mới cần quản lý dữ liệu toàn cục và đồng bộ dữ liệu chéo:
+* A dedicated dashboard shows habits grouped by category.
+* Key indicators per habit: Current streak, Longest streak, Total completions, Completion rate over the last 7 days.
+* Overall indicators: % of habits completed today, Number of active habits, Number of habits at risk of breaking a streak.
 
-1. Tạo một slice mới tại `fe/src/store/profileSlice.ts`.
-2. Định nghĩa interface state và các hàm cập nhật state, sau đó xuất ra hàm khởi tạo slice.
-3. Trong file định nghĩa kiểu dữ liệu của store [types.ts](file:///d:/FOR_LEARN/TU_HOC/habit-tracer/fe/src/store/types.ts), import interface của slice vừa tạo và tích hợp nó vào kiểu `BoundStore`.
-4. Trong file cấu hình store chính [useBoundStore.ts](file:///d:/FOR_LEARN/TU_HOC/habit-tracer/fe/src/store/useBoundStore.ts), import hàm khởi tạo slice và gộp vào hàm tạo store.
+### 3.5 Undo / Reset Logic
+**Assigned to:** Le Xuan Ny
 
-### Bước 3.5: Khai báo Kiểu dữ liệu và Hằng số dùng chung
+* Support at least one of the following actions: undo the last check-in action, or reset all data to the initial state.
+* The logic for these actions must be clearly implemented and explained within the application or documentation.
 
-- Đối với kiểu dữ liệu nghiệp vụ dùng chung, tạo file định nghĩa kiểu tại `fe/src/types/profile.ts` và xuất ra thông qua file trung gian `fe/src/types/index.ts`.
-- Đối với các hằng số dùng chung toàn cục hoặc các hằng số cấu hình hệ thống, định nghĩa chúng tại `fe/src/constants/`.
+<img width="8192" height="6310" alt="Undo and Reset Logic Diagram" src="https://github.com/user-attachments/assets/027d7999-55cd-4993-8f82-29abd047b338" />
+<p align="center"><em>(Undo / Reset Logic Sequence Diagram)</em></p>
+
+### 3.6 UX & Error Handling + Derived State & Data Persistence
+**Assigned to:** All members
+
+* **Input Validation:** Ensure that required fields cannot be empty. Target values and counts cannot be negative, and the completed count cannot exceed the daily target. Additionally, a future date cannot be checked in.
+* **Error Messages:** Show clear error messages to the user when input validation fails.
+* **Empty States:** The UI must handle empty states gracefully, specifically when there are: no habits, no check-ins for the selected day, or no goals set.
+* **Derived State & Performance:** Avoid duplicated state; all streaks, totals, percentages, and warnings must be derived from source data.
+* **Data Persistence:** Data must persist after page refresh using mocked JSON data or localStorage.
+
+---
+
+## 4. Bonus Features (Optional - Stretch)
+
+### 4.1 Calendar Heatmap View of Check-ins
+**Assigned to:** Nguyen Thi Bao Nhu
+
+* Visualize user check-in data over time using a calendar heatmap format.
+* Indicate completion status or intensity (e.g., number of habits completed) on specific days using varying colors or shades.
+* Allow users to navigate between different months or years to review historical progress.
+
+### 4.2 Habit Reminder Notes Per Day
+**Assigned to:** Le Xuan Ny
+
+* Enable users to add custom text notes or reminders for specific habits on specific dates.
+* Display these notes clearly within the daily check-in interface to serve as context or motivation.
+* Store notes persistently alongside the daily check-in data.
+
+<img width="8170" height="5300" alt="Habit Reminder Diagram" src="https://github.com/user-attachments/assets/225240a1-88b3-4095-9fe9-8b76ea90e312" />
+<p align="center"><em>(Habit Reminder Notes Sequence Diagram)</em></p>
+
+### 4.3 Export Habit Data to JSON File
+**Assigned to:** Duong Pham Trong Nghia
+
+* Provide a user-friendly option to export all current habit data, check-in history, and goal settings.
+* Generate a downloadable JSON file containing the user's complete raw data.
+* Allow users to create safe backups of their personal progress locally.
+
+<img width="8192" height="4357" alt="Export Habit Data Diagram" src="https://github.com/user-attachments/assets/1519843a-2ee3-4e7b-bddf-dba4ae502475" />
+<p align="center"><em>(Export Habit Data Sequence Diagram)</em></p>
+
+### 4.4 Responsive Mobile-First Design
+**Assigned to:** All members
+
+* Ensure the application layout and UI components adapt seamlessly to various screen sizes, with a primary focus on mobile devices.
+* Optimize interactive elements (buttons, forms, modals, navigation) for touch screens.
+* Maintain clear readability, usability, and visual hierarchy across mobile, tablet, and desktop views.
+
+### 4.5 Read-Only Summary Mode & Progress Charts
+**Assigned to:** Le Ngoc Minh Phuong
+
+* **Read-only mode:** Implement a specific view that summarizes the user's progress which can be safely shared with others without allowing data modification.
+* **Weekly progress chart:** Generate visual charts (e.g., bar charts or line graphs) that display progress over the week, grouped by habit category (Health, Study, Work, etc.).
+
+---
+
+## 5. Known Limitations
+Based on the project's technical constraints and scope, the following limitations are acknowledged:
+
+* **Device-Specific Data:** Because the application relies strictly on `localStorage` or mocked JSON for data persistence, user data is tied to the specific browser and device being used. Cross-device synchronization is not currently possible.
+* **No Authentication & Security:** The application has no authentication system and no real backend. Any user accessing the application on the same device/browser will have full access to view and modify the habit data.
+* **Storage Capacity:** `localStorage` has a typical limit of around 5MB per origin. While sufficient for standard usage, an exceptionally long history of daily check-ins and habit notes over many years might eventually reach this limit.
+* **Local Processing:** All derived data calculations (streaks, percentages, overall progress) are computed on the client side (frontend). For massive datasets, this could potentially impact performance, though it is optimized within the scope of React state management.

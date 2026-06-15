@@ -5,9 +5,6 @@ import { useCheckinStore } from '../hooks'
 import type { Habit, Checkin } from '@/types'
 import { pxToRem } from '@/utils'
 import dayjs from 'dayjs'
-import { useState } from 'react'
-import { useBoundStore } from '@/store'
-import { HabitNoteModal } from '@/features/habits/components'
 
 const LABEL_CATEGORY = 'Category: '
 const LABEL_PRIORITY = ' | Priority: '
@@ -39,36 +36,6 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
   onOpenModal,
   isAtRisk = false,
 }) => {
-  const [noteOpen, setNoteOpen] = useState(false)
-  const [noteText, setNoteText] = useState('')
-  const [noteId, setNoteId] = useState('')
-
-  const storeAddNote = useBoundStore((s) => s.addNote)
-  const storeUpdateNote = useBoundStore((s) => s.updateNote)
-  const storeDeleteNote = useBoundStore((s) => s.deleteNote)
-
-  const openNoteForDate = (date: string) => {
-    const existing = useBoundStore
-      .getState()
-      .notes.find((n) => n.habitId === habit.id && n.date === date)
-    setNoteText(existing?.content ?? '')
-    setNoteId(existing?.id ?? '')
-    setNoteOpen(true)
-  }
-
-  const handleSaveNote = () => {
-    if (noteId) storeUpdateNote(noteId, noteText)
-    else storeAddNote(habit.id, today, noteText)
-    setNoteOpen(false)
-  }
-
-  const handleDeleteNote = () => {
-    if (noteId) storeDeleteNote(noteId)
-    setNoteText('')
-    setNoteId('')
-    setNoteOpen(false)
-  }
-
   const { markComplete, upsertCheckin } = useCheckinStore()
   const completedCount = checkin?.completedCount ?? 0
   const isChecked = checkin?.status === 'Completed'
@@ -165,12 +132,6 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Note">
-            <IconButton size="small" onClick={() => openNoteForDate(today)}>
-              <Icons.Edit fontSize="small" />
-            </IconButton>
-          </Tooltip>
-
           <Tooltip title={LABEL_CHECKIN}>
             <Checkbox
               checked={isChecked}
@@ -186,21 +147,6 @@ export const CheckinItemCard: React.FC<CheckinItemCardProps> = ({
           </Tooltip>
         </Box>
       </Box>
-      <HabitNoteModal
-        open={noteOpen}
-        noteText={noteText}
-        onNoteTextChange={setNoteText}
-        onSave={handleSaveNote}
-        onDelete={noteId ? handleDeleteNote : undefined}
-        onClose={() => setNoteOpen(false)}
-        title="Daily Journal & Notes"
-        placeholder="Read 15 pages/day ..."
-        saveLabel="Save Note"
-        cancelLabel="Cancel"
-        deleteLabel="Delete Note"
-        habitName={habit.name}
-        date={today}
-      />
     </Card>
   )
 }

@@ -105,6 +105,79 @@ Users can manage all the habits they want to build. Each habit includes:
 * **Derived State & Performance:** Avoid duplicated state; all streaks, totals, percentages, and warnings must be derived from source data.
 * **Data Persistence:** Data must persist after page refresh using mocked JSON data or localStorage.
 
+<img width="7643" height="4508" alt="State architecture, validation and persistence flow" src="https://github.com/user-attachments/assets/3f3a7a7b-e142-417e-b5a7-222e9ede323d" />
+<p align="center"><em>(State architecture, validation and persistence flow)</em></p>
+
+**Sample Local Storage JSON Object (`tracex_data` / `habit-hub-storage` schema):**
+
+```json
+{
+  "state": {
+    "habits": [
+      {
+        "id": 1,
+        "name": "Drink Water",
+        "category": "Health",
+        "frequency": "Daily",
+        "specificDays": null,
+        "targetPerDay": 8,
+        "priority": "High",
+        "status": "Active",
+        "createdAt": "2026-06-15"
+      },
+      {
+        "id": 2,
+        "name": "Reading Book",
+        "category": "Study",
+        "frequency": "Specific",
+        "specificDays": [1, 3, 5],
+        "targetPerDay": 1,
+        "priority": "Medium",
+        "status": "Active",
+        "createdAt": "2026-06-15"
+      }
+    ],
+    "checkins": {
+      "2026-06-15_1": {
+        "habitId": 1,
+        "date": "2026-06-15",
+        "completedCount": 5,
+        "status": "In Progress"
+      },
+      "2026-06-15_2": {
+        "habitId": 2,
+        "date": "2026-06-15",
+        "completedCount": 1,
+        "status": "Completed"
+      }
+    },
+    "goals": [
+      {
+        "id": "1718452800000",
+        "habitId": 1,
+        "targetType": "total_completions",
+        "targetValue": 100,
+        "status": "active",
+        "createdAt": "2026-06-15"
+      }
+    ],
+    "notes": [
+      {
+        "id": "note-uuid-123456",
+        "habitId": 1,
+        "date": "2026-06-15",
+        "content": "Drank 5 glasses before 5 PM. Feeling hydrated!",
+        "createdAt": "2026-06-15T10:00:00.000Z"
+      }
+    ],
+    "notifiedGoals": {
+      "1718452800000-80percent": true
+    },
+    "themeMode": "dark"
+  },
+  "version": 0
+}
+```
 ---
 
 ## 4. Bonus Features (Optional - Stretch)

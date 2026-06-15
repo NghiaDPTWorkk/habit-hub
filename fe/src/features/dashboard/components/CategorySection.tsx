@@ -3,22 +3,13 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary, Category } from '@/types'
 import { HabitStatsRow } from './HabitStatsRow'
-
-const HABIT_STATS_GRID_COLS = {
-  xs: 'minmax(80px, 2fr) 55px 55px 50px',
-  sm: 'minmax(120px, 2.5fr) 80px 80px 80px',
-}
+import { HABIT_STATS_GRID_COLS } from './habitStatsConfig'
 
 const COL_HABIT = 'Habit'
 const COL_STREAK = 'Current'
 const COL_LONGEST = 'Longest'
 const COL_TOTAL = 'Total'
-
-function getAvgRate(habits: HabitSummary[]): number {
-  if (habits.length === 0) return 0
-  const sum = habits.reduce((acc, h) => acc + h.weeklyCompletionRate, 0)
-  return Math.round((sum / habits.length) * 100)
-}
+const COL_RATE = '7-Day'
 
 const HeaderRow: React.FC = () => (
   <Box
@@ -55,12 +46,16 @@ const HeaderRow: React.FC = () => (
     <Typography
       variant="caption"
       color="text.secondary"
-      sx={{
-        fontWeight: 600,
-        textAlign: 'center',
-      }}
+      sx={{ fontWeight: 600, textAlign: 'center' }}
     >
       {COL_TOTAL}
+    </Typography>
+    <Typography
+      variant="caption"
+      color="text.secondary"
+      sx={{ fontWeight: 600, textAlign: 'right' }}
+    >
+      {COL_RATE}
     </Typography>
   </Box>
 )
@@ -76,8 +71,6 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
   habits,
   defaultExpanded = false,
 }) => {
-  const avgLabel = `${getAvgRate(habits)}%`
-
   return (
     <Accordion defaultExpanded={defaultExpanded} disableGutters elevation={1}>
       <AccordionSummary expandIcon={<Icons.ExpandMore />}>
@@ -88,11 +81,6 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           <Typography variant="caption" color="text.secondary">
             {habits.length}
           </Typography>
-          <Box sx={{ ml: 'auto' }}>
-            <Typography variant="caption" color="text.secondary">
-              {avgLabel}
-            </Typography>
-          </Box>
         </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ p: 0 }}>

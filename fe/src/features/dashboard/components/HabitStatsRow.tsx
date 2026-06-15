@@ -2,11 +2,7 @@ import React from 'react'
 import { Box, Typography, Tooltip } from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import type { HabitSummary } from '@/types'
-
-const HABIT_STATS_GRID_COLS = {
-  xs: 'minmax(80px, 2fr) 55px 55px 50px',
-  sm: 'minmax(120px, 2.5fr) 80px 80px 80px',
-}
+import { HABIT_STATS_GRID_COLS } from './habitStatsConfig'
 
 const STREAK_SUFFIX = 'd'
 const AT_RISK_LABEL = 'At risk'
@@ -16,6 +12,10 @@ export interface HabitStatsRowProps {
 }
 
 export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
+  const rateValue = Math.round(summary.weeklyCompletionRate * 100)
+  const rateLabel = `${rateValue}%`
+  const rateColor = rateValue >= 70 ? 'success' : rateValue >= 40 ? 'warning' : 'error'
+
   return (
     <Box
       sx={{
@@ -31,13 +31,7 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: 500,
-            wordBreak: 'break-word',
-          }}
-        >
+        <Typography variant="body2" sx={{ fontWeight: 500, wordBreak: 'break-word' }}>
           {summary.habitName}
         </Typography>
         {summary.isAtRisk && (
@@ -66,6 +60,13 @@ export const HabitStatsRow: React.FC<HabitStatsRowProps> = ({ summary }) => {
 
       <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
         {summary.totalCompletions}
+      </Typography>
+
+      <Typography
+        variant="body2"
+        sx={{ textAlign: 'right', fontWeight: 600, color: `${rateColor}.main` }}
+      >
+        {rateLabel}
       </Typography>
     </Box>
   )

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Box, Typography, Avatar, Button } from '@/components/ui'
+import { Box, Typography, Button } from '@/components/ui'
 import { pxToRem } from '@/utils'
 
 // MUI Icons
@@ -20,9 +20,6 @@ interface SidebarProps {
 const BRAND_FIRST = 'Trace'
 const BRAND_SECOND = 'X'
 
-const USER_INITIALS = 'TN'
-const USER_NAME = 'Dương Nghĩa'
-const USER_PLAN = 'Premium Plan'
 const NAV_OVERVIEW = 'Overview'
 const NAV_HABITS = 'Habits'
 const NAV_PROGRESS = 'Progress'
@@ -73,12 +70,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
     >
       {/* Branding Section */}
       <Box
+        component={RouterLink}
+        to="/dashboard"
         sx={{
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
           px: 3,
           py: 3,
+          textDecoration: 'none',
+          color: 'inherit',
+          cursor: 'pointer',
+          '&:hover': {
+            opacity: 0.85,
+          },
         }}
       >
         <Box
@@ -122,62 +127,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
             {BRAND_SECOND}
           </Box>
         </Typography>
-      </Box>
-
-      {/* User Profile Card */}
-      <Box
-        sx={{
-          borderRadius: 2,
-          px: 2,
-          py: 1.5,
-          mx: 3,
-          mb: 3,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          bgcolor: 'background.paper',
-          border: '1px solid',
-          borderColor: 'divider',
-        }}
-      >
-        <Avatar
-          sx={{
-            width: 40,
-            height: 40,
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            fontWeight: 'bold',
-            fontSize: pxToRem(15),
-          }}
-        >
-          {USER_INITIALS}
-        </Avatar>
-        <Box sx={{ minWidth: 0, flexGrow: 1 }}>
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: 700,
-              color: 'text.primary',
-              lineHeight: 1.2,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {USER_NAME}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{
-              color: 'primary.main',
-              fontWeight: 600,
-              display: 'block',
-              mt: 0.25,
-            }}
-          >
-            {USER_PLAN}
-          </Typography>
-        </Box>
       </Box>
 
       {/* Navigation Links */}

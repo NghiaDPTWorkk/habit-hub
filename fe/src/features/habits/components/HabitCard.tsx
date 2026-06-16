@@ -1,38 +1,30 @@
-import { type FC } from 'react'
-import Chip from '@mui/material/Chip'
-import { useTheme, alpha } from '@mui/material/styles'
-import { Box } from '@/components/ui'
-import { Icons } from '@/components/ui/icons'
+import { type FC, useState } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { Box, Typography, alpha, IconButton } from '@/components/ui'
 import { Card } from '@/components/ui/Card'
-import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
+import { StatusPill } from '@/components/ui/StatusPill'
+import { pxToRem } from '@/utils'
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import { Icons } from '@/components/ui/icons'
+
+import { useCheckinStore } from '@/features/checkins/hooks/useCheckinStore'
+import { useBoundStore } from '@/store'
 import type { Habit } from '@/types'
 
-const CARD_TEXTS = {
-  scheduled: 'Scheduled on',
-  dueToday: 'Due today.',
-  missed: 'Missed today',
-  completed: 'Completed',
-  today: 'today',
-  edit: 'Edit',
-  delete: 'Delete',
-  pause: 'Pause',
-  resume: 'Resume',
-  restore: 'Restore',
-  archive: 'Archive',
-  daily: 'Daily',
-  specificDays: 'Specific days',
-  targetLabel: 'Target:',
-  priorityLabel: 'Priority:',
-  statusLabel: 'Status:',
-  dot: '.',
-  slash: '/',
-}
+import { HABIT_CARD_CONTENT } from '../constants/content'
+import { getPriorityColor } from '../utils/habitHelpers'
+import { HabitCardFooter } from './HabitCardFooter'
+import { HabitNoteModal } from './HabitNoteModal'
+import { HabitOverflowMenu, type HabitOverflowMenuItem } from './HabitOverflowMenu'
+
+const { SHORT_WEEK_DAYS, CARD_TEXTS } = HABIT_CARD_CONTENT
+
+const TEXT_CATEGORY_LABEL = 'Category: '
 
 export interface HabitCardProps {
   habit: Habit
-  todayCheckin?: {
-    completedCount: number
-  }
+  todayCheckin?: { completedCount: number }
   isMissed: boolean
   onEdit: (habit: Habit) => void
   onDelete: (habit: Habit) => void
@@ -40,19 +32,8 @@ export interface HabitCardProps {
   onArchive: (habit: Habit) => void
 }
 
-const weekDays = [
-  { label: 'Sunday', value: 0 },
-  { label: 'Monday', value: 1 },
-  { label: 'Tuesday', value: 2 },
-  { label: 'Wednesday', value: 3 },
-  { label: 'Thursday', value: 4 },
-  { label: 'Friday', value: 5 },
-  { label: 'Saturday', value: 6 },
-]
-
 export const HabitCard: FC<HabitCardProps> = ({
   habit,
-  todayCheckin,
   isMissed,
   onEdit,
   onDelete,
@@ -60,152 +41,252 @@ export const HabitCard: FC<HabitCardProps> = ({
   onArchive,
 }) => {
   const theme = useTheme()
-
   const dueToday =
     habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
-  const nextStatusAction =
-    habit.status === 'Paused'
-      ? CARD_TEXTS.resume
-      : habit.status === 'Archived'
-        ? CARD_TEXTS.restore
-        : CARD_TEXTS.pause
 
-  const menuItems: HabitOverflowMenuItem[] = [
-    {
-      label: CARD_TEXTS.edit,
-      icon: <Icons.Edit fontSize="small" />,
-      onClick: () => onEdit(habit),
-    },
-    {
-      label: CARD_TEXTS.delete,
-      icon: <Icons.Delete fontSize="small" color="error" />,
-      onClick: () => onDelete(habit),
-    },
-    {
-      label: nextStatusAction,
-      icon:
-        habit.status === 'Active' ? (
-          <Icons.Pause fontSize="small" />
-        ) : (
-          <Icons.Play fontSize="small" />
-        ),
+  const { today } = useCheckinStore()
+  const notes = useBoundStore((s) => s.notes)
+  const addNote = useBoundStore((s) => s.addNote)
+  const updateNote = useBoundStore((s) => s.updateNote)
+  const deleteNote = useBoundStore((s) => s.deleteNote)
+
+  const scheduledText =
+    habit.frequency === 'Daily'
+      ? CARD_TEXTS.daily
+      : habit.specificDays?.map((d) => SHORT_WEEK_DAYS[d]).join(', ') || ''
+
+  const priorityColor = getPriorityColor(habit.priority, theme)
+
+  const todayNote = notes.find((n) => n.habitId === habit.id && n.date === today)
+  const [noteModalOpen, setNoteModalOpen] = useState(false)
+  const [noteText, setNoteText] = useState('')
+
+  const handleOpenNote = () => {
+    setNoteText(todayNote?.content || '')
+    setNoteModalOpen(true)
+  }
+
+  const handleSaveNote = () => {
+    if (todayNote) {
+      updateNote(todayNote.id, noteText)
+    } else {
+      addNote(habit.id, today, noteText)
+    }
+    setNoteModalOpen(false)
+  }
+
+  const handleDeleteNote = () => {
+    if (todayNote) {
+      deleteNote(todayNote.id)
+    }
+    setNoteModalOpen(false)
+  }
+
+  const menuItems: HabitOverflowMenuItem[] = []
+
+  if (habit.status === 'Active') {
+    menuItems.push({
+      label: CARD_TEXTS.pause,
       onClick: () => onPauseResume(habit),
-    },
-  ]
-
-  if (habit.status !== 'Archived') {
+      icon: <Icons.Pause sx={{ fontSize: pxToRem(18) }} />,
+    })
     menuItems.push({
       label: CARD_TEXTS.archive,
-      icon: <Icons.Archive fontSize="small" />,
       onClick: () => onArchive(habit),
+      icon: <Icons.Archive sx={{ fontSize: pxToRem(18) }} />,
+    })
+  } else if (habit.status === 'Paused') {
+    menuItems.push({
+      label: CARD_TEXTS.resume,
+      onClick: () => onPauseResume(habit),
+      icon: <Icons.Play sx={{ fontSize: pxToRem(18) }} />,
+    })
+    menuItems.push({
+      label: CARD_TEXTS.archive,
+      onClick: () => onArchive(habit),
+      icon: <Icons.Archive sx={{ fontSize: pxToRem(18) }} />,
+    })
+  } else if (habit.status === 'Archived') {
+    menuItems.push({
+      label: CARD_TEXTS.restore,
+      onClick: () => onPauseResume(habit),
+      icon: <Icons.Play sx={{ fontSize: pxToRem(18) }} />,
     })
   }
 
   return (
     <Card
-      variant="outlined"
+      variant="elevation"
+      elevation={1}
       sx={{
-        borderColor: isMissed ? theme.palette.error.main : theme.palette.divider,
-        backgroundColor: isMissed
-          ? alpha(theme.palette.error.main, 0.08)
-          : theme.palette.background.paper,
-        p: 2,
+        borderRadius: 2,
+        borderLeft: `${pxToRem(4)} solid ${priorityColor}`,
+        bgcolor: 'background.paper',
+        p: { xs: 1.5, sm: 2 },
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        '&:hover': {
+          boxShadow: 2,
+          transform: 'translateY(-2px)',
+        },
       }}
     >
-      <Box sx={{ display: 'grid', gap: 2 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            gap: 2,
-          }}
-        >
-          <Box>
-            <Box
-              component="h3"
-              sx={{
-                ...theme.typography.subtitle1,
-                fontWeight: 700,
-                margin: 0,
-                mb: 1,
-              }}
-            >
-              {habit.name}
-            </Box>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
-              <Chip label={habit.category} size="small" />
-              <Chip
-                label={habit.frequency === 'Daily' ? CARD_TEXTS.daily : CARD_TEXTS.specificDays}
-                size="small"
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: { xs: 1.25, sm: 1.5 },
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.25, sm: 1.5 } }}>
+          {/* Header Row */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+              <Box
+                component="span"
+                sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: priorityColor }}
               />
-              <Chip label={`${CARD_TEXTS.targetLabel} ${habit.targetPerDay}`} size="small" />
-              <Chip label={`${CARD_TEXTS.priorityLabel} ${habit.priority}`} size="small" />
-              <Chip label={`${CARD_TEXTS.statusLabel} ${habit.status}`} size="small" />
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, fontSize: pxToRem(15.5), color: 'text.primary' }}
+              >
+                {habit.name}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+              <IconButton
+                onClick={() => onEdit(habit)}
+                size="small"
+                sx={{ color: 'text.secondary' }}
+              >
+                <EditNoteIcon />
+              </IconButton>
+              <IconButton onClick={() => onDelete(habit)} size="small" sx={{ color: 'error.main' }}>
+                <DeleteOutlinedIcon />
+              </IconButton>
+              <HabitOverflowMenu items={menuItems} />
             </Box>
           </Box>
-          <HabitOverflowMenu items={menuItems} />
+
+          {/* Title & Description */}
+          <Box>
+            <Typography
+              variant="body2"
+              sx={{ color: 'text.secondary', fontSize: pxToRem(12), fontWeight: 500 }}
+            >
+              {TEXT_CATEGORY_LABEL}
+              {habit.category}
+            </Typography>
+
+            {/* Status Badges Row */}
+            <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mt: 1 }}>
+              {habit.status !== 'Active' && (
+                <StatusPill
+                  status={habit.status.toLowerCase() as 'active' | 'paused' | 'archived'}
+                  sx={{ fontSize: pxToRem(10) }}
+                />
+              )}
+              {dueToday && (
+                <Box
+                  sx={{
+                    bgcolor: alpha(theme.palette.success.main, 0.1),
+                    color: theme.palette.success.main,
+                    px: 0.75,
+                    py: 0.15,
+                    borderRadius: pxToRem(3),
+                    fontSize: pxToRem(10),
+                    fontWeight: 600,
+                  }}
+                >
+                  {CARD_TEXTS.dueToday}
+                </Box>
+              )}
+              {isMissed && (
+                <Box
+                  sx={{
+                    bgcolor: alpha(theme.palette.error.main, 0.1),
+                    color: theme.palette.error.main,
+                    px: 0.75,
+                    py: 0.15,
+                    borderRadius: pxToRem(3),
+                    fontSize: pxToRem(10),
+                    fontWeight: 600,
+                  }}
+                >
+                  {CARD_TEXTS.missed}
+                </Box>
+              )}
+            </Box>
+
+            {/* Today's Note Display */}
+            {todayNote?.content && (
+              <Box
+                sx={{
+                  p: { xs: 1.25, sm: 1.5 },
+                  mt: 1.5,
+                  borderRadius: 1.5,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.06),
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.16)}`,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    fontWeight: 700,
+                    mb: 0.5,
+                    color: 'primary.main',
+                    fontSize: pxToRem(11),
+                  }}
+                >
+                  {CARD_TEXTS.noteLabel}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    m: 0,
+                    whiteSpace: 'pre-wrap',
+                    color: 'text.primary',
+                    fontSize: pxToRem(12),
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {todayNote.content}
+                </Typography>
+              </Box>
+            )}
+          </Box>
         </Box>
-        {habit.frequency === 'Specific' && habit.specificDays?.length ? (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.text.secondary,
-              mb: 1,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.scheduled}{' '}
-            {habit.specificDays
-              .map((day) => weekDays.find((item) => item.value === day)?.label)
-              .filter(Boolean)
-              .join(', ')}
-            {CARD_TEXTS.dot}
-          </Box>
-        ) : null}
-        {dueToday && (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.text.secondary,
-              mb: 0.5,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.dueToday}
-          </Box>
-        )}
-        {isMissed && (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.error.main,
-              fontWeight: 600,
-              mb: 0.5,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.missed}
-          </Box>
-        )}
-        {todayCheckin && !isMissed && dueToday && (
-          <Box
-            component="p"
-            sx={{
-              ...theme.typography.body2,
-              color: theme.palette.success.main,
-              mb: 0.5,
-              margin: 0,
-            }}
-          >
-            {CARD_TEXTS.completed} {todayCheckin.completedCount} {CARD_TEXTS.slash}{' '}
-            {habit.targetPerDay} {CARD_TEXTS.today}
-          </Box>
-        )}
+
+        {/* Footer Info */}
+        <HabitCardFooter habit={habit} scheduledText={scheduledText} onEditNote={handleOpenNote} />
       </Box>
+
+      {/* Note Modal */}
+      <HabitNoteModal
+        open={noteModalOpen}
+        onClose={() => setNoteModalOpen(false)}
+        onSave={handleSaveNote}
+        onDelete={handleDeleteNote}
+        noteText={noteText}
+        onNoteTextChange={setNoteText}
+        existingNote={!!todayNote}
+        title="Daily Journal & Notes"
+        cancelLabel="Cancel"
+        saveLabel="Save Note"
+        deleteLabel="Delete Note"
+        placeholder="Read 15 pages/day ..."
+        habitName={habit.name}
+        date={today}
+      />
     </Card>
   )
 }
+
+// Local state for notes modal

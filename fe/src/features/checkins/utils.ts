@@ -1,4 +1,5 @@
-import dayjs, { type Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
+import { getLocalDateString } from '@/utils'
 import type { Habit, Checkin } from '@/types'
 
 export function getActiveHabitsForDay(habits: Habit[], day: Dayjs): Habit[] {
@@ -16,7 +17,7 @@ export function getDayStatus(
   getCheckinByHabitAndDate: (habitId: number, date: string) => Checkin | null | undefined
 ): 'completed' | 'overdue' | 'none' {
   const dStr = day.format('YYYY-MM-DD')
-  const todayStr = dayjs().format('YYYY-MM-DD')
+  const todayStr = getLocalDateString()
 
   const dayHabits = getActiveHabitsForDay(habits, day)
 

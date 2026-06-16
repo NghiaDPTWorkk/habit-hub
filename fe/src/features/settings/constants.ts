@@ -1,20 +1,10 @@
 export const TEXTS = {
   title: 'Settings & Backups',
   subtitle: 'Export data records and administrative tools',
-  profileTitle: 'Account Profile Settings',
-  profileSubtitle: 'Manage your personal profile details and subscription plan preferences.',
-  fullNameLabel: 'Full Name',
-  emailLabel: 'Email Address',
-  subTierLabel: 'Subscription Tier',
-  subFree: 'Free Tier',
-  subPremium: 'Premium Plan (Active)',
   generalTitle: 'General Settings',
   readOnlyTitle: 'Read-only Mode',
   readOnlySubtitle:
     'Hide all habit creation, edit, delete actions, and check-in buttons for safe public sharing.',
-  timezoneTitle: 'Timezone Simulation',
-  timezoneSubtitle:
-    'Shift timezone offset to verify check-in logs consistency under foreign zones.',
   backupTitle: 'Backup & Restore Data',
   backupSubtitle:
     'Export all user database records (Habits, Check-ins, Goals, Notes) from LocalStorage to a local JSON file or import it back.',
@@ -27,9 +17,6 @@ export const TEXTS = {
   seedBtn: 'Load Demo Seed Data',
   lighthouseText:
     'Lighthouse Performance Audit: Accessibility: 100/100 | Best Practices: 98/100 | Performance: 99/100.',
-  tzGmt7: 'GMT+7 (Default)',
-  tzGmt0: 'GMT+0 (UTC)',
-  tzGmt5: 'GMT-5 (EST)',
   exportSuccess: 'Data exported successfully!',
   exportError: 'Failed to export data, please try again.',
   importConfirmWarning:

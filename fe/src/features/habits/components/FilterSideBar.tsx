@@ -1,9 +1,5 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import MenuItem from '@mui/material/MenuItem'
-import { Button } from '@/components/ui/Button'
+import { Box, Typography, TextField, MenuItem, Button } from '@/components/ui'
 import type { Category, Frequency, HabitStatus, Priority } from '@/types'
 
 const FILTER_SIDEBAR_TEXT = {

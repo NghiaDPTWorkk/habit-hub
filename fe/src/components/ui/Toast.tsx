@@ -11,7 +11,7 @@ import { pxToRem } from '@/utils'
 import { alpha } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
 
-const TOAST_DURATION_MS = 5000
+const TOAST_DURATION_MS = 3000
 const CELEBRATION_DURATION = 8000
 
 const GOAL_COMPLETED_TEXT = 'Goal Completed!'
@@ -207,7 +207,6 @@ export const Toast: React.FC = () => {
   const toastQueue = useBoundStore((s) => s.toastQueue)
   const dismissToast = useBoundStore((s) => s.dismissToast)
   const current = toastQueue[0] ?? null
-  const [paused, setPaused] = useState(false)
 
   if (!current) return null
 
@@ -219,14 +218,12 @@ export const Toast: React.FC = () => {
     <Snackbar
       key={current.id}
       open
-      autoHideDuration={paused ? null : TOAST_DURATION_MS}
+      autoHideDuration={TOAST_DURATION_MS}
       onClose={(_e, reason) => {
         if (reason !== 'clickaway') dismissToast()
       }}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       sx={{ top: { xs: 16, sm: 24 }, width: { xs: '92%', sm: 'auto' } }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
     >
       <Alert
         severity={current.severity}
@@ -263,9 +260,7 @@ export const Toast: React.FC = () => {
           '& .MuiAlert-action': {
             color: 'text.secondary',
             opacity: 0.8,
-            '&:hover': {
-              opacity: 1,
-            },
+            '&:hover': { opacity: 1 },
           },
         }}
       >

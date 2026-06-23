@@ -1,0 +1,46 @@
+import { getLocalDateString } from '@/utils'
+import type { StateCreator } from 'zustand'
+import type { Habit } from '@/types'
+import type { BoundStore } from './types'
+
+export interface HabitSlice {
+  habits: Habit[]
+  addHabit: (habit: Omit<Habit, 'id' | 'createdAt'> & { createdAt?: string }) => void
+  updateHabit: (id: number, updates: Partial<Habit>) => void
+  deleteHabit: (id: number) => void
+}
+
+export const createHabitSlice: StateCreator<BoundStore, [], [], HabitSlice> = (set) => ({
+  habits: [],
+
+  addHabit: (habit) =>
+    set((state) => ({
+      habits: [
+        ...state.habits,
+        {
+          ...habit,
+          id: state.habits.length > 0 ? Math.max(...state.habits.map((h) => h.id)) + 1 : 1,
+          createdAt: habit.createdAt ?? getLocalDateString(),
+        },
+      ],
+    })),
+
+  updateHabit: (id, updates) =>
+    set((state) => ({
+      habits: state.habits.map((h) => (h.id === id ? { ...h, ...updates } : h)),
+    })),
+
+  deleteHabit: (id) =>
+    set((state) => {
+      const exists = state.habits.some((h) => h.id === id)
+      if (!exists) return state
+
+      return {
+        habits: state.habits.filter((h) => h.id !== id),
+        checkins: Object.fromEntries(
+          Object.entries(state.checkins).filter(([, c]) => c.habitId !== id)
+        ),
+        goals: state.goals.filter((g) => g.habitId !== id),
+      }
+    }),
+})

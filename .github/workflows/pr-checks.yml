@@ -1,0 +1,36 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: fe
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: fe/package-lock.json
+
+      - name: Cài đặt thư viện
+        run: npm install --legacy-peer-deps
+
+      - name: Kiểm tra Code style (ESLint)
+        run: npm run lint
+
+      - name: Kiểm tra Build & Typecheck (TypeScript/Vite)
+        run: npm run build
+
+      - name: Chạy Test & tính Coverage
+        run: npm run test -- --coverage

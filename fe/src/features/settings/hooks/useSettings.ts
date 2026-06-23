@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useBoundStore } from '@/store'
 import { TEXTS } from '../constants'
-import { SEED_HABITS, SEED_CHECKINS, SEED_GOALS } from '@/storage/seedData'
+import { SEED_HABITS, SEED_CHECKINS, SEED_GOALS, SEED_NOTES } from '@/storage/seedData'
 import { makeCheckinKey } from '@/store/checkinSlice'
 import { convertToCSV, convertToHTMLReport } from '../utils/exportHelpers'
 import { currentStreak, totalCompletions } from '@/features/dashboard/services'
@@ -243,10 +243,30 @@ export const useSettings = () => {
           SEED_CHECKINS.map((c) => [makeCheckinKey(c.habitId, c.date), c])
         )
 
+        const notifiedGoals: Record<string, boolean> = {}
+        SEED_GOALS.forEach((goal) => {
+          const habit = SEED_HABITS.find((h) => h.id === goal.habitId)
+          if (habit) {
+            const currentValue =
+              goal.targetType === 'streak'
+                ? currentStreak(habit, SEED_CHECKINS)
+                : totalCompletions(habit, SEED_CHECKINS)
+            const percentage = Math.round((currentValue / goal.targetValue) * 100)
+            if (percentage >= 100) {
+              notifiedGoals[`${goal.id}-completed`] = true
+              notifiedGoals[`${goal.id}-80percent`] = true
+            } else if (percentage >= 80) {
+              notifiedGoals[`${goal.id}-80percent`] = true
+            }
+          }
+        })
+
         useBoundStore.setState({
           habits: SEED_HABITS,
           checkins: checkinsRecord,
           goals: SEED_GOALS,
+          notes: SEED_NOTES,
+          notifiedGoals,
         })
         useBoundStore.getState().showToast(TEXTS.seedSuccess, 'success')
       },

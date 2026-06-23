@@ -11,6 +11,7 @@ import {
   goalProgress,
 } from './index'
 import type { Habit, Checkin, Goal } from '@/types'
+import { SEED_HABITS, SEED_CHECKINS } from '../../../storage/seedData'
 
 const BASE_HABIT: Habit = {
   id: 1,
@@ -27,6 +28,50 @@ const BASE_HABIT: Habit = {
 function makeCheckin(date: string, status: 'Completed' | 'Not Started' = 'Completed'): Checkin {
   return { habitId: 1, date, completedCount: 1, status }
 }
+
+describe('seed data validation', () => {
+  it('verifies user required seed data stats and goal progress', () => {
+    const h1 = SEED_HABITS.find((h) => h.id === 1001)!
+    const h4 = SEED_HABITS.find((h) => h.id === 1004)!
+
+    // Check basic stats
+    expect(currentStreak(h1, SEED_CHECKINS)).toBe(20)
+    expect(totalCompletions(h4, SEED_CHECKINS)).toBe(14)
+
+    // Drink 8 Glasses of Water total completions goal (target 10 should show 100%)
+    const drinkWaterGoal10: Goal = {
+      id: 'g-water-10',
+      habitId: h4.id,
+      targetType: 'total_completions',
+      targetValue: 10,
+      status: 'active',
+      createdAt: '2026-01-01',
+    }
+    expect(goalProgress(drinkWaterGoal10, h4, SEED_CHECKINS)).toBe(100)
+
+    // Morning Exercise streak goal (target 200 should show 10% progress as in progress 20)
+    const morningExerciseGoal200: Goal = {
+      id: 'g-ex-200',
+      habitId: h1.id,
+      targetType: 'streak',
+      targetValue: 200,
+      status: 'active',
+      createdAt: '2026-01-01',
+    }
+    expect(goalProgress(morningExerciseGoal200, h1, SEED_CHECKINS)).toBe(10) // 20 / 200 = 10%
+
+    // Morning Exercise streak goal updated to 25 (should show 80% progress)
+    const morningExerciseGoal25: Goal = {
+      id: 'g-ex-25',
+      habitId: h1.id,
+      targetType: 'streak',
+      targetValue: 25,
+      status: 'active',
+      createdAt: '2026-01-01',
+    }
+    expect(goalProgress(morningExerciseGoal25, h1, SEED_CHECKINS)).toBe(80) // 20 / 25 = 80%
+  })
+})
 
 describe('todayStr', () => {
   it('returns a YYYY-MM-DD string', () => {

@@ -123,11 +123,16 @@ const generatedCheckins: Checkin[] = []
 for (let d = 0; d <= 120; d++) {
   const dayOfWeek = getWeekdayOfDaysAgo(d)
 
-  // H1: Morning Exercise (Daily, Target 1). Base 55% completion rate.
-  // Force NOT completed today (d === 0) but completed yesterday (d === 1) to trigger at-risk banner.
+  // H1: Morning Exercise (Daily, Target 1).
+  // Force current streak to be exactly 20 days.
   let h1Completed = wasCompleted(H1, d, getDynamicProbability(H1, d, 0.55))
-  if (d === 0) h1Completed = false
-  if (d === 1) h1Completed = true
+  if (d === 0) {
+    h1Completed = false // not completed today
+  } else if (d >= 1 && d <= 20) {
+    h1Completed = true // completed for the last 20 days
+  } else if (d === 21) {
+    h1Completed = false // break the streak here
+  }
   generatedCheckins.push(makeCheckin(H1, d, h1Completed ? 1 : 0, 1))
 
   // H2: Read Books (Daily, Target 1). Base 40% completion rate.
@@ -143,19 +148,15 @@ for (let d = 0; d <= 120; d++) {
     generatedCheckins.push(makeCheckin(H3, d, h3Completed ? 1 : 0, 1))
   }
 
-  // H4: Drink 8 Glasses of Water (Daily, Target 8, Active). Base 60% completion rate.
-  // Diverse glass count count: fully completed, partially completed, or not completed.
+  // H4: Drink 8 Glasses of Water (Daily, Target 8, Active).
+  // Force exactly 14 completions in total.
   let waterCount = 0
-  const waterProb = getDynamicProbability(H4, d, 0.6)
   if (d === 0) {
     waterCount = 3 // today is in progress (3 / 8 glasses)
-  } else if (wasCompleted(H4, d, waterProb)) {
-    const r = Math.sin(H4 * 23.45 + d * 11.22) * 43758.5453
-    const randVal = r - Math.floor(r)
-    if (randVal < 0.45) waterCount = 8
-    else if (randVal < 0.75)
-      waterCount = 5 + Math.floor(randVal * 3) // 5 to 7
-    else waterCount = 2 + Math.floor(randVal * 3) // 2 to 4
+  } else if (d >= 1 && d <= 14) {
+    waterCount = 8 // completed (14 days)
+  } else {
+    waterCount = d % 3 === 0 ? 5 : 2
   }
   generatedCheckins.push(makeCheckin(H4, d, waterCount, 8))
 
@@ -183,6 +184,22 @@ export const SEED_GOALS: Goal[] = [
     habitId: H2, // Read Books
     targetType: 'total_completions',
     targetValue: 80,
+    status: 'active',
+    createdAt: daysAgo(120),
+  },
+  {
+    id: 'goal-4002',
+    habitId: H4, // Drink 8 Glasses of Water
+    targetType: 'total_completions',
+    targetValue: 10,
+    status: 'active',
+    createdAt: daysAgo(120),
+  },
+  {
+    id: 'goal-4003',
+    habitId: H1, // Morning Exercise
+    targetType: 'streak',
+    targetValue: 200,
     status: 'active',
     createdAt: daysAgo(120),
   },

@@ -22,7 +22,7 @@ export const useBoundStore = create<BoundStore>()(
     }),
     {
       name: 'habit-hub-storage',
-      // Lưu theme dô local
+      // Save theme to local
       partialize: (state) => ({
         habits: state.habits,
         checkins: state.checkins,

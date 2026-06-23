@@ -14,6 +14,7 @@ export interface ToastSlice {
   toastQueue: ToastItem[]
   showToast: (message: string, severity: ToastSeverity, isGoalCelebration?: boolean) => void
   dismissToast: () => void
+  clearToasts: () => void
 }
 
 export const createToastSlice: StateCreator<BoundStore, [], [], ToastSlice> = (set) => ({
@@ -30,5 +31,10 @@ export const createToastSlice: StateCreator<BoundStore, [], [], ToastSlice> = (s
   dismissToast: () =>
     set((state) => ({
       toastQueue: state.toastQueue.slice(1),
+    })),
+
+  clearToasts: () =>
+    set(() => ({
+      toastQueue: [],
     })),
 })

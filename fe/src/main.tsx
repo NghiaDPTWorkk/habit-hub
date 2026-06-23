@@ -16,6 +16,19 @@ initStore()
 const ThemeApp: React.FC = () => {
   const themeMode = useBoundStore((state) => state.themeMode) || 'light'
   const currentTheme = React.useMemo(() => getTheme(themeMode), [themeMode])
+  const clearToasts = useBoundStore((state) => state.clearToasts)
+
+  React.useEffect(() => {
+    let lastPathname = router.state.location.pathname
+    const unsubscribe = router.subscribe((state) => {
+      const nextPathname = state.location.pathname
+      if (nextPathname !== lastPathname) {
+        lastPathname = nextPathname
+        clearToasts()
+      }
+    })
+    return () => unsubscribe()
+  }, [clearToasts])
 
   return (
     <ThemeProvider theme={currentTheme}>

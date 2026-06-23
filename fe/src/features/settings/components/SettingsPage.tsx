@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box, ConfirmDialog, Typography } from '@/components/ui'
 import { useSettings } from '../hooks/useSettings'
-import { GeneralSettingsCard } from './GeneralSettingsCard'
 import { BackupRestoreCard } from './BackupRestoreCard'
 import { AdminZoneCard } from './AdminZoneCard'
 
@@ -9,13 +8,11 @@ const PAGE_TITLE = 'Settings & Backups'
 
 export const SettingsPage: React.FC = () => {
   const {
-    readOnly,
     fileInputRef,
     confirmOpen,
     confirmConfig,
     handleConfirmClose,
     handleConfirmAction,
-    handleReadOnlyChange,
     handleExportData,
     handleImportClick,
     handleImportData,
@@ -30,8 +27,6 @@ export const SettingsPage: React.FC = () => {
           {PAGE_TITLE}
         </Typography>
       </Box>
-      {/* General Settings Card */}
-      <GeneralSettingsCard readOnly={readOnly} onReadOnlyChange={handleReadOnlyChange} />
 
       {/* Backup & Restore Data Card */}
       <BackupRestoreCard

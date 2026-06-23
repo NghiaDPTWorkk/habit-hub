@@ -1,24 +1,21 @@
 import React from 'react'
-import Chip from '@mui/material/Chip'
 import { useTheme, alpha } from '@mui/material/styles'
-import { Box } from '@/components/ui'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { Box, Typography, IconButton } from '@/components/ui'
+import { Icons } from '@/components/ui/icons'
 import { Card } from '@/components/ui/Card'
+import { pxToRem } from '@/utils'
 import type { Habit } from '@/types'
+import { getPriorityColor } from '../utils/habitHelpers'
+import { HABIT_CARD_CONTENT } from '../constants/content'
 
-const CARD_TEXTS = {
-  scheduled: 'Scheduled on',
-  dueToday: 'Due today.',
-  missed: 'Missed today',
-  completed: 'Completed',
-  today: 'today',
-  daily: 'Daily',
-  specificDays: 'Specific days',
-  targetLabel: 'Target:',
-  priorityLabel: 'Priority:',
-  statusLabel: 'Status:',
-  dot: '.',
-  slash: '/',
-}
+const { SHORT_WEEK_DAYS, CARD_TEXTS } = HABIT_CARD_CONTENT
+
+const TEXT_CATEGORY_LABEL = 'Category: '
 
 export interface ReadOnlyHabitCardProps {
   habit: Habit
@@ -26,16 +23,6 @@ export interface ReadOnlyHabitCardProps {
   isMissed: boolean
   currentDayOfWeek: number
 }
-
-const weekDays = [
-  { label: 'Sunday', value: 0 },
-  { label: 'Monday', value: 1 },
-  { label: 'Tuesday', value: 2 },
-  { label: 'Wednesday', value: 3 },
-  { label: 'Thursday', value: 4 },
-  { label: 'Friday', value: 5 },
-  { label: 'Saturday', value: 6 },
-]
 
 export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
   habit,
@@ -47,99 +34,230 @@ export const ReadOnlyHabitCard: React.FC<ReadOnlyHabitCardProps> = ({
   const dueToday =
     habit.frequency === 'Daily' || (habit.specificDays?.includes(currentDayOfWeek) ?? false)
 
+  const priorityColor = getPriorityColor(habit.priority, theme)
+
+  const scheduledText =
+    habit.frequency === 'Daily'
+      ? CARD_TEXTS.daily
+      : habit.specificDays?.map((d) => SHORT_WEEK_DAYS[d]).join(', ') || ''
+
+  const completedText = todayCheckin
+    ? `${CARD_TEXTS.completed} ${todayCheckin.completedCount} ${CARD_TEXTS.slash} ${habit.targetPerDay} ${CARD_TEXTS.today}`
+    : ''
+
   return (
     <Card
-      variant="outlined"
+      variant="elevation"
+      elevation={1}
       sx={{
-        borderColor: isMissed ? theme.palette.error.main : theme.palette.divider,
-        backgroundColor: isMissed
-          ? alpha(theme.palette.error.main, 0.08)
-          : theme.palette.background.paper,
-        p: 2,
+        borderRadius: 3,
+        borderLeft: `${pxToRem(5)} solid ${priorityColor}`,
+        bgcolor: 'background.paper',
+        p: { xs: 2, sm: 2.5 },
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: (t) => `0px 4px 20px ${alpha(t.palette.common.black, 0.03)}`,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderLeftColor: priorityColor,
+        '&:hover': {
+          boxShadow: (t) => `0px 12px 30px ${alpha(t.palette.common.black, 0.08)}`,
+          transform: 'translateY(-4px)',
+          borderLeftWidth: pxToRem(6),
+        },
       }}
     >
-      <Box sx={{ display: 'grid', gap: 2 }}>
-        <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: { xs: 1.25, sm: 1.5 },
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.25, sm: 1.5 } }}>
+          {/* Header Row */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+              <Box
+                component="span"
+                sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: priorityColor }}
+              />
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, fontSize: pxToRem(15.5), color: 'text.primary' }}
+              >
+                {habit.name}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+              <IconButton
+                disabled
+                size="small"
+                sx={{
+                  color: 'text.secondary',
+                  '&.Mui-disabled': { color: 'text.secondary', opacity: 0.8 },
+                }}
+              >
+                <EditNoteIcon />
+              </IconButton>
+              <IconButton
+                disabled
+                size="small"
+                sx={{
+                  color: 'error.main',
+                  '&.Mui-disabled': { color: 'error.main', opacity: 0.8 },
+                }}
+              >
+                <DeleteOutlinedIcon />
+              </IconButton>
+              <IconButton
+                disabled
+                size="small"
+                sx={{
+                  color: 'text.secondary',
+                  '&.Mui-disabled': { color: 'text.secondary', opacity: 0.8 },
+                }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
+          </Box>
+
+          {/* Title & Description */}
+          <Box>
+            <Typography
+              variant="body2"
+              sx={{ color: 'text.secondary', fontSize: pxToRem(12), fontWeight: 600 }}
+            >
+              {TEXT_CATEGORY_LABEL}
+              {habit.category}
+            </Typography>
+
+            {/* Status Badges Row */}
+            <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mt: 1.25 }}>
+              {dueToday && (
+                <Box
+                  sx={{
+                    bgcolor: alpha(theme.palette.success.main, 0.06),
+                    color: theme.palette.success.main,
+                    border: '1px solid',
+                    borderColor: alpha(theme.palette.success.main, 0.2),
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: pxToRem(4),
+                    fontSize: pxToRem(10.5),
+                    fontWeight: 700,
+                  }}
+                >
+                  {CARD_TEXTS.dueToday}
+                </Box>
+              )}
+              {isMissed && (
+                <Box
+                  sx={{
+                    bgcolor: alpha(theme.palette.error.main, 0.06),
+                    color: theme.palette.error.main,
+                    border: '1px solid',
+                    borderColor: alpha(theme.palette.error.main, 0.2),
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: pxToRem(4),
+                    fontSize: pxToRem(10.5),
+                    fontWeight: 700,
+                  }}
+                >
+                  {CARD_TEXTS.missed}
+                </Box>
+              )}
+              {todayCheckin && !isMissed && dueToday && (
+                <Box
+                  sx={{
+                    bgcolor: alpha(theme.palette.success.main, 0.06),
+                    color: theme.palette.success.main,
+                    border: '1px solid',
+                    borderColor: alpha(theme.palette.success.main, 0.2),
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: pxToRem(4),
+                    fontSize: pxToRem(10.5),
+                    fontWeight: 700,
+                  }}
+                >
+                  {completedText}
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Footer Info */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            pt: 1.5,
+            borderTop: `1px solid ${theme.palette.divider}`,
+          }}
+        >
           <Box
-            component="h3"
             sx={{
-              ...theme.typography.subtitle1,
-              fontWeight: 700,
-              margin: 0,
-              mb: 1,
+              display: 'flex',
+              gap: { xs: 1, sm: 1.5, md: 2 },
+              alignItems: 'center',
+              flexWrap: 'wrap',
             }}
           >
-            {habit.name}
+            {/* Priority */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.25, sm: 0.5 } }}>
+              <StarBorderIcon sx={{ fontSize: { xs: 14, sm: 16 }, color: 'text.secondary' }} />
+              <Typography
+                variant="caption"
+                sx={{
+                  color: priorityColor,
+                  fontWeight: 700,
+                  fontSize: { xs: pxToRem(11), sm: pxToRem(12) },
+                }}
+              >
+                {habit.priority}
+              </Typography>
+            </Box>
+
+            {/* Frequency */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.25, sm: 0.5 } }}>
+              <CalendarTodayIcon sx={{ fontSize: { xs: 13, sm: 15 }, color: 'text.secondary' }} />
+              <Typography
+                variant="caption"
+                sx={{
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                  fontSize: { xs: pxToRem(11), sm: pxToRem(12) },
+                }}
+              >
+                {scheduledText}
+              </Typography>
+            </Box>
           </Box>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
-            <Chip label={habit.category} size="small" />
-            <Chip
-              label={habit.frequency === 'Daily' ? CARD_TEXTS.daily : CARD_TEXTS.specificDays}
+
+          {/* Edit Note Action Icon (Disabled) */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
+            <IconButton
+              disabled
               size="small"
-            />
-            <Chip label={`${CARD_TEXTS.targetLabel} ${habit.targetPerDay}`} size="small" />
-            <Chip label={`${CARD_TEXTS.priorityLabel} ${habit.priority}`} size="small" />
-            <Chip label={`${CARD_TEXTS.statusLabel} ${habit.status}`} size="small" />
+              sx={{
+                color: 'text.secondary',
+                '&.Mui-disabled': { color: 'text.secondary', opacity: 0.8 },
+              }}
+            >
+              <Icons.Edit sx={{ fontSize: { xs: 14, sm: 16 } }} />
+            </IconButton>
           </Box>
-          {habit.frequency === 'Specific' && habit.specificDays?.length ? (
-            <Box
-              component="p"
-              sx={{
-                ...theme.typography.body2,
-                color: theme.palette.text.secondary,
-                margin: 0,
-                mb: 1,
-              }}
-            >
-              {CARD_TEXTS.scheduled}{' '}
-              {habit.specificDays
-                .map((day) => weekDays.find((item) => item.value === day)?.label)
-                .filter(Boolean)
-                .join(', ')}
-              {CARD_TEXTS.dot}
-            </Box>
-          ) : null}
-          {dueToday && (
-            <Box
-              component="p"
-              sx={{
-                ...theme.typography.body2,
-                color: theme.palette.text.secondary,
-                margin: 0,
-                mb: 0.5,
-              }}
-            >
-              {CARD_TEXTS.dueToday}
-            </Box>
-          )}
-          {isMissed && (
-            <Box
-              component="p"
-              sx={{
-                ...theme.typography.body2,
-                color: theme.palette.error.main,
-                fontWeight: 600,
-                margin: 0,
-                mb: 0.5,
-              }}
-            >
-              {CARD_TEXTS.missed}
-            </Box>
-          )}
-          {todayCheckin && !isMissed && dueToday && (
-            <Box
-              component="p"
-              sx={{
-                ...theme.typography.body2,
-                color: theme.palette.success.main,
-                margin: 0,
-                mb: 0.5,
-              }}
-            >
-              {CARD_TEXTS.completed} {todayCheckin.completedCount} {CARD_TEXTS.slash}{' '}
-              {habit.targetPerDay} {CARD_TEXTS.today}
-            </Box>
-          )}
         </Box>
       </Box>
     </Card>

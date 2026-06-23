@@ -45,5 +45,5 @@ export const GOALS_CONTENT = {
     COMPLETED: 'Completed',
   },
   FILTER_EMPTY_STATE: 'No goals match this filter.',
-  ACCORDION_LABEL: '+ Tạo mục tiêu mới',
+  ACCORDION_LABEL: '+ Create New Goal',
 }

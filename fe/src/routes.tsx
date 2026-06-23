@@ -6,6 +6,7 @@ import { goalsRoutes } from '@/features/goals'
 import { checkinsRoutes } from '@/features/checkins'
 import { settingsRoutes } from '@/features/settings'
 import { ReadOnlyHabitsPage } from '@/features/habits'
+import { NotFoundPage } from '@/components/ui'
 
 export const router = createBrowserRouter([
   {
@@ -28,5 +29,9 @@ export const router = createBrowserRouter([
         element: <ReadOnlyHabitsPage />,
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ])

@@ -30,7 +30,7 @@ const formatDate = (date: Date): string => {
 export const MOCK_HABITS: Habit[] = [
   {
     id: 1,
-    name: 'Uống nước',
+    name: 'Drink Water',
     category: 'Health',
     frequency: 'Daily',
     specificDays: null,
@@ -41,7 +41,7 @@ export const MOCK_HABITS: Habit[] = [
   },
   {
     id: 2,
-    name: 'Tập thể dục',
+    name: 'Exercise',
     category: 'Health',
     frequency: 'Daily',
     specificDays: null,
@@ -52,7 +52,7 @@ export const MOCK_HABITS: Habit[] = [
   },
   {
     id: 3,
-    name: 'Đọc sách',
+    name: 'Read Books',
     category: 'Study',
     frequency: 'Daily',
     specificDays: null,
@@ -83,7 +83,7 @@ export const MOCK_GOALS: Goal[] = [
 ]
 
 export const MOCK_CHECKINS: Checkin[] = [
-  // Habit 1: 3 ngày liên tiếp (streak test)
+  // Habit 1: 3 consecutive days (streak test)
   { habitId: 1, date: formatDate(today), completedCount: 1, status: 'Completed' },
   { habitId: 1, date: formatDate(yesterday), completedCount: 1, status: 'Completed' },
   { habitId: 1, date: formatDate(dayBefore), completedCount: 1, status: 'Completed' },

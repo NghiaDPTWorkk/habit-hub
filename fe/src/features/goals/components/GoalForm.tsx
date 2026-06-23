@@ -12,11 +12,19 @@ import {
   Radio,
   Select,
   TextField,
+  Typography,
 } from '@/components/ui'
 import { useBoundStore } from '@/store/useBoundStore'
 import type { Goal, GoalTargetType } from '@/types'
+import { useNavigate } from 'react-router-dom'
+import { pxToRem } from '@/utils'
 import { SHARED_MESSAGES } from '@/constants/messages'
 import { GOALS_CONTENT } from '../constants/content'
+
+const NO_HABITS_AVAILABLE = 'No habits available.'
+const BTN_CREATE_HABIT = 'Go to Habits to create one'
+const SELECT_PLACEHOLDER = 'Select a habit...'
+const NO_HABITS_PLACEHOLDER = 'No habits available (Click to create)'
 
 interface GoalFormProps {
   existingGoal?: Goal
@@ -25,6 +33,7 @@ interface GoalFormProps {
 
 export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) => {
   const { habits, addGoal, updateGoal, showToast } = useBoundStore()
+  const navigate = useNavigate()
   const [habitId, setHabitId] = useState<number | ''>(existingGoal?.habitId ?? '')
   const [targetType, setTargetType] = useState<GoalTargetType>(existingGoal?.targetType || 'streak')
   const [targetValue, setTargetValue] = useState(existingGoal?.targetValue?.toString() || '')
@@ -93,18 +102,56 @@ export const GoalForm: React.FC<GoalFormProps> = ({ existingGoal, onSuccess }) =
           <Select
             value={habitId}
             onChange={(e) => {
-              setHabitId(Number(e.target.value))
-              if (e.target.value) {
+              if ((e.target.value as string | number) !== '') {
+                setHabitId(Number(e.target.value))
                 setErrors((prev) => ({ ...prev, habitId: '' }))
               }
             }}
             disabled={isEditing}
+            displayEmpty
+            renderValue={(selected) => {
+              if ((selected as string | number) === '') {
+                return (
+                  <Typography color="text.secondary" sx={{ fontSize: pxToRem(14) }}>
+                    {habits.length === 0 ? NO_HABITS_PLACEHOLDER : SELECT_PLACEHOLDER}
+                  </Typography>
+                )
+              }
+              const habit = habits.find((h) => h.id === selected)
+              return habit ? habit.name : ''
+            }}
           >
-            {habits.map((habit) => (
-              <MenuItem key={habit.id} value={habit.id}>
-                {habit.name}
-              </MenuItem>
-            ))}
+            {habits.length === 0
+              ? [
+                  <MenuItem
+                    key="empty-msg"
+                    value=""
+                    disabled
+                    sx={{ opacity: '1 !important', justifyContent: 'center' }}
+                  >
+                    <Typography variant="body2" color="text.secondary">
+                      {NO_HABITS_AVAILABLE}
+                    </Typography>
+                  </MenuItem>,
+                  <MenuItem
+                    key="empty-nav"
+                    value=""
+                    onClick={() => navigate('/habits')}
+                    sx={{
+                      justifyContent: 'center',
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      fontSize: pxToRem(14),
+                    }}
+                  >
+                    {BTN_CREATE_HABIT}
+                  </MenuItem>,
+                ]
+              : habits.map((habit) => (
+                  <MenuItem key={habit.id} value={habit.id}>
+                    {habit.name}
+                  </MenuItem>
+                ))}
           </Select>
           {errors.habitId && <FormHelperText>{errors.habitId}</FormHelperText>}
         </FormControl>

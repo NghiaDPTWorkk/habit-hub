@@ -8,6 +8,7 @@ import { useDashboard, useDailyIntensity } from '../hooks'
 import { KpiCard } from './KpiCard'
 import { CategoryDistributionChart } from './CategoryDistributionChart'
 import { CategorySection } from './CategorySection'
+import { HABIT_STATS_GRID_COLS } from './habitStatsConfig'
 import { formatPercent, getDateLabel } from '../utils'
 
 const PAGE_TITLE = 'Dashboard'
@@ -22,6 +23,12 @@ const TITLE_WEEKLY_STATS = 'Habit Overview'
 const ICON_SIZE = { fontSize: 28 }
 const HEATMAP_WEEKS = 14
 
+const COL_HABIT = 'Habit'
+const COL_STREAK = 'Current'
+const COL_LONGEST = 'Longest'
+const COL_TOTAL = 'Total'
+const COL_RATE = '7-Day'
+
 const LABEL_LESS = 'Less'
 const LABEL_MORE = 'More'
 const LABEL_WEEKS = 'Last 14 weeks'
@@ -35,6 +42,7 @@ export const DashboardPage: React.FC = () => {
   const { summary, habitsByCategory } = useDashboard()
   const heatmapData = useDailyIntensity(HEATMAP_WEEKS * 7)
   const dateLabel = getDateLabel()
+  const emptyMessage = `${EMPTY_TITLE}. ${EMPTY_DESC}`
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -89,20 +97,72 @@ export const DashboardPage: React.FC = () => {
       </Grid>
 
       {/* Row 2: Habit Overview — full width */}
-      {habitsByCategory.length === 0 ? (
-        <Card sx={{ textAlign: 'center', py: 6 }}>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-            {EMPTY_TITLE}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {EMPTY_DESC}
-          </Typography>
-        </Card>
-      ) : (
-        <Card sx={{ p: { xs: 2, sm: 3 } }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
-            {TITLE_WEEKLY_STATS}
-          </Typography>
+      <Card sx={{ p: { xs: 2, sm: 3 } }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+          {TITLE_WEEKLY_STATS}
+        </Typography>
+        {habitsByCategory.length === 0 ? (
+          <Box
+            sx={{
+              border: 1,
+              borderColor: 'divider',
+              borderRadius: 1,
+              overflow: 'hidden',
+            }}
+          >
+            {/* Table Header Row */}
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: HABIT_STATS_GRID_COLS,
+                gap: 1,
+                px: 2,
+                py: 1.5,
+                borderBottom: 1,
+                borderColor: 'divider',
+                bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
+              }}
+            >
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                {COL_HABIT}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontWeight: 600, textAlign: 'center' }}
+              >
+                {COL_STREAK}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontWeight: 600, textAlign: 'center' }}
+              >
+                {COL_LONGEST}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontWeight: 600, textAlign: 'center' }}
+              >
+                {COL_TOTAL}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontWeight: 600, textAlign: 'right' }}
+              >
+                {COL_RATE}
+              </Typography>
+            </Box>
+            {/* Table Body - Empty Message */}
+            <Box sx={{ py: 6, px: 2, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                {emptyMessage}
+              </Typography>
+            </Box>
+          </Box>
+        ) : (
           <Stack spacing={2}>
             {habitsByCategory.map((group, index) => (
               <CategorySection
@@ -113,8 +173,8 @@ export const DashboardPage: React.FC = () => {
               />
             ))}
           </Stack>
-        </Card>
-      )}
+        )}
+      </Card>
 
       {/* Row 3: Calendar Heatmap + Category Distribution */}
       <Grid container spacing={3} sx={{ alignItems: 'stretch' }}>

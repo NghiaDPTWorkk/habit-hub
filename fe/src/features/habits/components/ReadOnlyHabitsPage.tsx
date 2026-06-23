@@ -1,40 +1,22 @@
-import React, { useMemo, useState } from 'react'
-import { Box, Typography, Drawer, IconButton } from '@/components/ui'
-import { Card } from '@/components/ui/Card'
+import React, { useMemo } from 'react'
+import { Box, Typography, alpha } from '@/components/ui'
 import { useHabitStore } from '@/features/habits/hooks'
 import { useCheckinStore } from '@/features/checkins/hooks'
-import { ReadOnlyHabitList } from './ReadOnlyHabitList'
-import { FilterSideBar } from './FilterSideBar'
-import type { HabitFilters } from './FilterSideBar'
-import type { Habit } from '@/types'
+import { pxToRem } from '@/utils'
+import { currentStreak, totalCompletions } from '@/features/dashboard/services'
+import { ReadOnlyHabitsSummary } from './ReadOnlyHabitsSummary'
 
 const PAGE_TEXTS = {
-  title: 'Habits',
-  description: 'Read-only view of habits.',
-  filterButton: 'Filters',
-}
-
-const DEFAULT_FILTERS: HabitFilters = {
-  category: 'All',
-  frequency: 'All',
-  priority: 'All',
-  status: 'All',
-}
-
-const isDueToday = (habit: Habit, currentDayOfWeek: number) => {
-  if (habit.frequency === 'Daily') {
-    return true
-  }
-  return Array.isArray(habit.specificDays) && habit.specificDays.includes(currentDayOfWeek)
+  title: '🏆 Achievement Showcase Hall',
+  description:
+    'A premium, gamified showcase of your current consistency, milestones, and habit completion stats.',
 }
 
 export const ReadOnlyHabitsPage: React.FC = () => {
   const { habits } = useHabitStore()
-  const { today, checkinsByDate } = useCheckinStore()
-  const todayWeekDay = new Date(today + 'T00:00:00').getDay()
+  const { today, checkinsByDate, checkins } = useCheckinStore()
 
-  const [filters, setFilters] = useState<HabitFilters>(DEFAULT_FILTERS)
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
+  const activeHabits = useMemo(() => habits.filter((h) => h.status === 'Active'), [habits])
 
   const todayCheckinByHabit = useMemo(
     () =>
@@ -48,95 +30,108 @@ export const ReadOnlyHabitsPage: React.FC = () => {
     [checkinsByDate, today]
   )
 
-  const filteredHabits = useMemo(
+  const checkinsList = useMemo(() => Object.values(checkins), [checkins])
+
+  const completedTodayCount = useMemo(
     () =>
-      habits.filter((habit) => {
-        if (filters.category !== 'All' && habit.category !== filters.category) {
-          return false
-        }
-        if (filters.frequency !== 'All' && habit.frequency !== filters.frequency) {
-          return false
-        }
-        if (filters.priority !== 'All' && habit.priority !== filters.priority) {
-          return false
-        }
-        if (filters.status !== 'All' && habit.status !== filters.status) {
-          return false
-        }
-        return true
-      }),
-    [habits, filters]
+      activeHabits.filter((h) => {
+        const checkin = todayCheckinByHabit[h.id]
+        return checkin && checkin.completedCount >= h.targetPerDay
+      }).length,
+    [activeHabits, todayCheckinByHabit]
   )
 
-  const isHabitMissed = (habit: Habit) => {
-    if (habit.status !== 'Active') {
-      return false
-    }
-    if (!isDueToday(habit, todayWeekDay)) {
-      return false
-    }
-    const todayCheckin = todayCheckinByHabit[habit.id]
-    return !todayCheckin || todayCheckin.completedCount < habit.targetPerDay
-  }
+  const completionRate = useMemo(
+    () => (activeHabits.length > 0 ? (completedTodayCount / activeHabits.length) * 100 : 0),
+    [completedTodayCount, activeHabits.length]
+  )
+
+  const highestStreak = useMemo(() => {
+    if (activeHabits.length === 0) return 0
+    return Math.max(...activeHabits.map((h) => currentStreak(h, checkinsList)), 0)
+  }, [activeHabits, checkinsList])
+
+  const totalCompletionsCount = useMemo(() => {
+    return activeHabits.reduce((acc, h) => acc + totalCompletions(h, checkinsList), 0)
+  }, [activeHabits, checkinsList])
+
+  const focusCategory = useMemo(() => {
+    if (activeHabits.length === 0) return 'None'
+    const counts = activeHabits.reduce<Record<string, number>>((acc, h) => {
+      acc[h.category] = (acc[h.category] ?? 0) + 1
+      return acc
+    }, {})
+    return Object.entries(counts).reduce((a, b) => (a[1] > b[1] ? a : b))[0]
+  }, [activeHabits])
 
   return (
-    <Box sx={{ p: 3, maxWidth: '100vw' }}>
-      <Typography variant="h4" gutterBottom>
-        {PAGE_TEXTS.title}
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 3 }}>
-        {PAGE_TEXTS.description}
-      </Typography>
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 3,
-          gridTemplateColumns: { xs: '1fr', md: '320px 1fr' },
-          maxWidth: '100vw',
-        }}
-      >
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          <Card sx={{ p: 2 }}>
-            <FilterSideBar
-              filters={filters}
-              onChange={setFilters}
-              onClear={() => setFilters(DEFAULT_FILTERS)}
-            />
-          </Card>
-        </Box>
-
-        <Box sx={{ display: 'grid', gap: 3 }}>
-          <Card sx={{ p: 2, display: { xs: 'block', md: 'none' } }}>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-              <IconButton onClick={() => setFilterDrawerOpen(true)}>
-                <Typography variant="button">{PAGE_TEXTS.filterButton}</Typography>
-              </IconButton>
-            </Box>
-          </Card>
-
-          <Card sx={{ p: 2 }}>
-            <ReadOnlyHabitList
-              habits={filteredHabits}
-              todayCheckinByHabit={todayCheckinByHabit}
-              isHabitMissed={isHabitMissed}
-              currentDayOfWeek={todayWeekDay}
-            />
-          </Card>
-        </Box>
+    <Box
+      sx={{
+        p: { xs: 2, sm: 3 },
+        maxWidth: pxToRem(1000),
+        mx: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: '10%',
+          width: pxToRem(300),
+          height: pxToRem(300),
+          borderRadius: '50%',
+          background: (t) =>
+            `radial-gradient(circle, ${alpha(t.palette.success.main, 0.05)} 0%, ${alpha(t.palette.background.default, 0)} 70%)`,
+          zIndex: -1,
+          pointerEvents: 'none',
+          filter: 'blur(40px)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '10%',
+          right: '10%',
+          width: pxToRem(400),
+          height: pxToRem(400),
+          borderRadius: '50%',
+          background: (t) =>
+            `radial-gradient(circle, ${alpha(t.palette.primary.main, 0.04)} 0%, ${alpha(t.palette.background.default, 0)} 70%)`,
+          zIndex: -1,
+          pointerEvents: 'none',
+          filter: 'blur(50px)',
+        },
+      }}
+    >
+      <Box>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontWeight: 800,
+            background: (t) =>
+              `linear-gradient(45deg, ${t.palette.primary.main} 30%, ${t.palette.success.main} 90%)`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          {PAGE_TEXTS.title}
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          {PAGE_TEXTS.description}
+        </Typography>
       </Box>
 
-      <Drawer anchor="left" open={filterDrawerOpen} onClose={() => setFilterDrawerOpen(false)}>
-        <Box sx={{ maxWidth: 280, p: 2 }}>
-          <FilterSideBar
-            filters={filters}
-            onChange={setFilters}
-            onClear={() => {
-              setFilters(DEFAULT_FILTERS)
-              setFilterDrawerOpen(false)
-            }}
-          />
-        </Box>
-      </Drawer>
+      <ReadOnlyHabitsSummary
+        activeHabits={activeHabits}
+        todayCheckinByHabit={todayCheckinByHabit}
+        completedTodayCount={completedTodayCount}
+        completionRate={completionRate}
+        highestStreak={highestStreak}
+        totalCompletionsCount={totalCompletionsCount}
+        focusCategory={focusCategory}
+      />
     </Box>
   )
 }

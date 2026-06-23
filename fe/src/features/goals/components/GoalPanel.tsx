@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { Box, Button, Card, IconButton, Stack, Typography, ConfirmDialog } from '@/components/ui'
+import {
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Stack,
+  Typography,
+  ConfirmDialog,
+  EmptyState,
+} from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { ProgressBar } from './ProgressBar'
 import { GoalCompletedDialog } from './GoalCompletedDialog'
@@ -13,7 +22,6 @@ interface GoalPanelProps {
   onEditGoal?: (goal: Goal) => void
 }
 
-const EMPTY_STATE_ICON = '🎯'
 const DATE_SEPARATOR = '/'
 const COLON_SEPARATOR = ': '
 const FILTER_ALL = GOALS_CONTENT.FILTER.ALL
@@ -73,6 +81,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
   return (
     <>
       <GoalCompletedDialog
+        key={milestone?.habitName ?? ''}
         habitName={milestone?.habitName ?? null}
         type={milestone?.type ?? '100'}
         onClose={() => setMilestone(null)}
@@ -113,12 +122,7 @@ export const GoalPanel: React.FC<GoalPanelProps> = ({ onEditGoal }) => {
         </Stack>
 
         {filteredGoals.length === 0 ? (
-          <Card sx={{ p: 6, textAlign: 'center', backgroundColor: 'background.paper' }}>
-            <Typography sx={{ fontSize: 48, mb: 2 }}>{EMPTY_STATE_ICON}</Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-              {goals.length === 0 ? GOALS_CONTENT.EMPTY_STATE : FILTER_EMPTY}
-            </Typography>
-          </Card>
+          <EmptyState message={goals.length === 0 ? GOALS_CONTENT.EMPTY_STATE : FILTER_EMPTY} />
         ) : (
           filteredGoals.map((goal) => {
             const progress = getGoalProgress(goal, Object.values(checkins))

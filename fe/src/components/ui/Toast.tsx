@@ -11,7 +11,7 @@ import { pxToRem } from '@/utils'
 import { alpha } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
 
-const TOAST_DURATION_MS = 3000
+const TOAST_DURATION_MS = 4000
 const CELEBRATION_DURATION = 8000
 
 const GOAL_COMPLETED_TEXT = 'Goal Completed!'
@@ -223,7 +223,7 @@ export const Toast: React.FC = () => {
         if (reason !== 'clickaway') dismissToast()
       }}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      sx={{ top: { xs: 16, sm: 24 }, width: { xs: '92%', sm: 'auto' } }}
+      sx={{ top: { xs: 16, sm: 24 }, width: { xs: '92%', sm: 'auto' }, zIndex: 9999 }}
     >
       <Alert
         severity={current.severity}

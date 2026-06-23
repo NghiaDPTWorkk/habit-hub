@@ -1,5 +1,14 @@
-import React from 'react'
-import { Typography, Card, Stack, Button } from '@/components/ui'
+import React, { useState } from 'react'
+import {
+  Typography,
+  Card,
+  Stack,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@/components/ui'
 import { Icons } from '@/components/ui/icons'
 import { TEXTS } from '../constants'
 
@@ -8,7 +17,7 @@ const orangeMainColor = '#fd7e14'
 const orangeDarkColor = '#e8590c'
 
 interface BackupRestoreCardProps {
-  onExportData: () => void
+  onExportData: (format: 'json' | 'csv' | 'pdf') => void
   onImportClick: () => void
   onImportData: (e: React.ChangeEvent<HTMLInputElement>) => void
   fileInputRef: React.RefObject<HTMLInputElement | null>
@@ -20,6 +29,8 @@ export const BackupRestoreCard: React.FC<BackupRestoreCardProps> = ({
   onImportData,
   fileInputRef,
 }) => {
+  const [format, setFormat] = useState<'json' | 'csv' | 'pdf'>('json')
+
   return (
     <Card
       variant="outlined"
@@ -36,11 +47,25 @@ export const BackupRestoreCard: React.FC<BackupRestoreCardProps> = ({
         {TEXTS.backupSubtitle}
       </Typography>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: 'center' }}>
+        <FormControl size="small" sx={{ minWidth: 180, width: { xs: '100%', sm: 'auto' } }}>
+          <InputLabel id="export-format-select-label">{TEXTS.exportFormatLabel}</InputLabel>
+          <Select
+            labelId="export-format-select-label"
+            value={format}
+            label={TEXTS.exportFormatLabel}
+            onChange={(e) => setFormat(e.target.value as 'json' | 'csv' | 'pdf')}
+          >
+            <MenuItem value="json">{TEXTS.formatJson}</MenuItem>
+            <MenuItem value="csv">{TEXTS.formatCsv}</MenuItem>
+            <MenuItem value="pdf">{TEXTS.formatPdf}</MenuItem>
+          </Select>
+        </FormControl>
+
         <Button
           variant="contained"
           startIcon={<Icons.Download />}
-          onClick={onExportData}
+          onClick={() => onExportData(format)}
           sx={{
             borderRadius: 2,
             px: 3,
@@ -48,12 +73,17 @@ export const BackupRestoreCard: React.FC<BackupRestoreCardProps> = ({
             fontWeight: 600,
             bgcolor: orangeMainColor,
             color: 'common.white',
+            width: { xs: '100%', sm: 'auto' },
             '&:hover': {
               bgcolor: orangeDarkColor,
             },
           }}
         >
-          {TEXTS.exportBtn}
+          {format === 'json'
+            ? TEXTS.btnExportBackup
+            : format === 'csv'
+              ? TEXTS.btnExportExcel
+              : TEXTS.btnPrintPdf}
         </Button>
 
         <Button
@@ -66,6 +96,7 @@ export const BackupRestoreCard: React.FC<BackupRestoreCardProps> = ({
             px: 3,
             py: 1.25,
             fontWeight: 600,
+            width: { xs: '100%', sm: 'auto' },
           }}
         >
           {TEXTS.importBtn}

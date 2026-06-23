@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
 
-import logo3Img from '@/assets/logo3.png'
+import faviconLogo from '@/assets/favicon-logo.png'
 
 interface SidebarProps {
   pathname: string
@@ -100,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ pathname, onCloseMobile, curre
         >
           <Box
             component="img"
-            src={logo3Img}
+            src={faviconLogo}
             alt="Logo"
             sx={{ height: '100%', width: '100%', objectFit: 'contain' }}
           />

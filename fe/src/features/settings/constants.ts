@@ -1,14 +1,17 @@
 export const TEXTS = {
   title: 'Settings & Backups',
   subtitle: 'Export data records and administrative tools',
-  generalTitle: 'General Settings',
-  readOnlyTitle: 'Read-only Mode',
-  readOnlySubtitle:
-    'Hide all habit creation, edit, delete actions, and check-in buttons for safe public sharing.',
   backupTitle: 'Backup & Restore Data',
   backupSubtitle:
     'Export all user database records (Habits, Check-ins, Goals, Notes) from LocalStorage to a local JSON file or import it back.',
   exportBtn: 'Export Data (JSON)',
+  exportFormatLabel: 'Export Format',
+  formatJson: 'JSON (Backup)',
+  formatCsv: 'Excel (CSV)',
+  formatPdf: 'PDF Report',
+  btnExportBackup: 'Export Backup',
+  btnExportExcel: 'Export Excel',
+  btnPrintPdf: 'Print PDF',
   importBtn: 'Import Data (JSON)',
   adminTitle: 'Administration & Release Zone',
   adminSubtitle:

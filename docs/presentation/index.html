@@ -1,0 +1,3033 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TraceX Project Presentation - ByteBuilders</title>
+    <!-- Google Fonts: Inter and Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Reset & CSS Variables */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        /* Theme light default values, will update dynamically */
+        --font-family-sans: "Inter", sans-serif;
+        --font-family-title: "Outfit", sans-serif;
+
+        /* Smooth transitions */
+        --transition-speed: 0.4s;
+        --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      html[data-theme="light"] {
+        --bg-color: #f6f8fa;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f1f3f5;
+        --text-primary: #1f2328;
+        --text-secondary: #656d76;
+        --primary: #27ae60;
+        --primary-hover: #219653;
+        --primary-light: #e6f4ea;
+        --secondary: #8250df;
+        --secondary-hover: #6639b6;
+        --secondary-light: #f5f0ff;
+        --border-color: rgba(31, 35, 40, 0.08);
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.08);
+        --accent-glow: rgba(39, 174, 96, 0.15);
+        --code-bg: #eceef0;
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: #0d1117;
+        --bg-card: #161b22;
+        --bg-card-hover: #21262d;
+        --text-primary: #e6edf3;
+        --text-secondary: #7d8590;
+        --primary: #34d399;
+        --primary-hover: #059669;
+        --primary-light: rgba(46, 125, 50, 0.15);
+        --secondary: #8957e5;
+        --secondary-hover: #a371f7;
+        --secondary-light: rgba(137, 87, 229, 0.15);
+        --border-color: rgba(240, 246, 252, 0.08);
+        --shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.35);
+        --accent-glow: rgba(52, 211, 153, 0.2);
+        --code-bg: #0d1117;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        font-family: var(--font-family-sans);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition:
+          background-color var(--transition-speed) ease,
+          color var(--transition-speed) ease;
+      }
+
+      /* Presentation Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10;
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        height: 70px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: var(--text-primary);
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 32px;
+        border-radius: 6px;
+        background: #0d1117; /* Dark background to make logo pop */
+        padding: 3px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .brand:hover .logo-container {
+        transform: rotate(10deg) scale(1.05);
+      }
+
+      .logo-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+
+      .brand-text {
+        font-family: var(--font-family-title);
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: -0.5px;
+      }
+
+      .brand-text span {
+        color: var(--primary);
+      }
+
+      .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      /* Common Button Styles */
+      .btn {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: var(--font-family-sans);
+        font-weight: 500;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+      }
+
+      .btn:hover {
+        background: var(--primary);
+        color: #ffffff;
+        border-color: var(--primary);
+        transform: translateY(-1px);
+      }
+
+      .btn-icon {
+        padding: 0.5rem;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #ffffff;
+        border-color: var(--primary);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+      }
+
+      /* Presentation Area */
+      .slides-container {
+        flex: 1;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slide {
+        position: absolute;
+        top: 1rem;
+        left: 2rem;
+        right: 2rem;
+        bottom: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(100px) scale(0.95);
+        transition:
+          opacity var(--transition-speed) var(--transition-smooth),
+          transform var(--transition-speed) var(--transition-bounce),
+          visibility var(--transition-speed) linear;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        padding: 2.5rem 3rem;
+        box-shadow: var(--shadow);
+        overflow: hidden; /* Strictly no scrollbars */
+      }
+
+      .slide::after {
+        content: "© ByteBuilders";
+        position: absolute;
+        bottom: 1rem;
+        right: 1.5rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        opacity: 0.35;
+        font-family: var(--font-family-title);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0) scale(1);
+        z-index: 2;
+      }
+
+      .slide.prev-slide {
+        transform: translateX(-100px) scale(0.95);
+      }
+
+      /* Slide Typography */
+      .slide-title {
+        font-family: var(--font-family-title);
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        line-height: 1.2;
+        letter-spacing: -1px;
+        color: var(--text-primary);
+        position: relative;
+        display: inline-block;
+      }
+
+      .slide-title::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 3px;
+      }
+
+      .slide-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 1.25rem;
+        line-height: 1.5;
+      }
+
+      /* Specific Slide Layouts & Styling */
+
+      /* Slide 1: Welcome */
+      .welcome-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 3rem;
+        align-items: center;
+        height: 100%;
+      }
+
+      .welcome-text h1 {
+        font-family: var(--font-family-title);
+        font-size: 3.75rem;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin-bottom: 1rem;
+      }
+
+      .welcome-text h1 span {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .welcome-text p {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+      }
+
+      .welcome-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .meta-badge {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border: 1px solid rgba(52, 211, 153, 0.2);
+      }
+
+      .welcome-visual {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .welcome-logo-glow {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: var(--accent-glow);
+        filter: blur(40px);
+        animation: pulse 4s infinite alternate;
+        z-index: 1;
+      }
+
+      .welcome-logo-wrapper {
+        z-index: 2;
+        width: 140px;
+        height: 140px;
+        background: #0d1117; /* Dark background under logo to make it pop */
+        border-radius: 28px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .welcome-logo-wrapper img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+      }
+
+      /* Slide 2: Outline specific styles */
+      .outline-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem 2rem;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+        padding: 0.5rem 0;
+      }
+
+      .outline-item {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        cursor: pointer;
+      }
+
+      .outline-item:hover {
+        transform: translateY(-2px) scale(1.01);
+        border-color: var(--primary);
+        background: var(--bg-card);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .outline-num {
+        font-family: var(--font-family-title);
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--primary);
+        min-width: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-light);
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+      }
+
+      .outline-item:nth-child(even) .outline-num {
+        color: var(--secondary);
+        background: var(--secondary-light);
+      }
+
+      .outline-text {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      /* Slide 2: Optimized 4-Part Outline styles */
+      .outline-grid-4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+        padding: 0.5rem 0;
+      }
+
+      .outline-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        padding: 1.25rem 1.5rem;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .outline-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .outline-card:nth-child(even)::before {
+        background: var(--secondary);
+      }
+
+      .outline-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary);
+        background: var(--bg-card-hover);
+      }
+
+      .outline-card:nth-child(even):hover {
+        border-color: var(--secondary);
+      }
+
+      .outline-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .outline-num-large {
+        font-family: var(--font-family-title);
+        font-weight: 800;
+        font-size: 1.35rem;
+        color: var(--primary);
+        background: var(--primary-light);
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .outline-card:nth-child(even) .outline-num-large {
+        color: var(--secondary);
+        background: var(--secondary-light);
+      }
+
+      .outline-title-large {
+        font-family: var(--font-family-title);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .outline-subtopics {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        padding-left: 2.9rem;
+      }
+
+      /* Slide 2: Context */
+      .context-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+      }
+
+      .context-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .context-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--secondary);
+      }
+
+      .context-card:nth-child(2)::before {
+        background: var(--primary);
+      }
+
+      .context-card:nth-child(3)::before {
+        background: linear-gradient(180deg, var(--primary), var(--secondary));
+      }
+
+      .context-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-hover);
+        background: var(--bg-card-hover);
+        border-color: var(--primary);
+      }
+
+      .context-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+      }
+
+      .context-card h3 {
+        font-family: var(--font-family-title);
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 0;
+        color: var(--text-primary);
+      }
+
+      .context-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .context-title-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .context-tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+
+      .context-tag-purple {
+        background: var(--secondary-light);
+        color: var(--secondary);
+        border: 1px solid rgba(130, 80, 223, 0.15);
+      }
+
+      .context-tag-green {
+        background: var(--primary-light);
+        color: var(--primary);
+        border: 1px solid rgba(39, 174, 96, 0.15);
+      }
+
+      /* Slide 3: Members */
+      .members-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+      }
+
+      .member-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        transition: all 0.3s var(--transition-bounce);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .member-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--secondary);
+      }
+
+      .member-card:nth-child(2)::before {
+        background: var(--primary);
+      }
+
+      .member-card:nth-child(3)::before {
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+
+      .member-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary);
+        background: var(--bg-card-hover);
+      }
+
+      .member-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+      }
+
+      .member-card-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--secondary-light);
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-family-title);
+        font-weight: 800;
+        font-size: 1.05rem;
+        border: 1px solid var(--border-color);
+        flex-shrink: 0;
+      }
+
+      .member-card:nth-child(2) .member-card-avatar {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      .member-card:nth-child(3) .member-card-avatar {
+        background: var(--secondary-light);
+        color: var(--secondary);
+      }
+
+      .member-card-info h4 {
+        font-family: var(--font-family-title);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.2;
+      }
+
+      .member-card-info p {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 0.1rem;
+      }
+
+      .member-card:nth-child(1) .member-card-info p {
+        color: var(--secondary);
+      }
+
+      .member-card:nth-child(3) .member-card-info p {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .member-card-tasks {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.35rem;
+      }
+
+      .member-card-tasks li {
+        position: relative;
+        padding-left: 1.1rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.45;
+      }
+
+      .member-card-tasks li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: bold;
+      }
+
+      .member-card:nth-child(1) .member-card-tasks li::before {
+        color: var(--secondary);
+      }
+
+      /* Slide 4: About Project & Timeline */
+      .project-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+      }
+
+      .timeline-container {
+        position: relative;
+        padding-left: 2rem;
+        border-left: 2px dashed var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .timeline-node {
+        position: relative;
+      }
+
+      .timeline-node::before {
+        content: "";
+        position: absolute;
+        left: calc(-2rem - 6px);
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--bg-card);
+        border: 2px solid var(--primary);
+        transition: all 0.3s ease;
+        box-sizing: border-box; /* Ensure exact mathematical alignment with the border line */
+      }
+
+      .timeline-node.active::before {
+        background: var(--primary);
+        box-shadow: 0 0 10px var(--primary);
+        transform: scale(1.2);
+      }
+
+      .timeline-date {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 0.2rem;
+      }
+
+      .timeline-content h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+      }
+
+      .timeline-content p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .timeline-content ul {
+        margin: 0;
+        padding-left: 1.1rem;
+      }
+
+      .timeline-content li {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+        margin-bottom: 0.15rem;
+      }
+
+      .timeline-content li:last-child {
+        margin-bottom: 0;
+      }
+
+      .project-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+
+      .stat-card {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .stat-num {
+        font-family: var(--font-family-title);
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      /* Slide 5: Tech Stack & Folder Explorer */
+      .tech-folder-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        flex: 1;
+        min-height: 0;
+        align-items: center;
+      }
+
+      .tech-stack-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+
+      .tech-pills {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .tech-pill {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        padding: 0.75rem 1.1rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .tech-pill-purple:hover {
+        border-color: var(--secondary);
+        background: var(--secondary-light);
+        color: var(--text-primary);
+      }
+
+      .tech-pill-green:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        color: var(--text-primary);
+      }
+
+      .tech-badge-purple {
+        color: var(--secondary);
+        font-weight: bold;
+      }
+
+      .tech-badge-green {
+        color: var(--primary);
+        font-weight: bold;
+      }
+
+      /* Folder Explorer */
+      .folder-explorer-card {
+        background: #0d1117;
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        color: #e6edf3;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.9rem;
+        max-height: 250px; /* Reduced to fit 1 screen */
+        overflow-y: auto;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .tree-node {
+        margin-left: 1rem;
+        margin-top: 0.35rem;
+        user-select: none;
+      }
+
+      .tree-folder {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #ffb04f;
+      }
+
+      .tree-folder:hover {
+        color: #ffc070;
+      }
+
+      .tree-folder::before {
+        content: "📁";
+        font-size: 1rem;
+      }
+
+      .tree-folder.open::before {
+        content: "📂";
+      }
+
+      .tree-file {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #8b949e;
+        margin-left: 1.5rem;
+      }
+
+      .tree-file::before {
+        content: "📄";
+        font-size: 0.9rem;
+      }
+
+      .tree-children {
+        display: none;
+        border-left: 1px dashed rgba(240, 246, 252, 0.15);
+        margin-left: 0.5rem;
+        padding-left: 0.5rem;
+      }
+
+      .tree-children.active {
+        display: block;
+      }
+
+      .explorer-title {
+        font-family: var(--font-family-title);
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #e6edf3;
+        margin-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(240, 246, 252, 0.1);
+        padding-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .explorer-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+      }
+
+      /* Slide 6: Assignments & Workflow */
+      .workflow-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 3rem;
+        flex: 1;
+        min-height: 0;
+        align-items: center;
+      }
+
+      .features-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .feature-row {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 0.5rem 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .feature-title {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--text-primary);
+      }
+
+      .feature-owner {
+        font-size: 0.8rem;
+        color: var(--secondary);
+        font-weight: 600;
+        margin-top: 0.2rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .feature-owner::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #555;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+      }
+
+      .feature-row:nth-child(even) .feature-owner {
+        color: var(--primary);
+      }
+
+      .feature-desc {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      /* Collaboration Guidelines Box */
+      .collab-card {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        padding: 1.15rem;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .collab-title {
+        color: var(--secondary);
+        font-family: var(--font-family-title);
+        font-size: 1.15rem;
+        margin: 0;
+      }
+
+      .collab-member {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .collab-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .collab-name {
+        color: var(--text-primary);
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+
+      .collab-role {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+      }
+
+      .role-ba {
+        background: var(--secondary-light);
+        color: var(--secondary);
+      }
+
+      .role-qa {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      .collab-desc {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      /* Production Tech Stack on Deploy Slide */
+      .tech-stack-prod {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        padding: 0.85rem;
+        border-radius: 12px;
+        margin-top: 1rem;
+      }
+
+      .tech-stack-prod-title {
+        color: var(--secondary);
+        font-family: var(--font-family-title);
+        font-size: 0.95rem;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .tech-stack-prod-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .tech-badge-prod {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+      }
+
+      .tech-badge-github {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      .tech-badge-aws {
+        background: var(--secondary-light);
+        color: var(--secondary);
+      }
+
+      .rules-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        justify-content: center;
+      }
+
+      .rule-card {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+      }
+
+      .rule-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .rule-card h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .rule-card p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      /* Slide 7: Deploy Flow */
+      .deploy-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+      }
+
+      .deploy-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .deploy-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card-hover);
+      }
+
+      .deploy-step-number {
+        font-family: var(--font-family-title);
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--secondary);
+        background: var(--secondary-light);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .deploy-step-content h4 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .deploy-step-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .deploy-image-container {
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow);
+        cursor: zoom-in;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .deploy-image-container:hover {
+        transform: scale(1.02);
+        border-color: var(--primary);
+      }
+
+      .deploy-image-container img {
+        max-width: 100%;
+        max-height: 240px; /* Reduced image height to prevent scroll */
+        border-radius: 8px;
+        object-fit: contain;
+        background: #0d1117;
+      }
+
+      .image-zoom-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(13, 17, 23, 0.95);
+        z-index: 100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: zoom-out;
+      }
+
+      .image-zoom-overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 12px;
+        border: 2px solid var(--border-color);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Slide 8: Limitations */
+      .limits-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 100%;
+      }
+
+      .limit-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem;
+        position: relative;
+      }
+
+      .limit-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 6px;
+        width: 100%;
+        background: var(--secondary);
+        border-radius: 16px 16px 0 0;
+      }
+
+      .limit-card:nth-child(2)::before {
+        background: var(--primary);
+      }
+
+      .limit-title {
+        font-family: var(--font-family-title);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .limit-points {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .limit-points li {
+        position: relative;
+        padding-left: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      .limit-points li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+      }
+
+      .limit-card:nth-child(1) .limit-points li::before {
+        content: "—";
+        color: #f85149;
+      }
+
+      /* Slide 9: Thank You */
+      .thanks-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        position: relative;
+      }
+
+      .thanks-title {
+        font-family: var(--font-family-title);
+        font-size: 6rem;
+        font-weight: 900;
+        letter-spacing: -2px;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: tracking-in-expand 1s ease-out both;
+      }
+
+      .thanks-team {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 3rem;
+      }
+
+      .thanks-socials {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .social-badge {
+        padding: 0.75rem 1.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        background: var(--bg-card-hover);
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+      }
+
+      .social-badge:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+        border-color: var(--primary);
+        transform: scale(1.05);
+      }
+
+      /* Bottom Control Bar */
+      .presentation-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2.5rem;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        height: 70px;
+        z-index: 10;
+      }
+
+      .controls-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .slide-indicator {
+        font-weight: 600;
+        font-size: 1rem;
+        font-family: var(--font-family-title);
+        color: var(--text-secondary);
+      }
+
+      .controls-center {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .controls-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      /* Progress bar */
+      .progress-bar-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--border-color);
+        z-index: 15;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        transition: width var(--transition-speed) ease;
+      }
+
+      /* Navigation Drawer (Table of Contents) */
+      .drawer {
+        position: fixed;
+        top: 0;
+        right: -320px;
+        width: 320px;
+        height: 100%;
+        background: var(--bg-card);
+        border-left: 1px solid var(--border-color);
+        z-index: 90;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        transition: right var(--transition-speed) var(--transition-bounce);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+      }
+
+      .drawer.open {
+        right: 0;
+      }
+
+      .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .drawer-title {
+        font-family: var(--font-family-title);
+        font-size: 1.25rem;
+        font-weight: 800;
+      }
+
+      .drawer-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+      }
+
+      .drawer-items {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .drawer-item {
+        padding: 0.85rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .drawer-item:hover,
+      .drawer-item.active {
+        background: var(--primary-light);
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .drawer-item-num {
+        font-weight: bold;
+        color: var(--secondary);
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 80;
+        display: none;
+      }
+
+      .overlay.active {
+        display: block;
+      }
+
+      /* Keyframe Animations */
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      @keyframes tracking-in-expand {
+        0% {
+          letter-spacing: -0.5em;
+          opacity: 0;
+        }
+        40% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Custom Scrollbars */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 1024px) {
+        .welcome-grid,
+        .members-grid,
+        .project-grid,
+        .tech-folder-layout,
+        .workflow-grid,
+        .deploy-layout {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        .slide {
+          padding: 2rem;
+        }
+        .welcome-text h1 {
+          font-size: 3.5rem;
+        }
+        .slide-title {
+          font-size: 2.25rem;
+        }
+        .context-cards {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        .project-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Fullscreen API presentation-specific styling */
+      :fullscreen header,
+      :fullscreen .presentation-controls {
+        display: none !important;
+      }
+
+      :fullscreen .slides-container {
+        padding: 0 !important;
+        height: 100vh !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+      }
+
+      :fullscreen .slide {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 4rem 5rem !important;
+        box-shadow: none !important;
+      }
+
+      :fullscreen .slide::after {
+        bottom: 2rem !important;
+        right: 2.5rem !important;
+        font-size: 1rem !important;
+        opacity: 0.45;
+      }
+
+      /* Fullscreen typography scaling */
+      :fullscreen .slide-title {
+        font-size: 3.25rem !important;
+        margin-bottom: 1.25rem !important;
+      }
+      :fullscreen .slide-subtitle {
+        font-size: 1.45rem !important;
+        margin-bottom: 2rem !important;
+      }
+
+      /* Slide 2 (Outline) scaling */
+      :fullscreen .outline-grid {
+        gap: 0.75rem 2rem !important;
+      }
+      :fullscreen .outline-item {
+        padding: 0.75rem 1.25rem !important;
+        border-radius: 12px !important;
+        gap: 1.1rem !important;
+      }
+      :fullscreen .outline-num {
+        font-size: 1.25rem !important;
+        min-width: 36px !important;
+        padding: 0.35rem 0.65rem !important;
+        border-radius: 6px !important;
+      }
+      :fullscreen .outline-text {
+        font-size: 1.15rem !important;
+      }
+
+      :fullscreen .outline-grid-4 {
+        gap: 2rem !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+      }
+      :fullscreen .outline-card {
+        padding: 1.75rem 2rem !important;
+        border-radius: 20px !important;
+        gap: 0.75rem !important;
+      }
+      :fullscreen .outline-num-large {
+        font-size: 1.6rem !important;
+        width: 46px !important;
+        height: 46px !important;
+        border-radius: 10px !important;
+      }
+      :fullscreen .outline-title-large {
+        font-size: 1.5rem !important;
+      }
+      :fullscreen .outline-subtopics {
+        font-size: 1.15rem !important;
+        padding-left: 3.65rem !important;
+      }
+
+      /* Slide 3 (Members) scaling */
+      :fullscreen .members-grid {
+        gap: 1.5rem !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+      }
+      :fullscreen .member-card {
+        padding: 1.5rem 1.75rem !important;
+        border-radius: 20px !important;
+        gap: 1rem !important;
+      }
+      :fullscreen .member-card-avatar {
+        width: 54px !important;
+        height: 54px !important;
+        font-size: 1.35rem !important;
+      }
+      :fullscreen .member-card-info h4 {
+        font-size: 1.45rem !important;
+      }
+      :fullscreen .member-card-info p {
+        font-size: 0.95rem !important;
+      }
+      :fullscreen .member-card-tasks {
+        gap: 0.75rem !important;
+      }
+      :fullscreen .member-card-tasks li {
+        font-size: 1.05rem !important;
+        padding-left: 1.5rem !important;
+        line-height: 1.5 !important;
+      }
+
+      /* Slide 4 (Context) scaling */
+      :fullscreen .context-cards {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+        width: 100% !important;
+      }
+      :fullscreen .context-card {
+        display: flex !important;
+        align-items: center !important;
+        padding: 1.75rem 2.5rem !important;
+        gap: 3rem !important;
+        text-align: left !important;
+      }
+      :fullscreen .context-title-group {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+        width: 280px !important;
+        min-width: 280px !important;
+        margin-bottom: 0 !important;
+      }
+      :fullscreen .context-card h3 {
+        font-size: 1.6rem !important;
+        margin-bottom: 0 !important;
+      }
+      :fullscreen .context-card p {
+        font-size: 1.25rem !important;
+        line-height: 1.5 !important;
+        margin: 0 !important;
+        flex: 1 !important;
+      }
+      :fullscreen .context-tag {
+        font-size: 0.95rem !important;
+        padding: 0.35rem 1rem !important;
+      }
+
+      /* Slide 5 (Tech Stack) scaling */
+      :fullscreen .tech-pills {
+        gap: 1.25rem !important;
+      }
+      :fullscreen .tech-pill {
+        padding: 1rem 1.5rem !important;
+        border-radius: 12px !important;
+        font-size: 1.2rem !important;
+        gap: 0.75rem !important;
+      }
+      :fullscreen .tech-badge-purple,
+      :fullscreen .tech-badge-green {
+        font-size: 1.25rem !important;
+      }
+      :fullscreen .tech-stack-section h3 {
+        font-size: 1.8rem !important;
+        margin-bottom: 1rem !important;
+      }
+      :fullscreen .tech-folder-layout h4 {
+        font-size: 1.6rem !important;
+        margin-bottom: 1rem !important;
+      }
+      :fullscreen .tech-folder-layout ul li {
+        font-size: 1.25rem !important;
+        padding-left: 1.75rem !important;
+        line-height: 1.8 !important;
+      }
+
+      /* Slide 6 (Folder Structure & Rules) scaling */
+      :fullscreen .explorer-title {
+        font-size: 1.35rem !important;
+        margin-bottom: 0.75rem !important;
+      }
+      :fullscreen .folder-explorer-card {
+        font-size: 1.25rem !important;
+        max-height: 480px !important;
+        padding: 2.25rem !important;
+      }
+      :fullscreen .rule-card {
+        padding: 1.25rem !important;
+        gap: 1.25rem !important;
+      }
+      :fullscreen .rule-num {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 1.35rem !important;
+      }
+      :fullscreen .rule-card h4 {
+        font-size: 1.35rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+      :fullscreen .rule-card p {
+        font-size: 1.15rem !important;
+      }
+
+      /* Slide 7 (Workflow & Assignments) scaling */
+      :fullscreen .workflow-grid {
+        gap: 3rem !important;
+      }
+      :fullscreen .feature-row {
+        padding: 0.75rem 1.25rem !important;
+        gap: 0.35rem !important;
+      }
+      :fullscreen .feature-title {
+        font-size: 1.25rem !important;
+      }
+      :fullscreen .feature-owner {
+        font-size: 0.85rem !important;
+        padding: 0 !important;
+        margin-top: 0.3rem !important;
+      }
+      :fullscreen .feature-owner::before {
+        width: 8px !important;
+        height: 8px !important;
+        margin-right: 0.6rem !important;
+      }
+      :fullscreen .feature-desc {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+      }
+      :fullscreen .workflow-grid h4 {
+        font-size: 1.3rem !important;
+        margin-bottom: 0.75rem !important;
+      }
+      :fullscreen .workflow-grid p {
+        font-size: 1.05rem !important;
+        line-height: 1.5 !important;
+      }
+      :fullscreen
+        .workflow-grid
+        div[style*="background: var(--primary-light)"] {
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        line-height: 1.5 !important;
+      }
+
+      :fullscreen .collab-card {
+        padding: 1.35rem !important;
+        gap: 1rem !important;
+      }
+      :fullscreen .collab-title {
+        font-size: 1.3rem !important;
+      }
+      :fullscreen .collab-name {
+        font-size: 1.1rem !important;
+      }
+      :fullscreen .collab-role {
+        font-size: 0.85rem !important;
+        padding: 0.2rem 0.6rem !important;
+      }
+      :fullscreen .collab-desc {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+      }
+
+      /* Slide 8 (Timeline) scaling */
+      :fullscreen .timeline-container {
+        gap: 1.5rem !important;
+      }
+      :fullscreen .timeline-date {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.35rem !important;
+      }
+      :fullscreen .timeline-content h4 {
+        font-size: 1.35rem !important;
+        margin-bottom: 0.35rem !important;
+      }
+      :fullscreen .timeline-content p {
+        font-size: 1.15rem !important;
+        line-height: 1.5 !important;
+      }
+      :fullscreen .timeline-content ul {
+        padding-left: 1.5rem !important;
+      }
+      :fullscreen .timeline-content li {
+        font-size: 1.15rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 0.25rem !important;
+      }
+      :fullscreen .project-grid .stat-card {
+        padding: 2.5rem !important;
+      }
+      :fullscreen .project-grid .stat-num {
+        font-size: 3.5rem !important;
+      }
+      :fullscreen .project-grid .stat-label {
+        font-size: 1.25rem !important;
+      }
+
+      /* Slide 9 (Deploy Flow) scaling */
+      :fullscreen .deploy-layout {
+        gap: 4rem !important;
+      }
+      :fullscreen .deploy-steps {
+        gap: 1.5rem !important;
+      }
+      :fullscreen .deploy-step {
+        padding: 1.35rem !important;
+        gap: 1.35rem !important;
+      }
+      :fullscreen .deploy-step-number {
+        font-size: 1.6rem !important;
+        width: 44px !important;
+        height: 44px !important;
+      }
+      :fullscreen .deploy-step-content h4 {
+        font-size: 1.45rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+      :fullscreen .deploy-step-content p {
+        font-size: 1.15rem !important;
+        line-height: 1.5 !important;
+      }
+      :fullscreen .deploy-image-container img {
+        max-height: 440px !important;
+      }
+
+      :fullscreen .tech-stack-prod {
+        padding: 1.25rem !important;
+        margin-top: 1.5rem !important;
+      }
+      :fullscreen .tech-stack-prod-title {
+        font-size: 1.2rem !important;
+        margin-bottom: 0.75rem !important;
+      }
+      :fullscreen .tech-badge-prod {
+        font-size: 0.95rem !important;
+        padding: 0.3rem 0.75rem !important;
+      }
+
+      /* Slide 11 (Limitations) scaling */
+      :fullscreen .limits-grid {
+        gap: 3rem !important;
+      }
+      :fullscreen .limit-card {
+        padding: 2.25rem 2.5rem !important;
+      }
+      :fullscreen .limit-title {
+        font-size: 1.6rem !important;
+        margin-bottom: 1.25rem !important;
+      }
+      :fullscreen .limit-points {
+        gap: 1.1rem !important;
+      }
+      :fullscreen .limit-points li {
+        font-size: 1.2rem !important;
+        line-height: 1.6 !important;
+        padding-left: 2rem !important;
+      }
+
+      /* Slide 1 (Welcome Cover) fullscreen scaling */
+      :fullscreen .welcome-grid {
+        gap: 6rem !important;
+      }
+      :fullscreen .meta-badge {
+        font-size: 1.25rem !important;
+        padding: 0.75rem 1.5rem !important;
+      }
+      :fullscreen .welcome-text h1 {
+        font-size: 6rem !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+      :fullscreen .welcome-text p {
+        font-size: 1.8rem !important;
+        margin-bottom: 3rem !important;
+      }
+      :fullscreen .welcome-meta {
+        gap: 2rem !important;
+      }
+      :fullscreen .meta-item {
+        font-size: 1.45rem !important;
+      }
+      :fullscreen .welcome-logo-glow {
+        width: 450px !important;
+        height: 450px !important;
+        filter: blur(60px) !important;
+      }
+      :fullscreen .welcome-logo-wrapper {
+        width: 260px !important;
+        height: 260px !important;
+        border-radius: 48px !important;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4) !important;
+      }
+      :fullscreen .welcome-logo-wrapper img {
+        width: 150px !important;
+        height: 150px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Progress Bar -->
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <a href="#" class="brand">
+        <div class="logo-container">
+          <!-- Will automatically show our copied logo -->
+          <img
+            src="favicon-logo.png"
+            alt="Logo"
+            onerror="
+              this.src = '../../fe/src/assets/favicon-logo.png';
+              this.onerror = null;
+            "
+          />
+        </div>
+        <div class="brand-text">Trace<span>X</span></div>
+      </a>
+      <div class="header-controls">
+        <button
+          class="btn"
+          id="themeToggle"
+          title="Toggle Theme (Light / Dark)"
+        >
+          Theme
+        </button>
+        <button class="btn" id="fsToggle" title="Fullscreen Mode">
+          Fullscreen
+        </button>
+        <button class="btn btn-primary" id="tocBtn">Outline</button>
+      </div>
+    </header>
+
+    <!-- Slides viewport -->
+    <div class="slides-container">
+      <!-- Slide 1: Welcome (Cover) -->
+      <div class="slide active" id="slide1">
+        <div class="welcome-grid">
+          <div class="welcome-text">
+            <div class="meta-badge">ByteBuilders Project Presentation</div>
+            <h1 style="margin-top: 1rem">Trace<span>X</span></h1>
+            <p>The Ultimate Habit Hub & Personal Progress Tracker</p>
+            <div class="welcome-meta">
+              <div class="meta-item">
+                <strong style="color: var(--secondary)">Team:</strong>
+                <span>ByteBuilders</span>
+              </div>
+              <div class="meta-item">
+                <strong style="color: var(--primary)">Timeline:</strong>
+                <span>08/06/2026 - 17/06/2026</span>
+              </div>
+            </div>
+          </div>
+          <div class="welcome-visual">
+            <div class="welcome-logo-glow"></div>
+            <div class="welcome-logo-wrapper">
+              <img
+                src="favicon-logo.png"
+                alt="TraceX Logo"
+                onerror="
+                  this.src = '../../fe/src/assets/favicon-logo.png';
+                  this.onerror = null;
+                "
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Outline -->
+      <div class="slide" id="slide2">
+        <h2 class="slide-title">Presentation Outline</h2>
+        <p class="slide-subtitle">
+          Detailed outline of the TraceX project presentation roadmap.
+        </p>
+        <div class="outline-grid-4">
+          <div class="outline-card" onclick="goToSlide(3)">
+            <div class="outline-header">
+              <span class="outline-num-large">01</span>
+              <span class="outline-title-large">Introduction & Design Strategy</span>
+            </div>
+            <div class="outline-subtopics">
+              Project introduction, development team members, roles, and our design strategy.
+            </div>
+          </div>
+          <div class="outline-card" onclick="goToSlide(5)">
+            <div class="outline-header">
+              <span class="outline-num-large">02</span>
+              <span class="outline-title-large">Technical Solution</span>
+            </div>
+            <div class="outline-subtopics">
+              Detailed technical stack and UI standards, system architecture overview, and continuous integration/deployment pipeline.
+            </div>
+          </div>
+          <div class="outline-card" onclick="goToSlide(7)">
+            <div class="outline-header">
+              <span class="outline-num-large">03</span>
+              <span class="outline-title-large">Live Application Demo</span>
+            </div>
+            <div class="outline-subtopics">
+              Interactive demonstration of core user flows in TraceX running live on the AWS Cloud staging environment.
+            </div>
+          </div>
+          <div class="outline-card" onclick="goToSlide(8)">
+            <div class="outline-header">
+              <span class="outline-num-large">04</span>
+              <span class="outline-title-large">Conclusion & Q&A</span>
+            </div>
+            <div class="outline-subtopics">
+              Key takeaways and engineering insights, current technical limitations, and Q&A session with the evaluation board.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Members -->
+      <div class="slide" id="slide3">
+        <h2 class="slide-title">Our Team Members</h2>
+        <p class="slide-subtitle">Meet the engineering minds behind TraceX.</p>
+        <div class="members-grid">
+          <!-- Dương Phạm Trọng Nghĩa -->
+          <div class="member-card">
+            <div class="member-card-header">
+              <div class="member-card-avatar">DN</div>
+              <div class="member-card-info">
+                <h4>Dương Phạm Trọng Nghĩa</h4>
+                <p>Lead BA & PM</p>
+              </div>
+            </div>
+            <ul class="member-card-tasks">
+              <li>Requirements analysis & spec management</li>
+              <li>State auditing & data flow integrity checks</li>
+              <li>PR review, arch validation & approvals</li>
+              <li>Boilerplate setup (Router, Husky, ESLint)</li>
+            </ul>
+          </div>
+
+          <!-- Lê Ngọc Minh Phương -->
+          <div class="member-card">
+            <div class="member-card-header">
+              <div class="member-card-avatar">LP</div>
+              <div class="member-card-info">
+                <h4>Lê Ngọc Minh Phương</h4>
+                <p>QA & Deployment Engineer</p>
+              </div>
+            </div>
+            <ul class="member-card-tasks">
+              <li>CI/CD setup & AWS cloud hosting</li>
+              <li>QA testing & regression test design</li>
+              <li>E2E automation & verification checking</li>
+              <li>Defect tracking & hotfix validation</li>
+            </ul>
+          </div>
+
+          <!-- Development Team -->
+          <div class="member-card">
+            <div class="member-card-header">
+              <div class="member-card-avatar">BB</div>
+              <div class="member-card-info">
+                <h4>Development Team</h4>
+                <p>Frontend Developers</p>
+              </div>
+            </div>
+            <ul class="member-card-tasks">
+              <li><strong>Arlene & Xuân Ny:</strong> Habit CRUD logic & UI</li>
+              <li><strong>Trần Thị Hạnh:</strong> Check-in calendars & toggles</li>
+              <li><strong>Trúc Quỳnh:</strong> Goal Milestones progress & toasts</li>
+              <li><strong>Nguyễn Bảo Như:</strong> Analytics center & Streaks KPI</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Design Strategy -->
+      <div class="slide" id="slide4">
+        <h2 class="slide-title">Design Strategy</h2>
+        <p class="slide-subtitle">
+          Fulfilling requirements with a streamlined, mobile-first design.
+        </p>
+        <div class="context-cards">
+          <div class="context-card">
+            <div class="context-title-group">
+              <h3>Ideation & Pain Points</h3>
+              <span class="context-tag context-tag-purple">Team Alignment</span>
+            </div>
+            <p>
+              Our team sat down to analyze existing habit trackers. We identified major drawbacks:
+              <strong>complex user interfaces</strong>, <strong>high friction</strong>, and cluttered screens that overwhelm daily logging.
+            </p>
+          </div>
+          <div class="context-card">
+            <div class="context-title-group">
+              <h3>Clutter-Free Features</h3>
+              <span class="context-tag context-tag-green">Streamlined</span>
+            </div>
+            <p>
+              We designed a <strong>streamlined layout</strong> that satisfies all prompt requirements
+              (CRUD habits, goals, check-ins, dashboard stats) while eliminating modern interface clutter.
+            </p>
+          </div>
+          <div class="context-card">
+            <div class="context-title-group">
+              <h3>Touch-First Mobile UX</h3>
+              <span class="context-tag context-tag-purple">Mobile Testing</span>
+            </div>
+            <p>
+              We prioritized <strong>mobile testing</strong> and <strong>one-tap touch check-ins</strong>.
+              We also integrated <strong>clear visual indicators</strong> and navigation guides so new users never feel lost.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Tech Stack -->
+      <div class="slide" id="slide5">
+        <h2 class="slide-title">Technical Stack</h2>
+        <p class="slide-subtitle">
+          Integrated frontend technologies selected for a robust, maintainable,
+          and type-safe architecture.
+        </p>
+        <div
+          class="tech-folder-layout"
+          style="grid-template-columns: 1.2fr 0.8fr; align-items: center"
+        >
+          <div class="tech-stack-section">
+            <h3>Core Technical Stack</h3>
+            <div class="tech-pills">
+              <div class="tech-pill tech-pill-purple">
+                <span class="tech-badge-purple">React 19</span> UI Library
+              </div>
+              <div class="tech-pill tech-pill-purple">
+                <span class="tech-badge-purple">TypeScript 6.0</span> Type
+                Safety
+              </div>
+              <div class="tech-pill tech-pill-purple">
+                <span class="tech-badge-purple">Material UI 9.0</span> Theme UI
+              </div>
+              <div class="tech-pill tech-pill-purple">
+                <span class="tech-badge-purple">Zustand 5.0</span> State Store
+              </div>
+              <div class="tech-pill tech-pill-green">
+                <span class="tech-badge-green">Vite</span> Dev Server
+              </div>
+              <div class="tech-pill tech-pill-green">
+                <span class="tech-badge-green">Husky 9.1</span> Git Hooks
+              </div>
+              <div class="tech-pill tech-pill-green">
+                <span class="tech-badge-green">ESLint 9.39</span> Code Linter
+              </div>
+              <div class="tech-pill tech-pill-green">
+                <span class="tech-badge-green">AWS services</span> Cloud Hosting
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              background: var(--bg-card-hover);
+              padding: 1.5rem;
+              border-radius: 16px;
+              border: 1px solid var(--border-color);
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+            "
+          >
+            <h4
+              style="
+                color: var(--primary);
+                font-family: var(--font-family-title);
+                font-size: 1.15rem;
+                margin: 0;
+              "
+            >
+              UI Design Standards
+            </h4>
+            <ul
+              style="
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                font-size: 0.95rem;
+                color: var(--text-secondary);
+                padding: 0;
+              "
+            >
+              <li style="position: relative; padding-left: 1.25rem">
+                <span style="position: absolute; left: 0; color: var(--primary)"
+                  >—</span
+                >
+                Color codes must not be hardcoded in standard styles or JSX.
+              </li>
+              <li style="position: relative; padding-left: 1.25rem">
+                <span style="position: absolute; left: 0; color: var(--primary)"
+                  >—</span
+                >
+                Do not use raw pixels (px) for spacing or typography.
+              </li>
+              <li style="position: relative; padding-left: 1.25rem">
+                <span style="position: absolute; left: 0; color: var(--primary)"
+                  >—</span
+                >
+                Avoid direct MUI component imports outside the UI feature layer.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: Deployment Flow -->
+      <div class="slide" id="slide6">
+        <h2 class="slide-title">Deployment Flow</h2>
+        <p class="slide-subtitle">
+          Automated continuous integration and deployment pipeline powered by
+          AWS services.
+        </p>
+        <div class="deploy-layout">
+          <div class="deploy-steps">
+            <div class="deploy-step">
+              <div class="deploy-step-number">1</div>
+              <div class="deploy-step-content">
+                <h4>Local Commits</h4>
+                <p>
+                  Husky enforces pre-commit hooks (Prettier format checks,
+                  ESLint analysis, test validation) locally.
+                </p>
+              </div>
+            </div>
+            <div class="deploy-step">
+              <div class="deploy-step-number">2</div>
+              <div class="deploy-step-content">
+                <h4>Pull Request Staging</h4>
+                <p>
+                  Pull Requests targeting the <code>develop</code> branch
+                  trigger AWS services to build and deploy to Staging
+                  environments.
+                </p>
+              </div>
+            </div>
+            <div class="deploy-step">
+              <div class="deploy-step-number">3</div>
+              <div class="deploy-step-content">
+                <h4>Production Deploy</h4>
+                <p>
+                  Merging <code>develop</code> into <code>main</code> triggers
+                  production compilation and serves the app over CloudFront CDN.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="deploy-image-container" onclick="openZoomImage()">
+              <img
+                src="deploy-flow.png"
+                alt="AWS services Deployment Pipeline"
+                id="deployImg"
+              />
+              <div
+                style="
+                  position: absolute;
+                  bottom: 8px;
+                  right: 8px;
+                  background: rgba(0, 0, 0, 0.6);
+                  padding: 4px 8px;
+                  border-radius: 4px;
+                  font-size: 0.75rem;
+                  color: #fff;
+                "
+              >
+                Click to Zoom
+              </div>
+            </div>
+
+            <div class="tech-stack-prod">
+              <span class="tech-stack-prod-title">Tech Stack (Production)</span>
+              <div class="tech-stack-prod-badges">
+                <span class="tech-badge-prod tech-badge-github"
+                  >GitHub Actions</span
+                >
+                <span class="tech-badge-prod tech-badge-aws">AWS S3</span>
+                <span class="tech-badge-prod tech-badge-aws"
+                  >AWS CloudFront</span
+                >
+                <span class="tech-badge-prod tech-badge-aws"
+                  >AWS CloudWatch</span
+                >
+                <span class="tech-badge-prod tech-badge-aws">Amazon SNS</span>
+                <span class="tech-badge-prod tech-badge-aws">AWS IAM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7: Live Demo -->
+      <div class="slide" id="slide7">
+        <div class="thanks-layout" style="justify-content: center">
+          <h1 class="thanks-title" style="font-size: 5rem; margin-bottom: 1rem">
+            LIVE DEMO
+          </h1>
+          <p
+            class="slide-subtitle"
+            style="text-align: center; margin-bottom: 2rem"
+          >
+            Interact with the live application deployed on AWS Cloud Staging.
+          </p>
+
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 1.5rem;
+            "
+          >
+            <a
+              href="https://d1vaai1191sip.cloudfront.net/"
+              target="_blank"
+              class="btn btn-primary"
+              style="
+                font-size: 1.35rem;
+                padding: 0.85rem 2.5rem;
+                border-radius: 12px;
+                font-weight: 700;
+                box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+              "
+            >
+              👉 Launch Live Application
+            </a>
+            <div
+              style="
+                font-family: monospace;
+                font-size: 1.1rem;
+                color: var(--text-secondary);
+                background: var(--bg-card-hover);
+                padding: 0.5rem 1.25rem;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+              "
+            >
+              https://d1vaai1191sip.cloudfront.net/
+            </div>
+
+            <div
+              id="demoCountdown"
+              style="
+                margin-top: 1.5rem;
+                font-size: 1.15rem;
+                color: var(--secondary);
+                font-weight: 600;
+              "
+            >
+              Redirecting to live app in 10 seconds...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 8: Lessons & Limitations -->
+      <div class="slide" id="slide8">
+        <h2 class="slide-title">Lessons & Limitations</h2>
+        <p class="slide-subtitle">
+          Key engineering insights gained from the sprint and current technical
+          limitations.
+        </p>
+        <div
+          class="limits-grid"
+          style="grid-template-columns: 1.1fr 0.9fr; gap: 2rem"
+        >
+          <div class="limit-card" style="border-radius: 16px; padding: 1.75rem">
+            <div class="limit-title" style="color: var(--primary)">
+              Key Takeaways & Lessons Learned
+            </div>
+            <ul class="limit-points">
+              <li>
+                <strong>Strict Boilerplate Standardization:</strong> Enforcing
+                UI wrapper architectures and linting checks keeps code uniform,
+                preventing early-stage technical debt.
+              </li>
+              <li>
+                <strong>Modular State Slicing:</strong> Segmenting the Zustand
+                store allows developers to work on features independently
+                without state overlap issues.
+              </li>
+              <li>
+                <strong>Continuous Integration Checkpoints:</strong> Continuous
+                staging builds enable QA engineers to identify edge-case bugs
+                (e.g. check-in timeline margins) very early.
+              </li>
+            </ul>
+          </div>
+
+          <div class="limit-card" style="border-radius: 16px; padding: 1.75rem">
+            <div class="limit-title" style="color: #f85149">
+              Technical Limitations
+            </div>
+            <ul class="limit-points">
+              <li>
+                <strong>Local Client-Side Storage:</strong> App data is stored
+                in LocalStorage, rendering it prone to loss during browser cache
+                clear cycles.
+              </li>
+              <li>
+                <strong>Missing User Authentication:</strong> The current build
+                lacks credential verification, role-based access controls, and
+                API security layers.
+              </li>
+              <li>
+                <strong>No Server Database Integration:</strong> Static mock
+                hosting makes retention analytic calculations completely
+                client-dependent.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 9: Thank You & Closing -->
+      <div class="slide" id="slide9">
+        <div class="thanks-layout">
+          <h1 class="thanks-title" style="font-size: 5rem; line-height: 1.2">
+            THANK YOU!
+          </h1>
+          <p
+            class="thanks-team"
+            style="font-size: 1.5rem; margin-top: 0.5rem; color: var(--primary)"
+          >
+            Special thanks to NAB for this opportunity and the judges for your
+            time and feedback!
+          </p>
+
+          <p
+            style="
+              margin-top: 2rem;
+              font-size: 1.05rem;
+              color: var(--text-secondary);
+            "
+          >
+            Q&A Session — We welcome questions from the panel of judges.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Control Bar -->
+    <div class="presentation-controls">
+      <div class="controls-left">
+        <button class="btn" id="homeBtn" title="Go to first slide">Home</button>
+        <div class="slide-indicator" id="slideIndicator">1 / 9</div>
+      </div>
+
+      <div class="controls-center">
+        <button class="btn" id="prevBtn" title="Previous Slide">Prev</button>
+        <button
+          class="btn btn-primary"
+          style="padding-left: 1.5rem; padding-right: 1.5rem"
+          id="nextBtn"
+          title="Next Slide"
+        >
+          Next
+        </button>
+      </div>
+
+      <div class="controls-right">
+        <button class="btn" id="playBtn" title="Auto-play presentation">
+          Auto Play
+        </button>
+      </div>
+    </div>
+
+    <!-- Table of Contents Drawer -->
+    <div class="overlay" id="overlay"></div>
+    <div class="drawer" id="drawer">
+      <div class="drawer-header">
+        <div class="drawer-title">Presentation Outline</div>
+        <button class="drawer-close" id="drawerClose">✕</button>
+      </div>
+      <div class="drawer-items">
+        <div class="drawer-item active" onclick="goToSlide(1)">
+          <span class="drawer-item-num">01</span> Project Cover
+        </div>
+        <div class="drawer-item" onclick="goToSlide(2)">
+          <span class="drawer-item-num">02</span> Presentation Outline
+        </div>
+        <div class="drawer-item" onclick="goToSlide(3)">
+          <span class="drawer-item-num">03</span> Development Team
+        </div>
+        <div class="drawer-item" onclick="goToSlide(4)">
+          <span class="drawer-item-num">04</span> Design Strategy
+        </div>
+        <div class="drawer-item" onclick="goToSlide(5)">
+          <span class="drawer-item-num">05</span> Technical Stack
+        </div>
+        <div class="drawer-item" onclick="goToSlide(6)">
+          <span class="drawer-item-num">06</span> Deployment Flow
+        </div>
+        <div class="drawer-item" onclick="goToSlide(7)">
+          <span class="drawer-item-num">07</span> Live Application Demo
+        </div>
+        <div class="drawer-item" onclick="goToSlide(8)">
+          <span class="drawer-item-num">08</span> Lessons & Limitations
+        </div>
+        <div class="drawer-item" onclick="goToSlide(9)">
+          <span class="drawer-item-num">09</span> Q&A & Closing
+        </div>
+      </div>
+    </div>
+
+    <!-- Zoom Overlay -->
+    <div class="image-zoom-overlay" id="zoomOverlay" onclick="closeZoomImage()">
+      <img src="deploy-flow.png" alt="Deployment flow zoomed" id="zoomedImg" />
+    </div>
+
+    <!-- Javascript Presentation Logic -->
+    <script>
+      // Constants & State
+      const totalSlides = 9;
+      let currentSlide = 1;
+      let autoPlayInterval = null;
+      let isAutoPlaying = false;
+
+      // Live Demo Redirect state variables
+      let demoRedirectTimeout = null;
+      let demoRedirectInterval = null;
+      let secondsLeft = 10;
+
+      // Member Details Mapping
+      const memberDetails = {
+        nghia: {
+          title: "Dương Phạm Trọng Nghĩa",
+          role: "Lead BA & PM",
+          tasks: [
+            "Requirements analysis and specification management",
+            "State management auditing and global store data flow integrity",
+            "Pull Request review, architectural validation, and code approvals",
+            "Core boilerplate configuration (React Router, Husky git hooks, ESLint rules)",
+            "Project delivery mapping, architecture blueprints, and documentation design",
+          ],
+        },
+        phuong: {
+          title: "Lê Ngọc Minh Phương",
+          role: "QA & Deployment Engineer",
+          tasks: [
+            "CI/CD infrastructure provisioning and AWS services hosting orchestration",
+            "Quality Assurance (QA) execution, regression test case creation",
+            "End-to-End automated verification setup and verification logs checking",
+            "Defect mapping, issue tracking logs, and hotfix tracking validation",
+          ],
+        },
+        devs: {
+          title: "Development Team",
+          role: "Frontend Feature Developers",
+          tasks: [
+            "<strong>Arlene Phuong Brown & Phạm Thị Xuân Ny:</strong> Habit Tracker (CRUD logic design, state validations, HabitCard & dialog modules)",
+            "<strong>Trần Thị Hạnh:</strong> Check-in logic (Check-in calendars, quick toggles, and MUI DatePicker integrations)",
+            "<strong>Nguyễn Ngọc Trúc Quỳnh:</strong> Goal Milestones (80%/100% progress markers tracking, ProgressBar UI & toast notifications)",
+            "<strong>Nguyễn Bảo Như:</strong> Analytics center (Streaks engine, completion metrics, KPI cards, and AtRisk banners)",
+          ],
+        },
+      };
+
+      // DOM Elements
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const homeBtn = document.getElementById("homeBtn");
+      const playBtn = document.getElementById("playBtn");
+      const slideIndicator = document.getElementById("slideIndicator");
+      const progressBar = document.getElementById("progressBar");
+      const themeToggle = document.getElementById("themeToggle");
+      const fsToggle = document.getElementById("fsToggle");
+      const tocBtn = document.getElementById("tocBtn");
+      const drawer = document.getElementById("drawer");
+      const drawerClose = document.getElementById("drawerClose");
+      const overlay = document.getElementById("overlay");
+      const zoomOverlay = document.getElementById("zoomOverlay");
+      const zoomedImg = document.getElementById("zoomedImg");
+      const deployImg = document.getElementById("deployImg");
+
+      // Theme logic
+      themeToggle.addEventListener("click", () => {
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+      });
+
+      // Fullscreen Logic
+      fsToggle.addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch((err) => {
+            alert(
+              `Error attempting to enable full-screen mode: ${err.message}`,
+            );
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      });
+
+      // Sidebar Outline Toggle
+      tocBtn.addEventListener("click", toggleDrawer);
+      drawerClose.addEventListener("click", toggleDrawer);
+      overlay.addEventListener("click", toggleDrawer);
+
+      function toggleDrawer() {
+        drawer.classList.toggle("open");
+        overlay.classList.toggle("active");
+      }
+
+      // Go to slide
+      function goToSlide(slideNum) {
+        if (slideNum < 1 || slideNum > totalSlides) return;
+
+        // Update Slide State
+        const currentActive = document.querySelector(".slide.active");
+        if (currentActive) {
+          currentActive.classList.remove("active");
+          currentActive.classList.remove("prev-slide");
+        }
+
+        currentSlide = slideNum;
+
+        // Update CSS classes for transitions
+        for (let i = 1; i <= totalSlides; i++) {
+          const slide = document.getElementById(`slide${i}`);
+          if (i < currentSlide) {
+            slide.className = "slide prev-slide";
+          } else if (i === currentSlide) {
+            slide.className = "slide active";
+          } else {
+            slide.className = "slide";
+          }
+        }
+
+        // Update Controls UI
+        slideIndicator.textContent = `${currentSlide} / ${totalSlides}`;
+        progressBar.style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
+
+        // Update TOC Highlight
+        document.querySelectorAll(".drawer-item").forEach((item, index) => {
+          if (index + 1 === currentSlide) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        });
+
+        // Update button labels
+        if (currentSlide === totalSlides) {
+          nextBtn.textContent = "Finish";
+        } else {
+          nextBtn.textContent = "Next";
+        }
+
+        // Close drawer if open
+        if (drawer.classList.contains("open")) {
+          toggleDrawer();
+        }
+
+        // Handle Live Demo automatic redirect
+        handleDemoRedirect(slideNum);
+      }
+
+      function handleDemoRedirect(slideNum) {
+        // Clear any existing redirect countdowns
+        if (demoRedirectTimeout) clearTimeout(demoRedirectTimeout);
+        if (demoRedirectInterval) clearInterval(demoRedirectInterval);
+
+        const countdownEl = document.getElementById("demoCountdown");
+        if (!countdownEl) return;
+
+        if (slideNum === 7) {
+          secondsLeft = 10;
+          countdownEl.textContent = `Redirecting to live app in ${secondsLeft} seconds...`;
+
+          demoRedirectInterval = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft > 0) {
+              countdownEl.textContent = `Redirecting to live app in ${secondsLeft} seconds...`;
+            } else {
+              countdownEl.textContent = `Redirecting now...`;
+              clearInterval(demoRedirectInterval);
+            }
+          }, 1000);
+
+          demoRedirectTimeout = setTimeout(() => {
+            window.location.href = "https://d1vaai1191sip.cloudfront.net/";
+          }, 10000);
+        } else {
+          countdownEl.textContent = "";
+        }
+      }
+
+      // Prev / Next functions
+      function nextSlide() {
+        if (currentSlide < totalSlides) {
+          goToSlide(currentSlide + 1);
+        } else {
+          goToSlide(1); // loop back to start
+        }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 1) {
+          goToSlide(currentSlide - 1);
+        } else {
+          goToSlide(totalSlides);
+        }
+      }
+
+      // Controls Event Listeners
+      nextBtn.addEventListener("click", nextSlide);
+      prevBtn.addEventListener("click", prevSlide);
+      homeBtn.addEventListener("click", () => goToSlide(1));
+
+      // Keyboard controls
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          goToSlide(1);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          goToSlide(totalSlides);
+        } else if (e.key === "Escape") {
+          if (drawer.classList.contains("open")) {
+            toggleDrawer();
+          }
+          if (zoomOverlay.style.display === "flex") {
+            closeZoomImage();
+          }
+        }
+      });
+
+      // Advance slide by clicking on blank space (PowerPoint style, only in fullscreen mode)
+      document.addEventListener("click", (e) => {
+        if (document.fullscreenElement) {
+          // Ignore clicks on links, buttons, drawers, cards, or interactive elements
+          if (
+            e.target.closest("button") ||
+            e.target.closest("a") ||
+            e.target.closest(".member-card") ||
+            e.target.closest(".tree-folder") ||
+            e.target.closest(".deploy-image-container") ||
+            e.target.closest(".drawer") ||
+            e.target.closest("#zoomOverlay") ||
+            e.target.closest(".outline-item") ||
+            e.target.closest(".outline-card")
+          ) {
+            return;
+          }
+          nextSlide();
+        }
+      });
+
+      // Swipe controls for touch screens
+      let startX = 0;
+      document.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+      });
+
+      document.addEventListener("touchend", (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const diffX = startX - endX;
+
+        // Only swipe if threshold is met and not zooming an image
+        if (zoomOverlay.style.display !== "flex") {
+          if (diffX > 80) {
+            nextSlide(); // Swiped Left
+          } else if (diffX < -80) {
+            prevSlide(); // Swiped Right
+          }
+        }
+      });
+
+      // Auto Play Logic
+      playBtn.addEventListener("click", () => {
+        if (isAutoPlaying) {
+          stopAutoPlay();
+        } else {
+          startAutoPlay();
+        }
+      });
+
+      function startAutoPlay() {
+        isAutoPlaying = true;
+        playBtn.textContent = "⏸ Stop Auto";
+        playBtn.style.background = "var(--secondary)";
+        playBtn.style.color = "#ffffff";
+
+        autoPlayInterval = setInterval(() => {
+          nextSlide();
+        }, 5000); // changes slide every 5 seconds
+      }
+
+      function stopAutoPlay() {
+        isAutoPlaying = false;
+        playBtn.textContent = "▶ Auto Play";
+        playBtn.style.background = "";
+        playBtn.style.color = "";
+
+        clearInterval(autoPlayInterval);
+      }
+
+      // Interactive Members details updater
+      function showMemberDetail(memberKey) {
+        // Toggle active states in list
+        const items = document.querySelectorAll(".member-item");
+        items.forEach((item) => item.classList.remove("active"));
+
+        // Find item
+        let eventTarget = event.currentTarget;
+        if (eventTarget) {
+          eventTarget.classList.add("active");
+        }
+
+        // Update contents
+        const data = memberDetails[memberKey];
+        const detailBox = document.getElementById("memberDetailBox");
+
+        detailBox.innerHTML = `
+        <div class="member-detail-title">${data.title}</div>
+        <div class="member-detail-role">${data.role}</div>
+        <ul class="member-detail-tasks">
+          ${data.tasks.map((t) => `<li>${t}</li>`).join("")}
+        </ul>
+      `;
+      }
+
+      // Folder tree toggle
+      function toggleTree(element) {
+        event.stopPropagation();
+        const children = element.nextElementSibling;
+        if (children) {
+          children.classList.toggle("active");
+          element.classList.toggle("open");
+        }
+      }
+
+      // Zoom Image logic
+      function openZoomImage() {
+        zoomOverlay.style.display = "flex";
+        zoomedImg.src = deployImg.src;
+      }
+
+      function closeZoomImage() {
+        zoomOverlay.style.display = "none";
+      }
+
+      // Initialize progress fill
+      progressBar.style.width = "0%";
+    </script>
+  </body>
+</html>

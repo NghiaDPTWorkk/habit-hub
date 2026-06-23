@@ -3,13 +3,9 @@ import { useBoundStore } from '@/store'
 import { TEXTS } from '../constants'
 import { SEED_HABITS, SEED_CHECKINS, SEED_GOALS } from '@/storage/seedData'
 import { makeCheckinKey } from '@/store/checkinSlice'
+import { convertToCSV, convertToHTMLReport } from '../utils/exportHelpers'
 
 export const useSettings = () => {
-  // General settings state
-  const [readOnly, setReadOnly] = useState(
-    () => localStorage.getItem('general_read_only') === 'true'
-  )
-
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Dialog confirmation state
@@ -42,40 +38,73 @@ export const useSettings = () => {
     setConfirmOpen(false)
   }
 
-  // Handlers for persistence
-  const handleReadOnlyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.checked
-    setReadOnly(val)
-    localStorage.setItem('general_read_only', String(val))
-  }
-
-  const handleExportData = () => {
+  const handleExportData = (format: 'json' | 'csv' | 'pdf' = 'json') => {
     try {
       const habits = useBoundStore.getState().habits
       const checkins = useBoundStore.getState().checkins
       const goals = useBoundStore.getState().goals
 
-      const settingsData = {
-        general_read_only: localStorage.getItem('general_read_only') || 'false',
+      if (format === 'pdf') {
+        const htmlString = convertToHTMLReport(habits, checkins, goals)
+        const iframe = document.createElement('iframe')
+        iframe.style.position = 'fixed'
+        iframe.style.right = '0'
+        iframe.style.bottom = '0'
+        iframe.style.width = '0'
+        iframe.style.height = '0'
+        iframe.style.border = '0'
+        document.body.appendChild(iframe)
+
+        const doc = iframe.contentWindow?.document || iframe.contentDocument
+        if (doc) {
+          doc.open()
+          doc.write(htmlString)
+          doc.close()
+
+          setTimeout(() => {
+            if (iframe.contentWindow) {
+              iframe.contentWindow.focus()
+              iframe.contentWindow.print()
+            }
+            // Delay removing the iframe to allow browser print task scheduling
+            setTimeout(() => {
+              if (document.body.contains(iframe)) {
+                document.body.removeChild(iframe)
+              }
+            }, 2000)
+          }, 800)
+        }
+        useBoundStore.getState().showToast('PDF print dialog opened', 'success')
+        return
       }
 
-      const payload = {
-        version: '1.0.0',
-        exportedAt: new Date().toISOString(),
-        data: {
-          habits,
-          checkins,
-          goals,
-          settings: settingsData,
-        },
+      let blob: Blob
+      let filename = `tracex_export_${new Date().toISOString().slice(0, 10)}`
+
+      if (format === 'csv') {
+        const csvString = convertToCSV(habits, checkins)
+        blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
+        filename += '.csv'
+      } else {
+        const payload = {
+          version: '1.0.0',
+          exportedAt: new Date().toISOString(),
+          data: {
+            habits,
+            checkins,
+            goals,
+          },
+        }
+
+        const jsonString = JSON.stringify(payload, null, 2)
+        blob = new Blob([jsonString], { type: 'application/json' })
+        filename += '.json'
       }
 
-      const jsonString = JSON.stringify(payload, null, 2)
-      const blob = new Blob([jsonString], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = 'tracex_export.json'
+      link.download = filename
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -109,7 +138,7 @@ export const useSettings = () => {
           return
         }
 
-        const { habits, checkins, goals, settings: importedSettings } = json.data
+        const { habits, checkins, goals } = json.data
         if (!Array.isArray(habits) || typeof checkins !== 'object' || !Array.isArray(goals)) {
           useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
           return
@@ -124,14 +153,6 @@ export const useSettings = () => {
               checkins,
               goals,
             })
-
-            if (importedSettings) {
-              if (importedSettings.general_read_only !== undefined) {
-                setReadOnly(importedSettings.general_read_only === 'true')
-                localStorage.setItem('general_read_only', importedSettings.general_read_only)
-              }
-            }
-
             useBoundStore.getState().showToast(TEXTS.importSuccess, 'success')
           },
           'warning'
@@ -155,9 +176,6 @@ export const useSettings = () => {
           goals: [],
         })
 
-        localStorage.removeItem('general_read_only')
-        setReadOnly(false)
-
         useBoundStore.getState().showToast(TEXTS.wipeSuccess, 'success')
       },
       'error'
@@ -178,10 +196,6 @@ export const useSettings = () => {
           checkins: checkinsRecord,
           goals: SEED_GOALS,
         })
-
-        localStorage.removeItem('general_read_only')
-        setReadOnly(false)
-
         useBoundStore.getState().showToast(TEXTS.seedSuccess, 'success')
       },
       'info'
@@ -189,13 +203,11 @@ export const useSettings = () => {
   }
 
   return {
-    readOnly,
     fileInputRef,
     confirmOpen,
     confirmConfig,
     handleConfirmClose,
     handleConfirmAction,
-    handleReadOnlyChange,
     handleExportData,
     handleImportClick,
     handleImportData,

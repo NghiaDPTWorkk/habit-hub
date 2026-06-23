@@ -4,6 +4,8 @@ import { TEXTS } from '../constants'
 import { SEED_HABITS, SEED_CHECKINS, SEED_GOALS } from '@/storage/seedData'
 import { makeCheckinKey } from '@/store/checkinSlice'
 import { convertToCSV, convertToHTMLReport } from '../utils/exportHelpers'
+import { currentStreak, totalCompletions } from '@/features/dashboard/services'
+import type { Habit, Goal, Checkin } from '@/types'
 
 export const useSettings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -129,18 +131,45 @@ export const useSettings = () => {
 
     e.target.value = ''
 
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      useBoundStore
+        .getState()
+        .showToast('Invalid file format: Please select a .json backup file.', 'error')
+      return
+    }
+
     const reader = new FileReader()
     reader.onload = (event) => {
       try {
         const json = JSON.parse(event.target?.result as string)
-        if (!json || typeof json !== 'object' || !json.data || typeof json.data !== 'object') {
-          useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
+        if (!json || typeof json !== 'object') {
+          useBoundStore
+            .getState()
+            .showToast('Invalid backup file: Root must be a JSON object.', 'error')
+          return
+        }
+        if (!json.data || typeof json.data !== 'object') {
+          useBoundStore.getState().showToast('Invalid backup file: Missing "data" object.', 'error')
           return
         }
 
         const { habits, checkins, goals } = json.data
-        if (!Array.isArray(habits) || typeof checkins !== 'object' || !Array.isArray(goals)) {
-          useBoundStore.getState().showToast(TEXTS.importInvalidError, 'error')
+        if (!Array.isArray(habits)) {
+          useBoundStore
+            .getState()
+            .showToast('Invalid backup file: "data.habits" must be a JSON array.', 'error')
+          return
+        }
+        if (typeof checkins !== 'object' || checkins === null) {
+          useBoundStore
+            .getState()
+            .showToast('Invalid backup file: "data.checkins" must be a JSON object.', 'error')
+          return
+        }
+        if (!Array.isArray(goals)) {
+          useBoundStore
+            .getState()
+            .showToast('Invalid backup file: "data.goals" must be a JSON array.', 'error')
           return
         }
 
@@ -148,10 +177,30 @@ export const useSettings = () => {
           TEXTS.importTitleDialog,
           TEXTS.importConfirmWarning,
           () => {
+            const notifiedGoals: Record<string, boolean> = {}
+            goals.forEach((goal: Goal) => {
+              const habit = habits.find((h: Habit) => h.id === goal.habitId)
+              if (habit) {
+                const checkinList = Object.values(checkins) as unknown as Checkin[]
+                const currentValue =
+                  goal.targetType === 'streak'
+                    ? currentStreak(habit, checkinList)
+                    : totalCompletions(habit, checkinList)
+                const percentage = Math.round((currentValue / goal.targetValue) * 100)
+                if (percentage >= 100) {
+                  notifiedGoals[`${goal.id}-completed`] = true
+                  notifiedGoals[`${goal.id}-80percent`] = true
+                } else if (percentage >= 80) {
+                  notifiedGoals[`${goal.id}-80percent`] = true
+                }
+              }
+            })
+
             useBoundStore.setState({
               habits,
               checkins,
               goals,
+              notifiedGoals,
             })
             useBoundStore.getState().showToast(TEXTS.importSuccess, 'success')
           },
@@ -159,7 +208,9 @@ export const useSettings = () => {
         )
       } catch (err) {
         console.error(err)
-        useBoundStore.getState().showToast(TEXTS.importParseError, 'error')
+        const errorMsg =
+          err instanceof Error ? err.message : 'Failed to read or parse the backup file'
+        useBoundStore.getState().showToast(`JSON Parse Error: ${errorMsg}`, 'error')
       }
     }
     reader.readAsText(file)
@@ -174,6 +225,7 @@ export const useSettings = () => {
           habits: [],
           checkins: {},
           goals: [],
+          notes: [],
         })
 
         useBoundStore.getState().showToast(TEXTS.wipeSuccess, 'success')

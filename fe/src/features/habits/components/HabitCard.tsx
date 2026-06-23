@@ -42,7 +42,8 @@ export const HabitCard: FC<HabitCardProps> = ({
 }) => {
   const theme = useTheme()
   const dueToday =
-    habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false)
+    habit.status === 'Active' &&
+    (habit.frequency === 'Daily' || (habit.specificDays?.includes(new Date().getDay()) ?? false))
 
   const { today } = useCheckinStore()
   const notes = useBoundStore((s) => s.notes)

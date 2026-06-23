@@ -4,8 +4,10 @@ import type { Habit, Checkin } from '@/types'
 
 export function getActiveHabitsForDay(habits: Habit[], day: Dayjs): Habit[] {
   const dayOfWeek = day.day()
+  const dayStr = day.format('YYYY-MM-DD')
   return habits.filter((h) => {
     if (h.status !== 'Active') return false
+    if (h.createdAt && dayStr < h.createdAt) return false
     if (h.frequency !== 'Daily' && !h.specificDays?.includes(dayOfWeek)) return false
     return true
   })

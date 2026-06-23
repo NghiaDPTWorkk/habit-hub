@@ -30,28 +30,14 @@ import {
   TEXT_CATEGORY_LABEL,
   TEXT_FREQUENCY_LABEL,
   TEXT_STATUS_LABEL,
-  TEXT_ALL_CATEGORIES,
-  TEXT_ALL_FREQUENCIES,
-  TEXT_ALL_STATUSES,
   TEXT_PRIORITY_LABEL,
   TEXT_CLEAR_FILTERS,
-  TEXT_VAL_ALL,
-  TEXT_VAL_HEALTH,
-  TEXT_VAL_STUDY,
-  TEXT_VAL_WORK,
-  TEXT_VAL_MINDFULNESS,
-  TEXT_VAL_OTHER,
-  TEXT_VAL_DAILY,
-  TEXT_VAL_SPECIFIC,
-  TEXT_VAL_ACTIVE,
-  TEXT_VAL_PAUSED,
-  TEXT_VAL_ARCHIVED,
   PAGE_TITLE,
+  CATEGORY_OPTIONS,
+  FREQUENCY_OPTIONS,
+  STATUS_OPTIONS,
+  PRIORITY_OPTIONS,
 } from '../constants/pageConstants'
-
-const TEXT_HIGH_PRIORITY = 'High Priority'
-const TEXT_MEDIUM_PRIORITY = 'Medium Priority'
-const TEXT_LOW_PRIORITY = 'Low Priority'
 
 const DEFAULT_FILTERS: HabitFilters = {
   category: 'All',
@@ -59,13 +45,6 @@ const DEFAULT_FILTERS: HabitFilters = {
   priority: 'All',
   status: 'All',
 }
-
-const PRIORITY_OPTIONS = [
-  { value: 'All', label: TEXT_VAL_ALL },
-  { value: 'High', label: TEXT_HIGH_PRIORITY },
-  { value: 'Medium', label: TEXT_MEDIUM_PRIORITY },
-  { value: 'Low', label: TEXT_LOW_PRIORITY },
-] as const
 
 export const HabitsPage: FC = () => {
   const theme = useTheme()
@@ -117,27 +96,40 @@ export const HabitsPage: FC = () => {
       return true
     })
     return [...filtered].sort((a, b) => {
+      // 1. Sort by status: Active > Paused > Archived
+      const statusWeight = { Active: 3, Paused: 2, Archived: 1 }
+      const aStatus = statusWeight[a.status] || 0
+      const bStatus = statusWeight[b.status] || 0
+      if (aStatus !== bStatus) return bStatus - aStatus
+
+      // 2. Sort by priority: High > Medium > Low
+      const priorityWeight = { High: 3, Medium: 2, Low: 1 }
+      const aPriority = priorityWeight[a.priority] || 0
+      const bPriority = priorityWeight[b.priority] || 0
+      if (aPriority !== bPriority) return bPriority - aPriority
+
+      // 3. Sort by missed status (Missed first to draw attention)
       const aMissed = helperIsHabitMissed(a, todayCheckinByHabit) ? 1 : 0
       const bMissed = helperIsHabitMissed(b, todayCheckinByHabit) ? 1 : 0
-      return bMissed - aMissed
+      if (aMissed !== bMissed) return bMissed - aMissed
+
+      // 4. Stable sort by ID
+      return a.id - b.id
     })
   }, [habits, filters, searchTerm, todayCheckinByHabit])
 
-  const handleEdit = (habit: Habit) => {
-    setHabitToEdit(habit)
+  const handleEdit = (h: Habit) => {
+    setHabitToEdit(h)
     setModalOpen(true)
   }
-
-  const handleDelete = (habit: Habit) => {
-    setHabitToDelete(habit)
+  const handleDelete = (h: Habit) => {
+    setHabitToDelete(h)
     setDeleteDialogOpen(true)
   }
-
   const handleCancelDelete = () => {
     setDeleteDialogOpen(false)
     setHabitToDelete(undefined)
   }
-
   const handleConfirmDelete = () => {
     if (habitToDelete) {
       deleteHabit(habitToDelete.id)
@@ -146,22 +138,19 @@ export const HabitsPage: FC = () => {
     setDeleteDialogOpen(false)
     setHabitToDelete(undefined)
   }
-
-  const handlePauseResume = (habit: Habit) => {
-    if (habit.status === 'Active') {
-      pauseHabit(habit.id)
+  const handlePauseResume = (h: Habit) => {
+    if (h.status === 'Active') {
+      pauseHabit(h.id)
     } else {
-      resumeHabit(habit.id)
+      resumeHabit(h.id)
     }
     showToast(SHARED_MESSAGES.SUCCESS.STATUS_CHANGE, 'success')
   }
-
-  const handleArchive = (habit: Habit) => {
-    archiveHabit(habit.id)
+  const handleArchive = (h: Habit) => {
+    archiveHabit(h.id)
     showToast(SHARED_MESSAGES.SUCCESS.STATUS_CHANGE, 'success')
   }
-
-  const isHabitMissed = (habit: Habit) => helperIsHabitMissed(habit, todayCheckinByHabit)
+  const isHabitMissed = (h: Habit) => helperIsHabitMissed(h, todayCheckinByHabit)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -199,12 +188,11 @@ export const HabitsPage: FC = () => {
                 setFilters((prev) => ({ ...prev, category: e.target.value as Category | 'All' }))
               }
             >
-              <MenuItem value={TEXT_VAL_ALL}>{TEXT_ALL_CATEGORIES}</MenuItem>
-              <MenuItem value={TEXT_VAL_HEALTH}>{TEXT_VAL_HEALTH}</MenuItem>
-              <MenuItem value={TEXT_VAL_STUDY}>{TEXT_VAL_STUDY}</MenuItem>
-              <MenuItem value={TEXT_VAL_WORK}>{TEXT_VAL_WORK}</MenuItem>
-              <MenuItem value={TEXT_VAL_MINDFULNESS}>{TEXT_VAL_MINDFULNESS}</MenuItem>
-              <MenuItem value={TEXT_VAL_OTHER}>{TEXT_VAL_OTHER}</MenuItem>
+              {CATEGORY_OPTIONS.map((o) => (
+                <MenuItem key={o.value} value={o.value}>
+                  {o.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl size="small" sx={{ minWidth: 140 }}>
@@ -216,9 +204,11 @@ export const HabitsPage: FC = () => {
                 setFilters((prev) => ({ ...prev, frequency: e.target.value as Frequency | 'All' }))
               }
             >
-              <MenuItem value={TEXT_VAL_ALL}>{TEXT_ALL_FREQUENCIES}</MenuItem>
-              <MenuItem value={TEXT_VAL_DAILY}>{TEXT_VAL_DAILY}</MenuItem>
-              <MenuItem value={TEXT_VAL_SPECIFIC}>{TEXT_VAL_SPECIFIC}</MenuItem>
+              {FREQUENCY_OPTIONS.map((o) => (
+                <MenuItem key={o.value} value={o.value}>
+                  {o.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl size="small" sx={{ minWidth: 140 }}>
@@ -230,10 +220,11 @@ export const HabitsPage: FC = () => {
                 setFilters((prev) => ({ ...prev, status: e.target.value as HabitStatus | 'All' }))
               }
             >
-              <MenuItem value={TEXT_VAL_ALL}>{TEXT_ALL_STATUSES}</MenuItem>
-              <MenuItem value={TEXT_VAL_ACTIVE}>{TEXT_VAL_ACTIVE}</MenuItem>
-              <MenuItem value={TEXT_VAL_PAUSED}>{TEXT_VAL_PAUSED}</MenuItem>
-              <MenuItem value={TEXT_VAL_ARCHIVED}>{TEXT_VAL_ARCHIVED}</MenuItem>
+              {STATUS_OPTIONS.map((o) => (
+                <MenuItem key={o.value} value={o.value}>
+                  {o.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>

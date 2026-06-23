@@ -21,7 +21,7 @@ export const useBoundStore = create<BoundStore>()(
       ...createToastSlice(...a),
     }),
     {
-      name: 'habit-hub-storage',
+      name: 'habit-hub-storage-v2',
       // Save theme to local
       partialize: (state) => ({
         habits: state.habits,
